@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->
+<project default="deploy" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  <record name="build.log" loglevel="info"/>
+  <import file="common.xml"/>
+  <property name="traverseTarget" value="antPlugin"/>
+  <property name="antTarget" value="deploy"/>
+  
+  <condition property="isWindows">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="isUnix">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="isZos">
+    <os family="z/os"/>
+  </condition>
+
+  <target name="deploy">
+    <mkdir dir="${deploy}/product/ZLUX/plugins"/>
+    <mkdir dir="${deploy}/product/ZLUX/pluginStorage"/>
+    <mkdir dir="${deploy}/product/ZLUX/serverConfig"/>
+    <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <property name="productActions" value="${deploy}/product/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
+    <property name="productRecognizers" value="${deploy}/product/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <mkdir dir="${productActions}"/>
+    <mkdir dir="${productRecognizers}"/>    
+
+    <mkdir dir="${deploy}/site/ZLUX/plugins"/>
+    <mkdir dir="${deploy}/site/ZLUX/pluginStorage"/>
+    <mkdir dir="${deploy}/site/ZLUX/serverConfig"/>
+    <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <property name="siteActions" value="${deploy}/site/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
+    <property name="siteRecognizers" value="${deploy}/site/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <mkdir dir="${siteActions}"/>
+    <mkdir dir="${siteRecognizers}"/>
+    
+    <!-- for demonstration purposes -->
+    <mkdir dir="${deploy}/site/ZLUX/pluginStorage/com.rs.dsnchangeview/query"/>
+
+    <mkdir dir="${deploy}/instance/ZLUX/plugins"/>
+    <mkdir dir="${deploy}/instance/ZLUX/pluginStorage"/>
+    <mkdir dir="${deploy}/instance/ZLUX/serverConfig"/>
+    <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <property name="instanceActions" value="${deploy}/instance/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
+    <property name="instanceRecognizers" value="${deploy}/instance/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <mkdir dir="${instanceActions}"/>
+    <mkdir dir="${instanceRecognizers}"/> 
+    
+    <mkdir dir="${deploy}/instance/users"/>
+    <mkdir dir="${deploy}/instance/groups"/>
+    <!-- # MVD bootstrap -->
+    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/serverConfig">
+      <fileset dir="${home}/config"/>
+    </copy>
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -pR ${home}/config/ ${deploy}/product/ZLUX/serverConfig'"/>
+    </exec>
+
+    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/plugins">
+      <fileset dir="${pluginDir}" includes="*.json"/>
+    </copy>
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -pR ${pluginDir}/*.json ${deploy}/product/ZLUX/plugins'"/>
+    </exec>
+
+    <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/plugins">
+      <fileset dir="${deploy}/product/ZLUX/plugins"/>
+    </copy>
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -pR ${deploy}/product/ZLUX/plugins/ ${deploy}/instance/ZLUX/plugins'"/>
+    </exec>
+    
+    <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/serverConfig">
+      <fileset dir="${home}/config">
+        <include name="zluxserver.json"/>
+        <include name="server.cert"/>
+        <include name="server.key"/>
+      </fileset>
+    </copy>
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -pR
+                  ${home}/config/zluxserver.json
+                  ${home}/config/server.cert
+                  ${home}/config/server.key
+                  ${deploy}/instance/ZLUX/serverConfig'"/>
+    </exec>
+
+    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/pluginStorage">
+      <fileset dir="${home}/pluginDefaults">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -pR ${home}/pluginDefaults/ ${deploy}/product/ZLUX/pluginStorage'"/>
+    </exec>
+
+    <antcall target="traverse"/>
+    <if>
+      <available file="externals/Rocket/zssServer"/>
+      <then>
+        <if>
+          <isset property="isZos"/>
+          <then>
+            <exec executable="sh">
+              <arg line="-c 'cp -pR externals/Rocket/zssServer ${home}/bin/zssServer'"/>
+            </exec>
+          </then>
+          <else>
+            <copy file="externals/Rocket/zssServer" tofile="${home}/bin/zssServer"/>
+          </else>
+        </if>
+      </then>
+    </if>
+  </target>
+
+  <target name="cleanDeploy">
+    <delete quiet="true" dir="${deploy}/product/ZLUX"/>
+    <delete quiet="true" dir="${deploy}/instance/ZLUX"/>
+    <delete quiet="true" dir="${deploy}/site/ZLUX"/>
+    <delete quiet="true" includeEmptyDirs="true">
+      <fileset dir="${deploy}" includes="instance/users/*/ZLUX, instance/groups/*/ZLUX"/>
+    </delete>
+  </target>
+  
+  <target name="devClean">
+    <delete quiet="true" dir="${deploy}/product"/>
+    <delete quiet="true" dir="${deploy}/instance/ZLUX/plugins"/>
+    <delete quiet="true" dir="${deploy}/site/ZLUX/plugins"/>
+  </target>
+</project>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->

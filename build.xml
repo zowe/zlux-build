@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->
+<project default="help" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  <record name="build.log" loglevel="info"/>
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+  <property environment="env"/>
+  <property name="capstone" location="../"/>
+  <property name="zlux-example-server" value="${capstone}/zlux-example-server"/>
+  <property name="home" value="${zlux-example-server}"/>
+  <property name="buildRel" value="zlux-build"/>
+  <property name="build" value="${capstone}/zlux-build"/>
+  <property name="deploy" value="${zlux-example-server}/deploy"/>
+
+  <import file="common.xml" unless:set="version.date"/>
+
+  <target name="buildAll" depends="deploy, build"/>
+  
+  <target name="production">
+    <ant antfile="production.xml" dir="."/>
+  </target>
+
+  <target name="getVersion">
+    <ant antfile="production.xml" dir="." target="publishVersion"/>
+  </target>
+
+  <target name="deploy" description="Deploy ZLUX with the plugins defined in a 'pluginDir' directory">
+    <ant antfile="deploy.xml" dir="."/>
+  </target>
+  
+  <target name="cleanDeploy" description="Clean the deploy directory">
+    <ant antfile="deploy.xml" dir="." target="cleanDeploy"/>
+  </target>
+  
+  <target name="devClean" description="Clean the deploy product and plugins directories">
+    <ant antfile="deploy.xml" dir="." target="devClean"/>
+  </target>
+   
+  <target name="build" description="Build zLUX with the plugins defined in a 'pluginDir' directory">
+    <ant antfile="build_ng2.xml" dir="."/>
+  </target>
+ 
+</project>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->

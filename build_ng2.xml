@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->
+<project name="build_ng2" default="buildng2" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  <import file="common.xml"/>
+  <property name="traverseTarget" value="buildPlugin"/>
+  <property name="antTarget" value="build"/>
+  
+  <target name="buildng2" depends="getDesktopDir, platformBuild, bootstrapBuild, desktopBuild, traverse">
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-shared/src/logging"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-shared/src/logging"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+    
+    <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
+    
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop/web/require.js'"/>
+    </exec>
+    
+    <delete dir="${capstone}/zlux-shared/src/logging/node_modules" if:set="_delete_source"/>
+    <delete dir="${capstone}/zlux-app-manager/bootstrap/node_modules" if:set="_delete_source"/>
+    <delete dir="${capstone}/zlux-app-manager/bootstrap/src" if:set="_delete_source"/>
+    <delete dir="${capstone}/zlux-app-manager/virtual-desktop/node_modules" if:set="_delete_source"/>
+    <delete dir="${capstone}/zlux-app-manager/dts" if:set="_delete_source"/>
+  </target>
+  
+  <target name="getDesktopDir">
+    <dirname file="${capstone}/zlux-app-manager/virtual-desktop/package.json" property="MVD_DESKTOP_DIR"/>
+    <echo message="MVD_DESKTOP_DIR is ${MVD_DESKTOP_DIR}"/>
+    <echo message="Plugin directory is ${pluginDir}"/>
+  </target>
+  
+  <target name="buildPlugin" depends="antPlugin" unless="build.xmlRan">
+    <property name="absolutePlugin" location="${pluginDir}/${plugin}"/>
+    <if>
+      <not>
+        <or>
+          <equals arg1="${plugin}" arg2="../../zlux-app-manager/bootstrap"/>
+          <equals arg1="${plugin}" arg2="../../zlux-app-manager/virtual-desktop"/>
+        </or>
+      </not>
+      <then>
+        <antcall target="npmInstall" unless:set="noInstall">
+          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+        </antcall>
+        <antcall target="npmBuild">
+          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+          <param name="buildType" value="build"/>
+        </antcall>
+        <delete dir="${pluginDir}/${plugin}/node_modules" if:set="_delete_source"/>
+        <delete dir="${pluginDir}/${plugin}/src" if:set="_delete_source"/>
+      </then>
+    </if>
+  
+    <for param="subfolder">
+      <path>
+        <dirset dir="${pluginDir}/${plugin}" includes="*"/>
+      </path>
+      <sequential>
+        <antcall target="npmInstall" unless:set="noInstall">
+          <param name="packagejson.Location" value="@{subfolder}"/>
+        </antcall>
+        <antcall target="npmBuild">
+          <param name="packagejson.Location" value="@{subfolder}"/>
+          <param name="buildType" value="build"/>
+        </antcall>        
+        <delete dir="@{subfolder}/node_modules" if:set="_delete_source"/>       
+        <if>
+          <not>
+            <equals arg1="${plugin}" arg2="../../sample-app"/>
+          </not>
+          <then>
+            <delete dir="@{subfolder}/src" if:set="_delete_source"/>       
+          </then>
+        </if>
+      </sequential>
+    </for>
+  </target>
+
+  <target name="platformBuild">
+    <antcall target="npmInstall" unless:set="noInstall">  
+      <param name="packagejson.Location" value="${capstone}/zlux-platform"/>
+    </antcall>
+  </target>
+  
+  <target name="bootstrapBuild"><!--We could pass different args for bootstrap if we wanted-->
+    <antcall target="npmInstall" unless:set="noInstall">  
+      <param name="packagejson.Location" value="${capstone}/zlux-proxy-server/js"/>
+    </antcall>
+    <antcall target="npmInstall" unless:set="noInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/bootstrap"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/bootstrap"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+  </target>
+  
+  <target name="desktopBuild"><!--We could pass different args for virtual-desktop if we wanted-->
+    <antcall target="npmInstall" unless:set="noInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+      <param name="buildType" value="build:externals"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+  </target>
+  
+  <target name="npmInstall" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="cmd" 
+          dir="${packagejson.Location}" 
+          osfamily="windows"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="/c npm install"/>
+    </exec>
+    <exec executable="npm" 
+          dir="${packagejson.Location}"
+          osfamily="unix"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="install"/>
+    </exec>
+    
+    <echo message="Result of install in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm install in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+  
+  <target name="npmBuild" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="cmd" 
+          dir="${packagejson.Location}" 
+          osfamily="windows" 
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="/c npm run ${buildType}"/>
+      <env key="MVD_DESKTOP_DIR" value="${MVD_DESKTOP_DIR}"/>
+    </exec>
+    <exec executable="npm" 
+          dir="${packagejson.Location}" 
+          osfamily="unix"  
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="run ${buildType}"/>
+      <env key="MVD_DESKTOP_DIR" value="${MVD_DESKTOP_DIR}"/>
+    </exec>
+    
+    <echo message="Result of build in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm run ${buildType} in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+  
+  <target name="package.jsonExists">
+    <available file="${packagejson.Location}/package.json" property="package.jsonPresent"/>
+  </target>
+  
+</project>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->

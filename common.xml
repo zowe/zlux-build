@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->
+<project name="common-imports" xmlns:if="ant:if" xmlns:unless="ant:unless">
+  
+  <antversion property="allowedVersion" atleast="1.9.1"/>
+  <fail unless="allowedVersion" message="Ant version 1.9.1 is required to run this script. The current version is ${ant.version}"/>
+
+  <taskdef resource="net/sf/antcontrib/antlib.xml" onerror="failall"/>  
+  <dirname property="imported.basedir" file="${ant.file.common-imports}"/>
+
+  <var name="nextValue" value="searching"/>
+  <var name="jsonfile" value=""/>
+  <property file="common.properties"/>
+  <property name="pluginDir" location="${plugins}"/>
+
+  <property file="${imported.basedir}/version.properties"/>
+  <tstamp>
+    <format property="version.date" pattern="yyyyMMdd"/>
+  </tstamp>
+
+  <condition property="isWindows">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="isUnix">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="isZos">
+    <os family="z/os"/>
+  </condition>
+  
+  <target name="help">
+    <echo message="For help use ant -p"/>
+  </target>
+  
+  <target name="antPlugin">
+    <property name="build.xml.location" location="${pluginDir}/${plugin}/build"/>
+    <available file="${build.xml.location}/build.xml" property="build.xmlPresent"/>
+    <trycatch if:set="build.xmlPresent">
+      <try>
+        <echo message="Running ${antTarget} in ${build.xml.location} for ${plugin_id}"/>
+        <ant antfile="build.xml" dir="${build.xml.location}" target="${antTarget}"/>
+        <property name="build.xmlRan" value="true"/>
+      </try>  
+      <catch>
+        <echo message="Target ${antTarget} not in ${build.xml.location}"/>
+      </catch>
+    </trycatch>
+  </target>
+
+  <target name="traverse">
+    <for param="file">
+      <path>
+        <fileset dir="${pluginDir}" includes="**/*.json"/>
+      </path>
+      <sequential>
+        <loadfile property="@{file}" srcfile="@{file}"/>
+        <for param="line" list="${@{file}}" delimiter=":,&quot;">
+          <sequential>
+          <if>
+            <equals arg1="${nextValue}" arg2="predir"/>
+            <then>
+              <var name="nextValue" value="dir"/>
+            </then>
+            <elseif>
+              <equals arg1="${nextValue}" arg2="dir"/>
+              <then>
+                <antcall target="${traverseTarget}">
+                  <param name="plugin" value="@{line}"/>
+                </antcall>
+                <var name="nextValue" value="searching"/>
+              </then>
+            </elseif>
+            <elseif>
+              <equals arg1="${nextValue}" arg2="preid"/>
+              <then>
+                <var name="nextValue" value="id"/>
+              </then>
+            </elseif>
+            <elseif>
+              <equals arg1="${nextValue}" arg2="id"/>
+              <then>
+                <var name="plugin_id" value="@{line}"/>
+                <var name="nextValue" value="searching"/>
+              </then>
+            </elseif>
+            <elseif>
+              <equals arg1="@{line}" arg2="pluginLocation"/>
+              <then>
+                <var name="nextValue" value="predir"/>
+              </then>
+            </elseif>
+            <elseif>
+              <equals arg1="@{line}" arg2="identifier"/>
+              <then>
+                <var name="nextValue" value="preid"/>
+              </then>
+            </elseif>
+          </if>
+          </sequential>
+        </for>
+      </sequential>
+    </for>
+  </target>
+</project>
+
+<!-- 
+  This program and the accompanying materials are
+  made available under the terms of the Eclipse Public License v2.0 which accompanies
+  this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
+  
+  SPDX-License-Identifier: EPL-2.0
+  
+  Copyright Contributors to the Zowe Project.
+-->
