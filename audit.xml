@@ -53,12 +53,12 @@
           searchpath="true">
       <arg line="/c npm audit > ${build}/artifacts/audit/${plugin_id}_audit.log"/>
     </exec>
-    <exec executable="npm" 
+    <exec executable="sh" 
           dir="${packagejson.Location}" 
           osfamily="unix"  
           resultproperty="rc"
           searchpath="true">
-      <arg line="audit > ${build}/artifacts/audit/${plugin_id}_audit.log"/>
+      <arg line="-c 'npm audit > ${build}/artifacts/audit/${plugin_id}_audit.log'"/>
     </exec>
   </target>
   
