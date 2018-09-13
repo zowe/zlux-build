@@ -27,6 +27,7 @@
   </condition>
   
   <target name="audit">
+    <mkdir dir="${build}/artifacts/audit"/>
     <antcall target="generate_audit_report">
       <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
     </antcall>
@@ -50,20 +51,22 @@
           osfamily="windows" 
           resultproperty="rc"
           searchpath="true">
-      <arg line="/c npm audit > ${build}/artifacts/audit/audit_{$plugin_id}"/>
+      <arg line="/c npm audit > ${build}/artifacts/audit/${plugin_id}_audit.log"/>
     </exec>
     <exec executable="npm" 
           dir="${packagejson.Location}" 
           osfamily="unix"  
           resultproperty="rc"
           searchpath="true">
-      <arg line="audit > ${build}/artifacts/audit/audit_{$plugin_id}"/>
+      <arg line="audit > ${build}/artifacts/audit/${plugin_id}_audit.log"/>
     </exec>
   </target>
   
   <target name="package.jsonExists">
+    <echo message="${packagejson.Location}"/>
     <available file="${packagejson.Location}/package.json" property="package.jsonPresent"/>
   </target>
+</project>
 <!-- 
   This program and the accompanying materials are
   made available under the terms of the Eclipse Public License v2.0 which accompanies
