@@ -50,20 +50,21 @@
           dir="${packagejson.Location}" 
           osfamily="windows" 
           resultproperty="rc"
-          searchpath="true">
-      <arg line="/c npm audit > ${build}/artifacts/audit/${plugin_id}_audit.log"/>
+          searchpath="true"
+          output="${build}/artifacts/audit/${plugin_id}_audit.log">
+      <arg line="/c npm audit"/>
     </exec>
-    <exec executable="sh" 
+    <exec executable="npm" 
           dir="${packagejson.Location}" 
           osfamily="unix"  
           resultproperty="rc"
-          searchpath="true">
-      <arg line="-c 'npm audit > ${build}/artifacts/audit/${plugin_id}_audit.log'"/>
+          searchpath="true"
+          output="${build}/artifacts/audit/${plugin_id}_audit.log">
+      <arg line="audit"/>
     </exec>
   </target>
   
   <target name="package.jsonExists">
-    <echo message="${packagejson.Location}"/>
     <available file="${packagejson.Location}/package.json" property="package.jsonPresent"/>
   </target>
 </project>
