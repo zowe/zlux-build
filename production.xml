@@ -19,11 +19,11 @@
     <mkdir dir="${capstone}/../dist"/>
    
     <exec executable="sh" if:set="isZos">
-      <arg line="-c 'cp -pR ../* ${capstone}/../dist/'"/>
+      <arg line="-c 'cp -pR .. ${capstone}/../dist/'"/>
     </exec>
 	   
     <exec executable="sh" if:set="isUnix">
-      <arg line="-c 'cp -pR ../* ${capstone}/../dist/'"/>
+      <arg line="-c 'cp -pR .. ${capstone}/../dist/'"/>
     </exec>
 
     <copy todir="${capstone}/../dist/" if:set="isWindows">
