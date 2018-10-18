@@ -35,6 +35,10 @@
     <ant antfile="deploy.xml" dir="."/>
   </target>
   
+  <target name="audit" description="Audit all the plugins to check for security violations">
+    <ant antfile="audit.xml" dir="."/>
+  </target>
+  
   <target name="cleanDeploy" description="Clean the deploy directory">
     <ant antfile="deploy.xml" dir="." target="cleanDeploy"/>
   </target>
