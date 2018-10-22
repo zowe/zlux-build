@@ -28,12 +28,51 @@
     <exec if:set="isZos" executable="sh">
       <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop/web/require.js'"/>
     </exec>
-    
-    <delete dir="${capstone}/zlux-shared/src/logging/node_modules" if:set="_delete_source"/>
-    <delete dir="${capstone}/zlux-app-manager/bootstrap/node_modules" if:set="_delete_source"/>
-    <delete dir="${capstone}/zlux-app-manager/bootstrap/src" if:set="_delete_source"/>
-    <delete dir="${capstone}/zlux-app-manager/virtual-desktop/node_modules" if:set="_delete_source"/>
-    <delete dir="${capstone}/zlux-app-manager/dts" if:set="_delete_source"/>
+
+    <!-- <delete><fileset .../>...</delete> is extremely slow -->
+    <for param="path" if:set="_delete_source">
+      <path>
+        <dirset dir="${capstone}">
+          <include name="**/.*"/>
+          <include name="**/node_modules"/>
+          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+        </dirset>
+        <dirset dir="${capstone}">
+          <include name="**/src"/>
+          <include name="**/dts"/>
+          <include name="**/nodeServer"/>
+          <include name="**/webClient"/>
+          <exclude name="sample-*/**"/>
+          <exclude name="zlux-app-manager/virtual-desktop/**"/>
+          <exclude name="zlux-platform/interface/**"/>
+          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+          <exclude name="zlux-shared/**"/>
+        </dirset>
+        <fileset dir="${capstone}" defaultexcludes="false">
+          <include name="**/.*"/>
+          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+        </fileset>
+        <fileset dir="${capstone}" defaultexcludes="false">
+          <include name="**/*.ts"/>
+          <include name="**/package*.json"/>
+          <include name="**/tsconfig*.json"/>
+          <include name="**/tslint.json"/>
+          <include name="**/webpack.config.js"/>
+          <exclude name="zlux-example-server/**"/>
+          <exclude name="zlux-build/**"/>
+          <exclude name="**/node_modules/**"/>
+          <exclude name="sample-*/**"/>
+          <exclude name="zlux-app-manager/virtual-desktop/**"/>
+          <exclude name="zlux-platform/interface/**"/>
+          <exclude name="zlux-shared/src/**"/>
+        </fileset>
+      </path>
+      <sequential>
+        <delete dir="@{path}"/>
+        <delete file="@{path}"/>
+      </sequential>
+    </for>
+
   </target>
   
   <target name="getDesktopDir">
@@ -59,8 +98,6 @@
           <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
           <param name="buildType" value="build"/>
         </antcall>
-        <delete dir="${pluginDir}/${plugin}/node_modules" if:set="_delete_source"/>
-        <delete dir="${pluginDir}/${plugin}/src" if:set="_delete_source"/>
       </then>
     </if>
   
@@ -75,16 +112,7 @@
         <antcall target="npmBuild">
           <param name="packagejson.Location" value="@{subfolder}"/>
           <param name="buildType" value="build"/>
-        </antcall>        
-        <delete dir="@{subfolder}/node_modules" if:set="_delete_source"/>       
-        <if>
-          <not>
-            <equals arg1="${plugin}" arg2="../../sample-app"/>
-          </not>
-          <then>
-            <delete dir="@{subfolder}/src" if:set="_delete_source"/>       
-          </then>
-        </if>
+        </antcall>
       </sequential>
     </for>
   </target>
