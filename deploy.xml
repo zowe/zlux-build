@@ -116,9 +116,6 @@
             <exec executable="sh">
               <arg line="-c 'cp -pR externals/Rocket/zssServer ${home}/bin/zssServer'"/>
             </exec>
-            <exec executable="sh">
-              <arg line="-c 'extattr +p ${home}/bin/zssServer'"/>
-            </exec>
           </then>
         </if>
       </then>
