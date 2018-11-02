@@ -117,9 +117,6 @@
               <arg line="-c 'cp -pR externals/Rocket/zssServer ${home}/bin/zssServer'"/>
             </exec>
           </then>
-          <else>
-            <copy file="externals/Rocket/zssServer" tofile="${home}/bin/zssServer"/>
-          </else>
         </if>
       </then>
     </if>
