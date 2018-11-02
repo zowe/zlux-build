@@ -32,8 +32,8 @@
     <mkdir dir="${deploy}/product/ZLUX/pluginStorage"/>
     <mkdir dir="${deploy}/product/ZLUX/serverConfig"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="productActions" value="${deploy}/product/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
-    <property name="productRecognizers" value="${deploy}/product/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <property name="productActions" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="productRecognizers" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${productActions}"/>
     <mkdir dir="${productRecognizers}"/>    
 
@@ -41,8 +41,8 @@
     <mkdir dir="${deploy}/site/ZLUX/pluginStorage"/>
     <mkdir dir="${deploy}/site/ZLUX/serverConfig"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="siteActions" value="${deploy}/site/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
-    <property name="siteRecognizers" value="${deploy}/site/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <property name="siteActions" value="${deploy}/site/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="siteRecognizers" value="${deploy}/site/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${siteActions}"/>
     <mkdir dir="${siteRecognizers}"/>
     
@@ -53,8 +53,8 @@
     <mkdir dir="${deploy}/instance/ZLUX/pluginStorage"/>
     <mkdir dir="${deploy}/instance/ZLUX/serverConfig"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="instanceActions" value="${deploy}/instance/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/actions"/>
-    <property name="instanceRecognizers" value="${deploy}/instance/ZLUX/pluginStorage/com.rs.mvd.ng2desktop/recognizers"/>
+    <property name="instanceActions" value="${deploy}/instance/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="instanceRecognizers" value="${deploy}/instance/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${instanceActions}"/>
     <mkdir dir="${instanceRecognizers}"/> 
     
