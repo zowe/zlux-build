@@ -87,6 +87,9 @@
         <include name="zluxserver.json"/>
         <include name="server.cert"/>
         <include name="server.key"/>
+        <include name="zlux.keystore.cer"/>
+        <include name="zlux.keystore.key"/>
+        <include name="apiml-localca.cer"/>
       </fileset>
     </copy>
     <exec if:set="isZos" executable="sh">
@@ -94,6 +97,9 @@
                   ${home}/config/zluxserver.json
                   ${home}/config/server.cert
                   ${home}/config/server.key
+                  ${home}/config/zlux.keystore.cer
+                  ${home}/config/zlux.keystore.key
+                  ${home}/config/apiml-localca.cer
                   ${deploy}/instance/ZLUX/serverConfig'"/>
     </exec>
 
