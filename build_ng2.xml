@@ -209,20 +209,7 @@
   <target name="package.jsonExists">
     <available file="${packagejson.Location}/package.json" property="package.jsonPresent"/>
   </target>
-  
-  <target name="copynode">
-
-    <mkdir dir="${user.dir}/../lib/node_modules/"/>
-    <copy todir="${user.dir}/../lib/node_modules/" if:set="isWindows"> <fileset dir ="${user.dir}/../nodeServer/node_modules"  includes="**" />
-    </copy>
-    <exec if:set="isUnix" executable="sh">
-      <arg line="-c 'cp -pR ${user.dir}/../nodeServer/node_modules/* ${user.dir}/../lib/node_modules/'"/>
-    </exec>   
-    <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${user.dir}/../nodeServer/node_modules/* ${user.dir}/../lib/node_modules/'"/>
-    </exec>    
-  </target>
-  
+ 
 </project>
 
 <!-- 
