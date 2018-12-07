@@ -212,8 +212,6 @@
   
   <target name="copynode">
 
-    <property name="absolutePlugin" location="${user.dir}"/>
-
     <mkdir dir="${user.dir}/../lib/node_modules/"/>
     <copy todir="${user.dir}/../lib/node_modules/" if:set="isWindows"> <fileset dir ="${user.dir}/../nodeServer/node_modules"  includes="**" />
     </copy>
