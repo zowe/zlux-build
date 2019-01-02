@@ -156,14 +156,14 @@
           osfamily="windows"
           resultproperty="rc"
           searchpath="true">
-      <arg line="/c npm install"/>
+      <arg line="/c npm ci"/>
     </exec>
     <exec executable="npm" 
           dir="${packagejson.Location}"
           osfamily="unix"
           resultproperty="rc"
           searchpath="true">
-      <arg line="install"/>
+      <arg line="ci"/>
     </exec>
     
     <echo message="Result of install in ${packagejson.Location} is: ${rc}"/>
