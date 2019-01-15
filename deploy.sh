@@ -61,13 +61,13 @@ cp -vr ../zlux-app-server/config/zlux.keystore.key ../zlux-app-server/deploy/ins
 cp -vr ../zlux-app-server/config/zlux.keystore.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/apiml-localca.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.tn3270
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.tn3270/sessions
-cp -v ../tn3270-ng2/_defaultTN3270.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.tn3270/sessions/_defaultTN3270.json
+mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270
+mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions
+cp -v ../tn3270-ng2/_defaultTN3270.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions/_defaultTN3270.json
 
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.vt
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.vt/sessions
-cp -v ../vt-ng2/_defaultVT.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/com.rs.mvd.vt/sessions/_defaultVT.json
+mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt
+mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions
+cp -v ../vt-ng2/_defaultVT.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions/_defaultVT.json
 # This program and the accompanying materials are
 # made available under the terms of the Eclipse Public License v2.0 which accompanies
 # this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
