@@ -35,7 +35,7 @@
         <dirset dir="${capstone}">
           <include name="**/.*"/>
           <include name="**/node_modules"/>
-          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+          <exclude name="zlux-server-framework/js/node_modules/**"/>
         </dirset>
         <dirset dir="${capstone}">
           <include name="**/src"/>
@@ -45,12 +45,12 @@
           <exclude name="sample-*/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
-          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+          <exclude name="zlux-server-framework/js/node_modules/**"/>
           <exclude name="zlux-shared/**"/>
         </dirset>
         <fileset dir="${capstone}" defaultexcludes="false">
           <include name="**/.*"/>
-          <exclude name="zlux-proxy-server/js/node_modules/**"/>
+          <exclude name="zlux-server-framework/js/node_modules/**"/>
         </fileset>
         <fileset dir="${capstone}" defaultexcludes="false">
           <include name="**/*.ts"/>
@@ -58,7 +58,7 @@
           <include name="**/tsconfig*.json"/>
           <include name="**/tslint.json"/>
           <include name="**/webpack.config.js"/>
-          <exclude name="zlux-example-server/**"/>
+          <exclude name="zlux-app-server/**"/>
           <exclude name="zlux-build/**"/>
           <exclude name="**/node_modules/**"/>
           <exclude name="sample-*/**"/>
@@ -125,13 +125,13 @@
   
   <target name="bootstrapBuild"><!--We could pass different args for bootstrap if we wanted-->
     <antcall target="npmInstall" unless:set="noInstall">  
-      <param name="packagejson.Location" value="${capstone}/zlux-proxy-server"/>
+      <param name="packagejson.Location" value="${capstone}/zlux-server-framework"/>
     </antcall>
     <antcall target="npmInstall" unless:set="noInstall">  
       <param name="packagejson.Location" value="${capstone}/zss-auth"/>
     </antcall>
     <antcall target="npmInstall" unless:set="noInstall">  
-      <param name="packagejson.Location" value="${capstone}/zlux-example-server"/>
+      <param name="packagejson.Location" value="${capstone}/zlux-app-server"/>
     </antcall>
     <antcall target="npmInstall" unless:set="noInstall">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/bootstrap"/>

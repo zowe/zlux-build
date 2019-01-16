@@ -13,11 +13,11 @@
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
   <property environment="env"/>
   <property name="capstone" location="../"/>
-  <property name="zlux-example-server" value="${capstone}/zlux-example-server"/>
-  <property name="home" value="${zlux-example-server}"/>
+  <property name="zlux-app-server" value="${capstone}/zlux-app-server"/>
+  <property name="home" value="${zlux-app-server}"/>
   <property name="buildRel" value="zlux-build"/>
   <property name="build" value="${capstone}/zlux-build"/>
-  <property name="deploy" value="${zlux-example-server}/deploy"/>
+  <property name="deploy" value="${zlux-app-server}/deploy"/>
 
   <import file="common.xml" unless:set="version.date"/>
 

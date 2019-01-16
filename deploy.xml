@@ -85,8 +85,6 @@
     <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/serverConfig">
       <fileset dir="${home}/config">
         <include name="zluxserver.json"/>
-        <include name="server.cert"/>
-        <include name="server.key"/>
         <include name="zlux.keystore.cer"/>
         <include name="zlux.keystore.key"/>
         <include name="apiml-localca.cer"/>
@@ -95,8 +93,6 @@
     <exec if:set="isZos" executable="sh">
       <arg line="-c 'cp -pR
                   ${home}/config/zluxserver.json
-                  ${home}/config/server.cert
-                  ${home}/config/server.key
                   ${home}/config/zlux.keystore.cer
                   ${home}/config/zlux.keystore.key
                   ${home}/config/apiml-localca.cer

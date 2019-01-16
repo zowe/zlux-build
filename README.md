@@ -11,7 +11,7 @@ These scripts require at least version 1.9.1 of Apache Ant. ant-contrib is also 
 
 Use 'ant help' to get list of targets accessible from this directory
 
-The script has two primary parts: deploy and build. Deploy populates the deploy directory under zlux-example-server. Build will build the source of the file so it can be used within the brower
+The script has two primary parts: deploy and build. Deploy populates the deploy directory under zlux-app-server. Build will build the source of the file so it can be used within the brower
 
 The default behavior for a plugin is to navigate to its home directory, as defined by the directory given in its _pluginDefinition.json_ file, and then run _npm install_ and _npm run build_. This can be altered by adding a build/build.xml file to the plugin's home directory. Having a _deploy_ target in this file will cause it to be run during the deploy step. This is useful for adding plugin-specific configuration files. If there is a _build_ target in this file, it will be run instead of _npm install_ and _npm run build_. You can still call those functions within the _build_ target, but you can use ant to do whatever other build steps need to be done
 
