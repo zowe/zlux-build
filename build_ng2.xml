@@ -128,9 +128,6 @@
       <param name="packagejson.Location" value="${capstone}/zlux-server-framework"/>
     </antcall>
     <antcall target="npmInstall" unless:set="noInstall">  
-      <param name="packagejson.Location" value="${capstone}/zss-auth"/>
-    </antcall>
-    <antcall target="npmInstall" unless:set="noInstall">  
       <param name="packagejson.Location" value="${capstone}/zlux-app-server"/>
     </antcall>
     <antcall target="npmInstall" unless:set="noInstall">
