@@ -51,6 +51,9 @@
     <ant antfile="build_ng2.xml" dir="."/>
   </target>
  
+  <target name="bootstrapBuild" description="Build zLUX with the plugins defined in a 'pluginDir' directory">
+    <ant antfile="build_ng2.xml" target="bootstrapBuild" dir="."/>
+  </target>
 </project>
 
 <!-- 
