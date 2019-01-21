@@ -32,12 +32,13 @@
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
     <for param="path" if:set="_delete_source">
       <path>
-        <dirset dir="${capstone}">
+        <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/.*"/>
           <include name="**/node_modules"/>
-          <exclude name="zlux-server-framework/js/node_modules/**"/>
+          <exclude name="zlux-app-server/node_modules/**"/>
+          <exclude name="zlux-server-framework/node_modules/**"/>
         </dirset>
-        <dirset dir="${capstone}">
+        <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/src"/>
           <include name="**/dts"/>
           <include name="**/nodeServer"/>
@@ -45,16 +46,18 @@
           <exclude name="sample-*/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
-          <exclude name="zlux-server-framework/js/node_modules/**"/>
+          <exclude name="zlux-app-server/node_modules/**"/>
+          <exclude name="zlux-server-framework/node_modules/**"/>
           <exclude name="zlux-shared/**"/>
         </dirset>
         <fileset dir="${capstone}" defaultexcludes="false">
           <include name="**/.*"/>
-          <exclude name="zlux-server-framework/js/node_modules/**"/>
+          <include name="**/sonar-project.properties"/>
+          <exclude name="zlux-app-server/node_modules/**"/>
+          <exclude name="zlux-server-framework/node_modules/**"/>
         </fileset>
         <fileset dir="${capstone}" defaultexcludes="false">
           <include name="**/*.ts"/>
-          <include name="**/package*.json"/>
           <include name="**/tsconfig*.json"/>
           <include name="**/tslint.json"/>
           <include name="**/webpack.config.js"/>
