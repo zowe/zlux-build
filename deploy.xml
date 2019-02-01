@@ -45,9 +45,6 @@
     <property name="siteRecognizers" value="${deploy}/site/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${siteActions}"/>
     <mkdir dir="${siteRecognizers}"/>
-    
-    <!-- for demonstration purposes -->
-    <mkdir dir="${deploy}/site/ZLUX/pluginStorage/com.rs.dsnchangeview/query"/>
 
     <mkdir dir="${deploy}/instance/ZLUX/plugins"/>
     <mkdir dir="${deploy}/instance/ZLUX/pluginStorage"/>
@@ -110,18 +107,21 @@
 
     <antcall target="traverse"/>
     <if>
-      <available file="externals/Rocket/zssServer"/>
+      <available file="../zss/bin/zssServer"/>
       <then>
         <if>
           <isset property="isZos"/>
           <then>
             <exec executable="sh">
-              <arg line="-c 'cp -pR externals/Rocket/zssServer ${home}/bin/zssServer'"/>
+              <arg line="-c 'cp -pR ../zss/bin/zssServer ${home}/bin/zssServer'"/>
             </exec>
           </then>
         </if>
       </then>
     </if>
+
+    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="go-w" includes="**/*"/>
+    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="o-rx" includes="**/*"/>      
   </target>
 
   <target name="cleanDeploy">
