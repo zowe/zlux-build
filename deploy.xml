@@ -120,8 +120,10 @@
       </then>
     </if>
 
-    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="go-w" includes="**/*"/>
-    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="o-rx" includes="**/*"/>      
+    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="750"/>
+    <chmod unless:set="isWindows" perm="640">
+      <fileset dir="${deploy}/instance/ZLUX/serverConfig"/>
+    </chmod>
   </target>
 
   <target name="cleanDeploy">
