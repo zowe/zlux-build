@@ -30,6 +30,9 @@
 # serverConfig - the folder for storing information that the server needs at startup, such as a json describing
 #                the port to use, or other files for security certificates
 
+# Don't do permission changes in this script because final changes such as these happen after this script is executed
+# Such as, currently in zowe-runtime-authorize.sh
+
 mkdir -p ../zlux-app-server/deploy/product
 mkdir -p ../zlux-app-server/deploy/product/ZLUX
 mkdir -p ../zlux-app-server/deploy/product/ZLUX/plugins
@@ -68,9 +71,6 @@ cp -v ../tn3270-ng2/_defaultTN3270.json ../zlux-app-server/deploy/instance/ZLUX/
 mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt
 mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions
 cp -v ../vt-ng2/_defaultVT.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions/_defaultVT.json
-
-chmod -R go-w ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-chmod -R o-rx ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 # This program and the accompanying materials are
 # made available under the terms of the Eclipse Public License v2.0 which accompanies
 # this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
