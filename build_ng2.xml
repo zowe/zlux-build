@@ -29,8 +29,11 @@
       <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop/web/require.js'"/>
     </exec>
 
+  </target>
+
+  <target name="removeSource">
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
-    <for param="path" if:set="_delete_source">
+    <for param="path">
       <path>
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/.*"/>
@@ -75,9 +78,8 @@
         <delete file="@{path}"/>
       </sequential>
     </for>
-
   </target>
-  
+
   <target name="getDesktopDir">
     <dirname file="${capstone}/zlux-app-manager/virtual-desktop/package.json" property="MVD_DESKTOP_DIR"/>
     <echo message="MVD_DESKTOP_DIR is ${MVD_DESKTOP_DIR}"/>
