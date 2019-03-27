@@ -64,6 +64,8 @@ cp -vr ../zlux-app-server/config/zlux.keystore.key ../zlux-app-server/deploy/ins
 cp -vr ../zlux-app-server/config/zlux.keystore.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/apiml-localca.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 
+cp -vr ../zlux-app-server/pluginDefaults/* ../zlux-app-server/deploy/instance/ZLUX/pluginStorage
+
 mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270
 mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions
 cp -v ../tn3270-ng2/_defaultTN3270.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions/_defaultTN3270.json
