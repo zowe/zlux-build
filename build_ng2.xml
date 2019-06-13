@@ -22,6 +22,13 @@
       <param name="packagejson.Location" value="${capstone}/zlux-shared/src/logging"/>
       <param name="buildType" value="build"/>
     </antcall>
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-shared/src/obfuscator"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-shared/src/obfuscator"/>
+      <param name="buildType" value="build"/>
+    </antcall>    
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
     
@@ -38,6 +45,7 @@
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/.*"/>
           <include name="**/node_modules"/>
+          <include name="**/dco-signoffs"/>
           <exclude name="zlux-app-server/node_modules/**"/>
           <exclude name="zlux-server-framework/node_modules/**"/>
         </dirset>
