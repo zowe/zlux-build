@@ -85,6 +85,7 @@
         <include name="zlux.keystore.cer"/>
         <include name="zlux.keystore.key"/>
         <include name="apiml-localca.cer"/>
+        <include name="tomcat.xml"/>
       </fileset>
     </copy>
     <exec if:set="isZos" executable="sh">
@@ -93,6 +94,7 @@
                   ${home}/config/zlux.keystore.cer
                   ${home}/config/zlux.keystore.key
                   ${home}/config/apiml-localca.cer
+                  ${home}/config/tomcat.xml
                   ${deploy}/instance/ZLUX/serverConfig'"/>
     </exec>
 
