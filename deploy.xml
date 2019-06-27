@@ -28,6 +28,12 @@
   </condition>
 
   <target name="deploy">
+    <delete quiet="true" dir="${deploy}/product/ZLUX/plugins"/>
+    <delete quiet="true" dir="${deploy}/instance/ZLUX/plugins"/>
+    <delete quiet="true" dir="${deploy}/site/ZLUX/plugins"/>
+    <delete quiet="true" includeEmptyDirs="true">
+      <fileset dir="${deploy}" includes="instance/users/*/ZLUX, instance/groups/*/ZLUX"/>
+    </delete>
     <mkdir dir="${deploy}/product/ZLUX/plugins"/>
     <mkdir dir="${deploy}/product/ZLUX/pluginStorage"/>
     <mkdir dir="${deploy}/product/ZLUX/serverConfig"/>
@@ -73,10 +79,10 @@
     </exec>
 
     <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/plugins">
-      <fileset dir="${deploy}/product/ZLUX/plugins"/>
+      <fileset dir="${pluginDir}" includes="*.json"/>
     </copy>
     <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${deploy}/product/ZLUX/plugins/ ${deploy}/instance/ZLUX/plugins'"/>
+      <arg line="-c 'cp -pR ${pluginDir}/*.json ${deploy}/instance/ZLUX/plugins'"/>
     </exec>
     
     <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/serverConfig">
