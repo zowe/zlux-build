@@ -33,6 +33,10 @@
 # Don't do permission changes in this script because final changes such as these happen after this script is executed
 # Such as, currently in zowe-runtime-authorize.sh
 
+rm -rf ../zlux-app-server/deploy/product/ZLUX/plugins
+rm -rf ../zlux-app-server/deploy/site/ZLUX/plugins
+rm -rf ../zlux-app-server/deploy/instance/ZLUX/plugins
+
 mkdir -p ../zlux-app-server/deploy/product
 mkdir -p ../zlux-app-server/deploy/product/ZLUX
 mkdir -p ../zlux-app-server/deploy/product/ZLUX/plugins
@@ -63,7 +67,6 @@ cp -vr ../zlux-app-server/config/zluxserver.json ../zlux-app-server/deploy/insta
 cp -vr ../zlux-app-server/config/zlux.keystore.key ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/zlux.keystore.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/apiml-localca.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-cp -vr ../zlux-app-server/config/tomcat.xml ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 
 cp -vr ../zlux-app-server/pluginDefaults/* ../zlux-app-server/deploy/instance/ZLUX/pluginStorage
 
