@@ -67,6 +67,7 @@ cp -vr ../zlux-app-server/config/zluxserver.json ../zlux-app-server/deploy/insta
 cp -vr ../zlux-app-server/config/zlux.keystore.key ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/zlux.keystore.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 cp -vr ../zlux-app-server/config/apiml-localca.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
+cp -vr ../zlux-app-server/config/tomcat.xml ../zlux-app-server/deploy/instance/ZLUX/serverConfig
 
 cp -vr ../zlux-app-server/pluginDefaults/* ../zlux-app-server/deploy/instance/ZLUX/pluginStorage
 
