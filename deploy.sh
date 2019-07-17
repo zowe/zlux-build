@@ -33,6 +33,10 @@
 # Don't do permission changes in this script because final changes such as these happen after this script is executed
 # Such as, currently in zowe-runtime-authorize.sh
 
+rm -rf ../zlux-app-server/deploy/product/ZLUX/plugins
+rm -rf ../zlux-app-server/deploy/site/ZLUX/plugins
+rm -rf ../zlux-app-server/deploy/instance/ZLUX/plugins
+
 mkdir -p ../zlux-app-server/deploy/product
 mkdir -p ../zlux-app-server/deploy/product/ZLUX
 mkdir -p ../zlux-app-server/deploy/product/ZLUX/plugins
