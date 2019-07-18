@@ -150,6 +150,10 @@
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/bootstrap"/>
       <param name="buildType" value="build"/>
     </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-server-framework"/>
+      <param name="buildType" value="build"/>
+    </antcall>    
   </target>
   
   <target name="desktopBuild"><!--We could pass different args for virtual-desktop if we wanted-->
