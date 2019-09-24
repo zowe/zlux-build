@@ -28,7 +28,16 @@
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-shared/src/obfuscator"/>
       <param name="buildType" value="build"/>
-    </antcall>    
+    </antcall>
+    <antcall target="npmRunI18n">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+    </antcall>
+    <antcall target="npmRunI18n">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-settings-preferences/webClient"/>
+    </antcall>
+    <antcall target="npmRunI18n">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/app-prop-viewer/webClient"/>
+    </antcall>
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
     
@@ -193,6 +202,33 @@
       </not>
       <then>
         <fail message="Error with npm install in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+
+  <target name="npmRunI18n" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="cmd"
+          dir="${packagejson.Location}"
+          osfamily="windows"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="/c npm run i18n"/>
+    </exec>
+    <exec executable="npm"
+          dir="${packagejson.Location}"
+          osfamily="unix"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="run i18n"/>
+    </exec>
+
+    <echo message="Result of i18n in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm run i18 in ${packagejson.Location}" />
       </then>
     </if>
   </target>
