@@ -40,8 +40,10 @@
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
     <property name="productActions" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
     <property name="productRecognizers" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
+	<property name="productPlugins" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.bootstrap/plugins"/>
     <mkdir dir="${productActions}"/>
-    <mkdir dir="${productRecognizers}"/>    
+    <mkdir dir="${productRecognizers}"/>
+    <mkdir dir="${productPlugins}"/>
 
     <mkdir dir="${deploy}/site/ZLUX/plugins"/>
     <mkdir dir="${deploy}/site/ZLUX/pluginStorage"/>
