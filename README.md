@@ -4,8 +4,12 @@ this distribution, and is available at https://www.eclipse.org/legal/epl-v20.htm
 
 SPDX-License-Identifier: EPL-2.0
 
-Copyright Contributors to the Zowe Project.# zlux-build
-Repository for common build scripts among various superprojects
+Copyright Contributors to the Zowe Project.
+
+# zlux-build
+Repository for build scripts used for ease of building Zowe App Framework code as well as Apps that rely upon it.
+
+**To request features or report bugs, please use the issues page at the [zlux repo](https://github.com/zowe/zlux/issues) with the CI/CD tag**
 
 These scripts require at least version 1.9.1 of Apache Ant. ant-contrib is also required.
 
