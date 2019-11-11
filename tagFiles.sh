@@ -75,7 +75,9 @@ find . \( \
 \) -exec chtag -tc ISO8859-1 {} \;
 
 #UTF-8 files
-echo "Tagging files for UTF-8"
+#UTF-8 behavior seems broken. Best to leave these as binary instead.
+#echo "Tagging files for UTF-8"
+echo "Tagging files for UTF-8 as binary"
 
 find . \( \
 -iname "*.css" -o \
@@ -83,13 +85,7 @@ find . \( \
 -iname "*.html" -o \
 -iname "*.tsx" -o \
 -iname "*.xlf" \
-\) -exec chtag -tc ISO8859-1 {} \;
-
-
-find . \( \
--iname "*.xlf" \
 \) -exec chtag -b {} \;
-
 
 #Binary files
 echo "Tagging files for binary"
