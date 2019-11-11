@@ -104,7 +104,12 @@
   </target>
   
   <target name="buildPlugin" depends="antPlugin" unless="build.xmlRan">
-    <property name="absolutePlugin" location="${pluginDir}/${plugin}"/>
+    <condition property="absolute">
+      <matches string="${plugin}" pattern="^\/"/>
+    </condition>
+    <property name="plugin.directory" value="${pluginDir}/${plugin}" unless:set="absolute"/>
+    <property name="plugin.directory" value="${plugin}" if:set="absolute"/>
+    
     <if>
       <not>
         <or>
@@ -114,18 +119,18 @@
       </not>
       <then>
         <antcall target="npmInstall" unless:set="noInstall">
-          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+          <param name="packagejson.Location" value="${plugin.directory}"/>
         </antcall>
         <antcall target="npmBuild">
-          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+          <param name="packagejson.Location" value="${plugin.directory}"/>
           <param name="buildType" value="build"/>
         </antcall>
       </then>
     </if>
-  
+    
     <for param="subfolder">
       <path>
-        <dirset dir="${pluginDir}/${plugin}" includes="*"/>
+        <dirset dir="${plugin.directory}" includes="*"/>
       </path>
       <sequential>
         <antcall target="npmInstall" unless:set="noInstall">
