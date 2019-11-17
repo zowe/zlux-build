@@ -196,7 +196,7 @@ find . \( \
 -name *.JCL" -o \
 -name "*.sh" -o \
 -name "*.SH" \
-\) -exec sh -c "iconv -f iso8859-1 -t 1047 {} > {}.1047" \; -exec mv "{}".1047 "{}" \;
+\) -exec sh -c 'iconv -f iso8859-1 -t 1047 "$0" > "$0".1047' {} \; -exec sh -c 'mv "$0".1047 "$0"' {} \;
 
 #Ebcdic files
 echo "Tagging files for IBM-1047"
