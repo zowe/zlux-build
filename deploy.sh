@@ -33,51 +33,39 @@
 # Don't do permission changes in this script because final changes such as these happen after this script is executed
 # Such as, currently in zowe-runtime-authorize.sh
 
-rm -rf ../zlux-app-server/deploy/product/ZLUX/plugins
-rm -rf ../zlux-app-server/deploy/site/ZLUX/plugins
-rm -rf ../zlux-app-server/deploy/instance/ZLUX/plugins
+if [ -n WORKSPACE_DIR ]
+then
+  zlux_instance_dir=$WORKSPACE_DIR/app-server
+  zlux_site_dir=$WORKSPACE_DIR/app-server/site
+elif [ -n INSTANCE_DIR ]
+then
+  zlux_instance_dir=$INSTANCE_DIR/workspace/app-server
+  zlux_site_dir=$INSTANCE_DIR/workspace/app-server/site
+else
+  zlux_instance_dir=../zlux-app-server/deploy/instance
+  zlux_site_dir=../zlux-app-server/deploy/site
+fi
 
-mkdir -p ../zlux-app-server/deploy/product
-mkdir -p ../zlux-app-server/deploy/product/ZLUX
-mkdir -p ../zlux-app-server/deploy/product/ZLUX/plugins
-mkdir -p ../zlux-app-server/deploy/product/ZLUX/pluginStorage
-mkdir -p ../zlux-app-server/deploy/product/ZLUX/serverConfig
+zlux_users_dir=$zlux_instance_dir/users
+zlux_groups_dir=$zlux_instance_dir/groups  
+  
+mkdir -p ../zlux-app-server/defaults/plugins
+mkdir -p ../zlux-app-server/defaults/ZLUX/pluginStorage
+mkdir -p ../zlux-app-server/defaults/serverConfig
 
-mkdir -p ../zlux-app-server/deploy/site
-mkdir -p ../zlux-app-server/deploy/site/ZLUX
-mkdir -p ../zlux-app-server/deploy/site/ZLUX/plugins
-mkdir -p ../zlux-app-server/deploy/site/ZLUX/pluginStorage
-mkdir -p ../zlux-app-server/deploy/site/ZLUX/serverConfig
+mkdir -p $zlux_site_dir/plugins
+mkdir -p $zlux_site_dir/ZLUX/pluginStorage
+mkdir -p $zlux_site_dir/serverConfig
 
-mkdir -p ../zlux-app-server/deploy/instance
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/plugins
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/serverConfig
+mkdir -p $zlux_instance_dir/plugins
+mkdir -p $zlux_instance_dir/ZLUX/pluginStorage
+mkdir -p $zlux_instance_dir/serverConfig
 
-mkdir -p ../zlux-app-server/deploy/instance/users
-mkdir -p ../zlux-app-server/deploy/instance/groups
+mkdir -p $zlux_users_dir/ZLUX/pluginStorage
+mkdir -p $zlux_groups_dir/ZLUX/pluginStorage
 
-# MVD bootstrap
-cp -vr ../zlux-app-server/config/* ../zlux-app-server/deploy/product/ZLUX/serverConfig
-cp -vr ../zlux-app-server/plugins/*.json ../zlux-app-server/deploy/product/ZLUX/plugins
-cp -v ../zlux-app-server/plugins/*.json ../zlux-app-server/deploy/instance/ZLUX/plugins
-
-cp -vr ../zlux-app-server/config/zluxserver.json ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-cp -vr ../zlux-app-server/config/zlux.keystore.key ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-cp -vr ../zlux-app-server/config/zlux.keystore.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-cp -vr ../zlux-app-server/config/apiml-localca.cer ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-cp -vr ../zlux-app-server/config/tomcat.xml ../zlux-app-server/deploy/instance/ZLUX/serverConfig
-
-cp -vr ../zlux-app-server/pluginDefaults/* ../zlux-app-server/deploy/instance/ZLUX/pluginStorage
-
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions
-cp -v ../tn3270-ng2/_defaultTN3270.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.tn3270/sessions/_defaultTN3270.json
-
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt
-mkdir -p ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions
-cp -v ../vt-ng2/_defaultVT.json ../zlux-app-server/deploy/instance/ZLUX/pluginStorage/org.zowe.terminal.vt/sessions/_defaultVT.json
+cp -vr ../zlux-app-server/defaults/* $zlux_instance_dir/serverConfig
+cp -vr ../zlux-app-server/defaults/ZLUX/pluginStorage/* $zlux_instance_dir/ZLUX/pluginStorage
 # This program and the accompanying materials are
 # made available under the terms of the Eclipse Public License v2.0 which accompanies
 # this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
