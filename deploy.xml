@@ -42,9 +42,14 @@
     <mkdir dir="${siteActions}"/>
     <mkdir dir="${siteRecognizers}"/>
 
-    <mkdir dir="${instanceDir}/plugins"/>
+    <property name="serverConfig" value="${instanceDir}/ZLUX/serverConfig" unless:set="instanceMode"/>
+    <property name="serverConfig" value="${instanceDir}/serverConfig" if:set="instanceMode"/>
+    <property name="instancePlugins" value="${instanceDir}/ZLUX/plugins" unless:set="instanceMode"/>
+    <property name="instancePlugins" value="${instanceDir}/plugins" if:set="instanceMode"/>
+    
+    <mkdir dir="${instancePlugins}"/>
+    <mkdir dir="${serverConfig}"/>
     <mkdir dir="${instanceDir}/ZLUX/pluginStorage"/>
-    <mkdir dir="${instanceDir}/serverConfig"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
     <property name="instanceActions" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
     <property name="instanceRecognizers" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
@@ -54,14 +59,14 @@
     <mkdir dir="${instanceDir}/users"/>
     <mkdir dir="${instanceDir}/groups"/>
     <!-- # MVD bootstrap -->
-    <copy unless:set="isZos" todir="${instanceDir}/plugins">
+    <copy unless:set="isZos" todir="${instancePlugins}">
       <fileset dir="${pluginDir}" includes="*.json"/>
     </copy>
     <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${pluginDir}/*.json ${instanceDir}/plugins'"/>
+      <arg line="-c 'cp -pR ${pluginDir}/*.json ${instancePlugins}'"/>
     </exec>
     
-    <copy unless:set="isZos" todir="${instanceDir}/serverConfig">
+    <copy unless:set="isZos" todir="${serverConfig}">
       <fileset dir="${home}/defaults/serverConfig">
         <include name="server.json"/>
         <include name="zlux.keystore.cer"/>
@@ -77,7 +82,7 @@
                   ${home}/defaults/serverConfig/zlux.keystore.key
                   ${home}/defaults/serverConfig/apiml-localca.cer
                   ${home}/defaults/serverConfig/tomcat.xml
-                  ${instanceDir}/serverConfig'"/>
+                  ${serverConfig}'"/>
     </exec>
     <antcall target="traverse"/>
     <if>
@@ -94,9 +99,9 @@
       </then>
     </if>
 
-    <chmod unless:set="isWindows" dir="${instanceDir}/serverConfig" perm="750"/>
+    <chmod unless:set="isWindows" dir="${serverConfig}" perm="750"/>
     <chmod unless:set="isWindows" perm="640">
-      <fileset dir="${instanceDir}/serverConfig"/>
+      <fileset dir="${serverConfig}"/>
     </chmod>
   </target>
 
@@ -104,15 +109,14 @@
     <delete quiet="true" dir="${instanceDir}"/>
     <delete quiet="true" dir="${siteDir}"/>
     <delete quiet="true" includeEmptyDirs="true">
-      <fileset dir="${instanceDir}" includes="users/*/ZLUX, groups/*/ZLUX"/>
+      <fileset dir="${instanceDir}" includes="users/*, groups/*"/>
     </delete>
   </target>
   
   <target name="devClean">
-    <delete quiet="true" dir="${instanceDir}/plugins"/>
-    <delete quiet="true" dir="${siteDir}/plugins"/>
+    <delete quiet="true" dir="${instancePlugins}"/>
     <delete quiet="true" includeEmptyDirs="true">
-      <fileset dir="${instanceDir}" includes="users/*/ZLUX, groups/*/ZLUX"/>
+      <fileset dir="${instanceDir}" includes="users/*, groups/*"/>
     </delete>
   </target>
 </project>

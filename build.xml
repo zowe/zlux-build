@@ -17,7 +17,7 @@
   <property name="home" value="${zlux-app-server}"/>
   <property name="buildRel" value="zlux-build"/>
   <property name="build" value="${capstone}/zlux-build"/>
-  <condition name="instanceMode">
+  <condition property="instanceMode">
     <isset property="env.INSTANCE_DIR"/>
   </condition>
   <!-- instanceMode is the new standard, non-instanceMode is for compatibility -->
