@@ -104,7 +104,7 @@
   </target>
   
   <target name="buildPlugin" depends="antPlugin" unless="build.xmlRan">
-    <property name="absolutePlugin" location="${pluginDir}/${plugin}"/>
+    <property name="absolutePlugin" location="${capstone}/zlux-app-server/lib/${plugin}"/>
     <if>
       <not>
         <or>
@@ -114,10 +114,10 @@
       </not>
       <then>
         <antcall target="npmInstall" unless:set="noInstall">
-          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+          <param name="packagejson.Location" value="${capstone}/zlux-app-server/lib/${plugin}"/>
         </antcall>
         <antcall target="npmBuild">
-          <param name="packagejson.Location" value="${pluginDir}/${plugin}"/>
+          <param name="packagejson.Location" value="${capstone}/zlux-app-server/lib/${plugin}"/>
           <param name="buildType" value="build"/>
         </antcall>
       </then>
@@ -125,7 +125,7 @@
   
     <for param="subfolder">
       <path>
-        <dirset dir="${pluginDir}/${plugin}" includes="*"/>
+        <dirset dir="${capstone}/zlux-app-server/lib/${plugin}" includes="*"/>
       </path>
       <sequential>
         <antcall target="npmInstall" unless:set="noInstall">
