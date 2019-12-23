@@ -28,66 +28,47 @@
   </condition>
 
   <target name="deploy">
-    <delete quiet="true" dir="${deploy}/product/ZLUX/plugins"/>
-    <delete quiet="true" dir="${deploy}/instance/ZLUX/plugins"/>
-    <delete quiet="true" dir="${deploy}/site/ZLUX/plugins"/>
-    <delete quiet="true" includeEmptyDirs="true">
-      <fileset dir="${deploy}" includes="instance/users/*/ZLUX, instance/groups/*/ZLUX"/>
-    </delete>
-    <mkdir dir="${deploy}/product/ZLUX/plugins"/>
-    <mkdir dir="${deploy}/product/ZLUX/pluginStorage"/>
-    <mkdir dir="${deploy}/product/ZLUX/serverConfig"/>
+    <mkdir dir="${home}/defaults/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="productActions" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
-    <property name="productRecognizers" value="${deploy}/product/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
+    <property name="productActions" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="productRecognizers" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${productActions}"/>
     <mkdir dir="${productRecognizers}"/>    
 
-    <mkdir dir="${deploy}/site/ZLUX/plugins"/>
-    <mkdir dir="${deploy}/site/ZLUX/pluginStorage"/>
-    <mkdir dir="${deploy}/site/ZLUX/serverConfig"/>
+    <mkdir dir="${siteDir}/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="siteActions" value="${deploy}/site/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
-    <property name="siteRecognizers" value="${deploy}/site/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
+    <property name="siteActions" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="siteRecognizers" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${siteActions}"/>
     <mkdir dir="${siteRecognizers}"/>
 
-    <mkdir dir="${deploy}/instance/ZLUX/plugins"/>
-    <mkdir dir="${deploy}/instance/ZLUX/pluginStorage"/>
-    <mkdir dir="${deploy}/instance/ZLUX/serverConfig"/>
+    <property name="serverConfig" value="${instanceDir}/ZLUX/serverConfig" unless:set="instanceMode"/>
+    <property name="serverConfig" value="${instanceDir}/serverConfig" if:set="instanceMode"/>
+    <property name="instancePlugins" value="${instanceDir}/ZLUX/plugins" unless:set="instanceMode"/>
+    <property name="instancePlugins" value="${instanceDir}/plugins" if:set="instanceMode"/>
+    
+    <mkdir dir="${instancePlugins}"/>
+    <mkdir dir="${serverConfig}"/>
+    <mkdir dir="${instanceDir}/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
-    <property name="instanceActions" value="${deploy}/instance/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
-    <property name="instanceRecognizers" value="${deploy}/instance/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
+    <property name="instanceActions" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
+    <property name="instanceRecognizers" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${instanceActions}"/>
     <mkdir dir="${instanceRecognizers}"/> 
     
-    <mkdir dir="${deploy}/instance/users"/>
-    <mkdir dir="${deploy}/instance/groups"/>
+    <mkdir dir="${instanceDir}/users"/>
+    <mkdir dir="${instanceDir}/groups"/>
     <!-- # MVD bootstrap -->
-    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/serverConfig">
-      <fileset dir="${home}/config"/>
-    </copy>
-    <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${home}/config/ ${deploy}/product/ZLUX/serverConfig'"/>
-    </exec>
-
-    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/plugins">
+    <copy unless:set="isZos" todir="${instancePlugins}">
       <fileset dir="${pluginDir}" includes="*.json"/>
     </copy>
     <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${pluginDir}/*.json ${deploy}/product/ZLUX/plugins'"/>
-    </exec>
-
-    <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/plugins">
-      <fileset dir="${pluginDir}" includes="*.json"/>
-    </copy>
-    <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${pluginDir}/*.json ${deploy}/instance/ZLUX/plugins'"/>
+      <arg line="-c 'cp -pR ${pluginDir}/*.json ${instancePlugins}'"/>
     </exec>
     
-    <copy unless:set="isZos" todir="${deploy}/instance/ZLUX/serverConfig">
-      <fileset dir="${home}/config">
-        <include name="zluxserver.json"/>
+    <copy unless:set="isZos" todir="${serverConfig}">
+      <fileset dir="${home}/defaults/serverConfig">
+        <include name="server.json"/>
         <include name="zlux.keystore.cer"/>
         <include name="zlux.keystore.key"/>
         <include name="apiml-localca.cer"/>
@@ -96,23 +77,13 @@
     </copy>
     <exec if:set="isZos" executable="sh">
       <arg line="-c 'cp -pR
-                  ${home}/config/zluxserver.json
-                  ${home}/config/zlux.keystore.cer
-                  ${home}/config/zlux.keystore.key
-                  ${home}/config/apiml-localca.cer
-                  ${home}/config/tomcat.xml
-                  ${deploy}/instance/ZLUX/serverConfig'"/>
+                  ${home}/defaults/serverConfig/server.json
+                  ${home}/defaults/serverConfig/zlux.keystore.cer
+                  ${home}/defaults/serverConfig/zlux.keystore.key
+                  ${home}/defaults/serverConfig/apiml-localca.cer
+                  ${home}/defaults/serverConfig/tomcat.xml
+                  ${serverConfig}'"/>
     </exec>
-
-    <copy unless:set="isZos" todir="${deploy}/product/ZLUX/pluginStorage">
-      <fileset dir="${home}/pluginDefaults">
-         <include name="**/*"/>
-      </fileset>
-    </copy>
-    <exec if:set="isZos" executable="sh">
-      <arg line="-c 'cp -pR ${home}/pluginDefaults/ ${deploy}/product/ZLUX/pluginStorage'"/>
-    </exec>
-
     <antcall target="traverse"/>
     <if>
       <available file="../zss/bin/zssServer"/>
@@ -128,25 +99,25 @@
       </then>
     </if>
 
-    <chmod unless:set="isWindows" dir="${deploy}/instance/ZLUX/serverConfig" perm="750"/>
+    <chmod unless:set="isWindows" dir="${serverConfig}" perm="750"/>
     <chmod unless:set="isWindows" perm="640">
-      <fileset dir="${deploy}/instance/ZLUX/serverConfig"/>
+      <fileset dir="${serverConfig}"/>
     </chmod>
   </target>
 
   <target name="cleanDeploy">
-    <delete quiet="true" dir="${deploy}/product/ZLUX"/>
-    <delete quiet="true" dir="${deploy}/instance/ZLUX"/>
-    <delete quiet="true" dir="${deploy}/site/ZLUX"/>
+    <delete quiet="true" dir="${instanceDir}"/>
+    <delete quiet="true" dir="${siteDir}"/>
     <delete quiet="true" includeEmptyDirs="true">
-      <fileset dir="${deploy}" includes="instance/users/*/ZLUX, instance/groups/*/ZLUX"/>
+      <fileset dir="${instanceDir}" includes="users/*, groups/*"/>
     </delete>
   </target>
   
   <target name="devClean">
-    <delete quiet="true" dir="${deploy}/product"/>
-    <delete quiet="true" dir="${deploy}/instance/ZLUX/plugins"/>
-    <delete quiet="true" dir="${deploy}/site/ZLUX/plugins"/>
+    <delete quiet="true" dir="${instancePlugins}"/>
+    <delete quiet="true" includeEmptyDirs="true">
+      <fileset dir="${instanceDir}" includes="users/*, groups/*"/>
+    </delete>
   </target>
 </project>
 

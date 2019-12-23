@@ -17,8 +17,16 @@
   <property name="home" value="${zlux-app-server}"/>
   <property name="buildRel" value="zlux-build"/>
   <property name="build" value="${capstone}/zlux-build"/>
-  <property name="deploy" value="${zlux-app-server}/deploy"/>
+  <condition property="instanceMode">
+    <isset property="env.INSTANCE_DIR"/>
+  </condition>
+  <!-- instanceMode is the new standard, non-instanceMode is for compatibility -->
+  <property name="instanceDir" value="${zlux-app-server}/deploy/instance" unless:set="instanceMode"/>
+  <property name="siteDir" value="${zlux-app-server}/deploy/site" unless:set="instanceMode"/>
+  <property name="instanceDir" value="${env.INSTANCE_DIR}/workspace/app-server" if:set="instanceMode"/>
+  <property name="siteDir" value="${env.INSTANCE_DIR}/workspace/app-server/site" if:set="instanceMode"/>
 
+  
   <import file="common.xml" unless:set="version.date"/>
 
   <target name="buildAll" depends="deploy, build"/>
