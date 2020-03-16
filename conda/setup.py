@@ -38,7 +38,9 @@ with open('./plugin/pluginDefinition.json', 'r') as f:
   buildnumber=os.getenv('ZLUX_BUILD_NUMBER')
       
   if (sys.platform != 'zos'):
-    noarch="noarch: generic"
+    noarch="  noarch: generic"
+  else:
+    noarch="# zos build"
 
   setup(name=pluginDef['identifier'],
         version=pluginDef['pluginVersion'],

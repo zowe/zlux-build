@@ -18,7 +18,8 @@ source:
 build:
   number: "{{ data.get('buildnumber') }}"
   string: "zowe"
-  {{ data.get('noarch') }}
+{{ data.get('noarch') }}
+
 #  features:
 #    - zowe
 
