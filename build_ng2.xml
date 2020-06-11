@@ -29,14 +29,32 @@
       <param name="packagejson.Location" value="${capstone}/zlux-shared/src/obfuscator"/>
       <param name="buildType" value="build"/>
     </antcall>
+
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/admin-notification-app/webClient"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/admin-notification-app/webClient"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+
     <antcall target="npmRunI18n">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
-    </antcall>
-    <antcall target="npmRunI18n">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-settings-preferences/webClient"/>
-    </antcall>
-    <antcall target="npmRunI18n">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/app-prop-viewer/webClient"/>
     </antcall>
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
