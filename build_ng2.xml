@@ -53,6 +53,22 @@
       <param name="buildType" value="build"/>
     </antcall>
 
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-generator/webClient"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-generator/webClient"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-generator/nodeServer"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-generator/nodeServer"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+
+    
     <antcall target="npmRunI18n">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
     </antcall>
