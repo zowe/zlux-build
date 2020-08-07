@@ -26,6 +26,6 @@ build:
 about:
   home: "{{ data.get('homepage') }}"
   license: "{{ data.get('license') }}"
-  license_file: "LICENSE"
+#  license_file: "LICENSE"
   summary: "{{ data.get('description') }}"
   doc_url: "https://docs.zowe.org"

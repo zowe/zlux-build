@@ -7,12 +7,9 @@ REM SPDX-License-Identifier: EPL-2.0
 REM 
 REM Copyright Contributors to the Zowe Project.
 
+REM /plugins is a primary location for plugins of a component. Secondarily, /components/componentname/plugins
 
-if not exist %PREFIX%\share\zowe\app-server\zlux-app-server\defaults\plugins mkdir %PREFIX%\share\zowe\app-server\zlux-app-server\defaults\plugins
-echo '{"identifier":"%PKG_NAME%","pluginLocation":"%PREFIX%/share/zowe/app-server/plugins/%PKG_NAME%/%PKG_VERSION%"}' ^
-     > %PREFIX%\share\zowe\app-server\zlux-app-server\defaults\plugins\%PKG_NAME%.json
-
-if not exist %PREFIX%\share\zowe\app-server\plugins\%PKG_NAME%\%PKG_VERSION% mkdir %PREFIX%\share\zowe\app-server\plugins\%PKG_NAME%\%PKG_VERSION%
-robocopy %SRC_DIR% %PREFIX%\share\zowe\app-server\plugins\%PKG_NAME%\%PKG_VERSION% * /E > nul
+if not exist %PREFIX%\opt\zowe\plugins\app-server\%PKG_NAME% mkdir %PREFIX%\opt\zowe\plugins\app-server\%PKG_NAME%
+robocopy %SRC_DIR% %PREFIX%\opt\zowe\plugins\app-server\%PKG_NAME% * /E > nul
 
 exit 0
