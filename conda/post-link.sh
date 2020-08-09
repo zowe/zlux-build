@@ -76,3 +76,4 @@ fi
 
 # Here: plugins for other components can potentially be auto-installed
 
+# TODO: Print a warning if zos folder seen but not running on zos
