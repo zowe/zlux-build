@@ -8,56 +8,63 @@
 # 
 # Copyright Contributors to the Zowe Project.
 
+# Available env vars:
+# PREFIX - The location you must copy content to be included into the package
+# PKG_NAME - The name of your package as seen by a user
+# PKG_VERSION - The version, as seen by a user
+# PKG_BUILDNUM - The build number, can be used to distinguish patches by the user
+
+
 # /plugins is a primary location for plugins of a component. Secondarily, /components/componentname/plugins
+# PKG_NAME should be meaningful in the case that multiple plugin dirs (app, cli, apiml) exist within.
+zowe_plugins=$PREFIX/opt/zowe/plugins
+app_plugin_dir=$zowe_plugins/app-server/$PKG_NAME
+cli_plugin_dir=$zowe_plugins/cli/$PKG_NAME
+apiml_plugin_dir=$zowe_plugins/api-mediation/$PKG_NAME
+# Special case: zos isnt a component, just a way to make clear what must be put onto zos
+zos_content_dir=$zowe_plugins/zos/$PKG_NAME
 
-destination=$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME
-mkdir -p $destination
-cp -r ${SRC_DIR}/* $destination
-cd $destination
-rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
+# In the case that the structure of https://github.com/zowe/zowe-install-packaging/issues/1569 is not followed
+# Then this is assuming it's an app framework plugin.
+if [ -e "${SRC_DIR}/pluginDefinition.json" ]
+then
+    mkdir -p $app_dir
+    cp -r ${SRC_DIR}/* $app_dir
+    cd $app_dir
+    rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
 
-#mkdir -p "${PREFIX}/etc/conda/activate.d"
-#mkdir -p "${PREFIX}/etc/conda/deactivate.d"
-#cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/${PKG_NAME}_activate.sh"
-#cp "${RECIPE_DIR}/activate.bat" "${PREFIX}/etc/conda/activate.d/${PKG_NAME}_activate.bat"
-#cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/${PKG_NAME}_deactivate.sh"
-#cp "${RECIPE_DIR}/deactivate.bat" "${PREFIX}/etc/conda/deactivate.d/${PKG_NAME}_deactivate.bat"
+# Otherwise, if it is following the scheme, here's some hardcoded components that may have content
+else
+    if [ -d "${SRC_DIR}/app-server" ]; then
+        mkdir -p $app_plugin_dir
+        cp -r ${SRC_DIR}/app-server/* $app_plugin_dir
+        cd $app_plugin_dir
+        rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
+    fi
+    if [ -d "${SRC_DIR}/cli" ]; then
+        mkdir -p $cli_plugin_dir
+        cp -r ${SRC_DIR}/cli/* $cli_plugin_dir
+    fi
+    if [ -d "${SRC_DIR}/api-mediation" ]; then
+        mkdir -p $apiml_plugin_dir
+        cp -r ${SRC_DIR}/api-mediation/* $apiml_plugin_dir
+    fi
+# TODO: Is there more to do here for the case of zos content, or is that an install-time concern?
+    if [ -d "${SRC_DIR}/zos" ]; then
+        mkdir -p $zos_content_dir
+        cp -r ${SRC_DIR}/zos/* $zos_content_dir
+    fi
+fi
 
-#mkdir -p "${PREFIX}/bin"
-#cp "${RECIPE_DIR}/post-link.sh" "${PREFIX}/bin/.${PKG_NAME}-post-link.sh"
-#cp "${RECIPE_DIR}/pre-unlink.sh" "${PREFIX}/bin/.${PKG_NAME}-pre-unlink.sh"
+# If present in the same directory as this file, if pre-link, post-link, or pre-unlink .sh or .bat
+# Files are present, then they will be copied into this package and assist with automation on end user device
 
-#
-#for CHANGE in "activate" "deactivate"
-#do
-#    mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-#    cp "${RECIPE_DIR}/${CHANGE}.sh" "${PREFIX}/etc/conda/${CHANGE}.d/${PKG_NAME}_${CHANGE}.sh"
-#done
-#
-#
-# bin/.<name>-<action>.sh
-# bin/.org.zowe.blah-pre-link.sh
-#
-#
 # pre-link---Executed before the package is installed. An error is indicated by a nonzero exit and causes conda to stop and causes the installation to fail.
 #
 # post-link---Executed after the package is installed. An error is indicated by a nonzero exist and causes installation to fail. If there is an error, conda does not write any package metadata.
 #
 # pre-unlink---Executed before the package is removed. An error is indicated by a nonzero exist and causes the removal to fail.
 #
-# PREFIX
-# The install prefix.
-# PKG_NAME
-#
-#
-# The name of the package.
-# PKG_VERSION
-# The version of the package.
-#
-# PKG_BUILDNUM
-# The build number of the package.
-#
-
 
 
 exit 0

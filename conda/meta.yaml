@@ -8,6 +8,13 @@
 # 
 # Copyright Contributors to the Zowe Project.
 
+
+# This example is opinionated toward getting metata from an app framework plugin
+# That is not required, and you can write your own meta.yaml instead.
+# But for consistency if your package is for multiple zowe components
+# You should ensure that all metadata for the different components is related
+# So that end users can see the relationship.
+
 package:
   name: "{{ data.get('name')|lower }}"
   version: "{{ data.get('version') }}"
