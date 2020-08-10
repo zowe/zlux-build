@@ -1,13 +1,5 @@
 #!/bin/sh
 
-# This program and the accompanying materials are
-# made available under the terms of the Eclipse Public License v2.0 which accompanies
-# this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-# 
-# SPDX-License-Identifier: EPL-2.0
-# 
-# Copyright Contributors to the Zowe Project.
-
 if [ -d "${ZOWE_WORKSPACE_DIR}/app-server/ZLUX" ]; then
   ZOWE_INST=${ZOWE_WORKSPACE_DIR}/../
 elif [ -e "${ZOWE_INSTANCE_DIR}/workspace/app-server/ZLUX" ]; then
@@ -18,7 +10,18 @@ elif [ -e "${INSTANCE_DIR}/workspace/app-server/ZLUX" ]; then
   ZOWE_INST=${INSTANCE_DIR}
 fi
 
-if [ -e "${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json" ]; then
-  location=$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME node -e "const fs=require('fs'); const content=require('${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json'); if (content.pluginLocation == '${location}') { fs.unlinkSync('${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json'); }" > $PREFIX/.messages.txt
+if [ -n "$NODE_HOME" ]
+then
+  NODE_BIN=${NODE_HOME}/bin/node
+else
+  NODE_BIN=node
+fi
+
+package_location=$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME
+json_location=${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json
+
+if [ -e "${json_location}" ]; then
+  _BPXK_AUTOCVT=ON _TAG_REDIR_ERR=txt _TAG_REDIR_IN=txt _TAG_REDIR_OUT=txt __UNTAGGED_READ_MODE=V6 \
+  ${NODE_BIN} -e "const fs=require('fs'); const content=require('${json_location}'); if (content.pluginLocation == '${package_location}') { fs.unlinkSync('${json_location}'); }" > $PREFIX/.messages.txt
 fi
 
