@@ -9,6 +9,11 @@
 
 # /plugins is a primary location for plugins of a component. Secondarily, /components/componentname/plugins
 # PKG_NAME should be meaningful in the case that multiple plugin dirs (app, cli, apiml) exist within.
+# If your package includes multiple plugins for a type (such as 2 app framework plugins),
+# There are different solutions but you may wish to either place common utilities outside the below variables,
+# While keeping the plugins within these below locations, in a 1-plugin-per-directory scheme
+# To maintain consistency with other plugins.
+
 zowe_plugins=$PREFIX/opt/zowe/plugins
 app_plugin_dir=$zowe_plugins/app-server/$PKG_NAME
 cli_plugin_dir=$zowe_plugins/cli/$PKG_NAME
@@ -20,9 +25,9 @@ zos_content_dir=$zowe_plugins/zos/$PKG_NAME
 # Then this is assuming it's an app framework plugin.
 if [ -e "${SRC_DIR}/pluginDefinition.json" ]
 then
-    mkdir -p $app_dir
-    cp -r ${SRC_DIR}/* $app_dir
-    cd $app_dir
+    mkdir -p $app_plugin_dir
+    cp -r ${SRC_DIR}/* $app_plugin_dir
+    cd $app_plugin_dir
     rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
 
 # Otherwise, if it is following the scheme, here's some hardcoded components that may have content
