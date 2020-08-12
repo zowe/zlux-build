@@ -8,6 +8,9 @@ elif [ -e "${WORKSPACE_DIR}/app-server/ZLUX" ]; then
   ZOWE_INST=${WORKSPACE_DIR}/../
 elif [ -e "${INSTANCE_DIR}/workspace/app-server/ZLUX" ]; then
   ZOWE_INST=${INSTANCE_DIR}
+elif [ -d "${HOME}/.zowe/workspace/app-server" ]; then
+    echo "Warning: Using fallback default location for zowe instance of ~/.zowe" >> $PREFIX/.messages.txt
+    ZOWE_INST=${HOME}/.zowe
 fi
 
 if [ -n "$NODE_HOME" ]
@@ -17,7 +20,7 @@ else
   NODE_BIN=node
 fi
 
-package_location=$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME
+package_location=$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server
 json_location=${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json
 
 if [ -e "${json_location}" ]; then

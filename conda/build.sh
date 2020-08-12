@@ -15,43 +15,54 @@
 # To maintain consistency with other plugins.
 
 zowe_plugins=$PREFIX/opt/zowe/plugins
-app_plugin_dir=$zowe_plugins/app-server/$PKG_NAME
-cli_plugin_dir=$zowe_plugins/cli/$PKG_NAME
-apiml_plugin_dir=$zowe_plugins/api-mediation/$PKG_NAME
-# Special case: zos isnt a component, just a way to make clear what must be put onto zos
-zos_content_dir=$zowe_plugins/zos/$PKG_NAME
+pkg_dir=$zowe_plugins/$PKG_NAME
 
-# In the case that the structure of https://github.com/zowe/zowe-install-packaging/issues/1569 is not followed
-# Then this is assuming it's an app framework plugin.
-if [ -e "${SRC_DIR}/pluginDefinition.json" ]
-then
-    mkdir -p $app_plugin_dir
-    cp -r ${SRC_DIR}/* $app_plugin_dir
-    cd $app_plugin_dir
-    rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
-
-# Otherwise, if it is following the scheme, here's some hardcoded components that may have content
-else
-    if [ -d "${SRC_DIR}/app-server" ]; then
-        mkdir -p $app_plugin_dir
-        cp -r ${SRC_DIR}/app-server/* $app_plugin_dir
-        cd $app_plugin_dir
+function packageByFolder {
+    # In the case that the structure of https://github.com/zowe/zowe-install-packaging/issues/1569 is not followed
+    # Then this is assuming it's an app framework plugin.
+    if [ -e "$1/pluginDefinition.json" ]
+    then
+        mkdir -p $2/app-server
+        cp -r $1/* $2/app-server
+        cd $2/app-server
         rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
+        # Otherwise, if it is following the scheme, here's some hardcoded components that may have content
+    else
+        if [ -d "$1/app-server" ]; then
+            mkdir -p $2/app-server
+            cp -r $1/app-server/* $2/app-server
+            cd $2/app-server
+            rm -f build_env_setup.sh conda_build.sh metadata_conda_debug.yaml *.ppf
+        fi
+        if [ -d "$1/cli" ]; then
+            mkdir -p $2/cli
+            cp -r $1/cli/* $2/cli
+        fi
+        if [ -d "$1/api-mediation" ]; then
+            mkdir -p $2/api-mediation
+            cp -r $1/api-mediation/* $2/api-mediation
+        fi
+        # TODO: Is there more to do here for the case of zos content, or is that an install-time concern?
+        if [ -d "$1/zos" ]; then
+            #special case: zos isnt a component, just a folder to alert that zos code is needed to be installed
+            mkdir -p $2/zos
+            cp -r $1/zos/* $2/zos
+        fi
     fi
-    if [ -d "${SRC_DIR}/cli" ]; then
-        mkdir -p $cli_plugin_dir
-        cp -r ${SRC_DIR}/cli/* $cli_plugin_dir
-    fi
-    if [ -d "${SRC_DIR}/api-mediation" ]; then
-        mkdir -p $apiml_plugin_dir
-        cp -r ${SRC_DIR}/api-mediation/* $apiml_plugin_dir
-    fi
-# TODO: Is there more to do here for the case of zos content, or is that an install-time concern?
-    if [ -d "${SRC_DIR}/zos" ]; then
-        mkdir -p $zos_content_dir
-        cp -r ${SRC_DIR}/zos/* $zos_content_dir
-    fi
+}
+
+
+packageByFolder ${SRC_DIR} ${pkg_dir}
+
+if [ ! -d "${pkg_dir}" ]; then
+    for D in `find . -maxdepth 1 type -d printf %f\\\\n`
+    do
+        packageByFolder ${SRC_DIR}/$D ${pkg_dir}/$D
+    done
 fi
+
+
+# It's fine to copy an entire source directory into $zowe_plugins, but the above is explicit to be educational
 
 # If present in the same directory as this file, if pre-link, post-link, or pre-unlink .sh or .bat
 # Files are present, then they will be copied into this package and assist with automation on end user device

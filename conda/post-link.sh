@@ -48,21 +48,22 @@ echo "Finding instance... ZOWE_INST=${ZOWE_INST}, ZOWE_INSTANCE_DIR=${ZOWE_INSTA
 
 # Relevant environment variables hopefully exist by this time.
 # Here we determing if any automatic actions can be taken, based on what the package contains.
-
-if [ -e "$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME/autoinstall.sh" ]; then
+if [ -e "$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server/autoinstall.sh" ]; then
     #autoinstall script exists, try it.
     #Map environment variables in a way that is package manager neutral, in case scripts are reused outside of conda
-    INSTANCE_DIR=$ZOWE_INST ZLUX_ROOT=$ZLUX_ROOT APP_PLUGIN_DIR=$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME $PREFIX/opt/zowe/plugins/app-server/$PKG_NAME/autoinstall.sh
-elif [ -d "$PREFIX/opt/zowe/plugins/app-server/$PKG_NAME" ]; then
+    INSTANCE_DIR=$ZOWE_INST ZLUX_ROOT=$ZLUX_ROOT APP_PLUGIN_DIR=$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server $PREFIX/opt/zowe/plugins/$PKG_NAME/app-server/autoinstall.sh
+elif [ -d "$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server" ]; then
     if [ -e "${ZOWE_INST}/bin/install-app.sh" ]; then
         # TODO reconsider if this is safe or will cause end-user confusion when configuration is required
-        ${ZOWE_INST}/bin/install-app.sh $PREFIX/opt/zowe/plugins/app-server/$PKG_NAME >> $PREFIX/.messages.txt
+        ${ZOWE_INST}/bin/install-app.sh $PREFIX/opt/zowe/plugins/$PKG_NAME/app-server >> $PREFIX/.messages.txt
     elif [ -e "${ZLUX_ROOT}/zlux-app-server/bin/install-app.sh" ]; then
         if [ -n ${ZOWE_INST} ]; then
-            ${ZLUX_ROOT}/zlux-app-server/bin/install-app.sh $PREFIX/opt/zowe/plugins/app-server/$PKG_NAME >> $PREFIX/.messages.txt
+            ${ZLUX_ROOT}/zlux-app-server/bin/install-app.sh $PREFIX/opt/zowe/plugins/$PKG_NAME/app-server >> $PREFIX/.messages.txt
         else
-            echo "${PKG_NAME} not registered to Zowe because no instance found. To manually install, run INSTANCE_DIR/bin/install-app.sh $PREFIX/opt/zowe/plugins/app-server/$PKG_NAME" >> ${PREFIX}/.messages.txt
+            echo "${PKG_NAME} not registered to Zowe because no instance found. To manually install, run INSTANCE_DIR/bin/install-app.sh $PREFIX/opt/zowe/plugins/$PKG_NAME/app-server" >> ${PREFIX}/.messages.txt
         fi
+    else
+        echo "${PKG_NAME} not registered to Zowe because no instance found. To manually install, run INSTANCE_DIR/bin/install-app.sh $PREFIX/opt/zowe/plugins/$PKG_NAME/app-server" >> ${PREFIX}/.messages.txt
     fi
 fi
 
