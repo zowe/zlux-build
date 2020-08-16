@@ -20,6 +20,9 @@ else
   NODE_BIN=node
 fi
 
+# TODO this section only handles app-server plugins. Consult the api-mediation and cli Zowe community and
+# Documentation to learn what should be done for those types of plugins
+
 package_location=$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server
 json_location=${ZOWE_INST}/workspace/app-server/plugins/${PKG_NAME}.json
 

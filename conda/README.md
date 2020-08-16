@@ -1,21 +1,21 @@
 # Conda for Package Managment of Zowe Plugins
 
 As Zowe is composed of components which can be extended by plugins, 
-A standardized and simple way to find, install, upgrade, and list plugins in your Zowe environment
-Is important to make it easy to get the most out of Zowe.
+a standardized and simple way to find, install, upgrade, and list plugins in your Zowe environment
+is important to make it easy to get the most out of Zowe.
 
 Package management as a concept generally provides a way to find packages such as plugins,
-Check and possible co-install dependencies the package has, and ultimately install the desired package.
+check and possible co-install dependencies the package has, and ultimately install the desired package.
 Post-install, management tasks such as upgrading and uninstalling are common.
 
 Conda is one such package manager, and if you are familiar with apt, yum, or npm, you will find
-That using conda is very similar. But, there are some important abilities that make conda stand out:
+that using Conda is very similar. But, there are some important abilities that make Conda stand out:
 
-* Very cross platform: Conda is available, and acts very similar on z/OS, Windows, Linux, mac OS, and various Unix.
+* Very cross platform: Conda is available, and acts very similar on z/OS, Windows, Linux, macOS, and various Unix.
                        Packages can state which platforms they support, so it easy to know what packages you can install.
-* Tagging: On z/OS, conda packages can contain tagging information, to avoid issues around the difference between EBCDIC & ASCII
+* Tagging: On z/OS, Conda packages can contain tagging information, to avoid issues around the difference between EBCDIC & ASCII.
 * Software neutrality: Language-specific package managers are becoming popular, but Conda does not assume the purpose of the package, so you can install most anything.
-* Environments: If desired, every user can have a different set of packages, because conda can install & manage packages in personal folders instead of system ones.
+* Environments: If desired, every user can have a different set of packages, because Conda can install & manage packages in personal folders instead of system ones.
                 A user can even have multiple such environments, and switch between them rapidly to work with different sets of related software without conflict.
 
 
@@ -26,11 +26,11 @@ For Linux, Unix, and Windows, this can be downloaded at https://docs.conda.io/en
 For z/OS, Conda can be downloaded from Rocket Software at https://www.rocketsoftware.com/zos-open-source
 
 Conda will prompt during the install for certain setup options, 
-And ultimately you'll want to put some conda initialization content into your startup script
-So that whenever you open your terminal, conda will be ready for your use.
+and ultimately you'll want to put some Conda initialization content into your startup script
+so that whenever you open your terminal, Conda will be ready for your use.
 
-Once you have conda downloaded and installed, you'll want to create your first conda "environment"
-This can be done by providing a path or a nickname
+Once you have Conda downloaded and installed, you'll want to create your first Conda "environment"
+this can be done by providing a path or a nickname
 
 `conda create --prefix PATH`
 `conda create --name ENVIRONMENT`
@@ -49,7 +49,7 @@ Once you have an environment, you should activate it so that the actions you do 
 
 Conda will detect whether the parameter is a path or a nickname, so this command works for both.
 
-Finally, you can view the conda environment and other information by checking "info"
+Finally, you can view the Conda environment and other information by checking "info"
 `conda info`
 
 ## Managing Conda Channels
@@ -67,15 +67,15 @@ You can have multiple of each, and if a package is present in more than one loca
 ## Searching for Packages
 
 Conda has a search utility that checks all the Channels, but it's important to note that because any type of software
-Can be installed through Conda, that you probably want to search through the details to help identify which ones are meant for Zowe,
-Or use Channels that are distinctly for Zowe so that you can get packages that are strictly for Zowe.
+can be installed through Conda, that you probably want to search through the details to help identify which ones are meant for Zowe,
+or use Channels that are distinctly for Zowe so that you can get packages that are strictly for Zowe.
 
 `conda search anything_you_want`
 `conda search --info this_gives_more_details`
 
 ## Using Conda with Zowe
 
-Zowe is not yet available in the form of conda packages yet, so it must be installed separately.
+Zowe is not yet available in the form of Conda packages yet, so it must be installed separately.
 If you have Zowe installed on the same system as Conda, some Zowe plugins installed through Conda will automatically register into Zowe.
 In order to do this, the plugins must be able to find Zowe. You should set environment variables before trying to install the plugins:
 
@@ -152,7 +152,7 @@ This information can be programmatically found, and Zowe provides examples of ho
 
 ### Creating Build Step
 It's recommended not to build your code from scratch to put into Conda.
-Rather, build your code however you want, and then just copy the contents into a conda package. This keeps the Conda scripting small and simple.
+Rather, build your code however you want, and then just copy the contents into a Conda package. This keeps the Conda scripting small and simple.
 
 In the same folder as `meta.yaml`, Conda requires `build.sh` for building on Unix, Linux, or z/OS and `build.bat` for Windows.
 Except for z/OS, this script does not determine where your package can be used, it's just about where you are building it.
@@ -179,11 +179,11 @@ However, it's possible to do what you want in your own `post-link.sh` script ins
 #### Uninstall automation
 `pre-unlink.sh` is the opposite of `post-link.sh`. It allows you to do anything you need to before the package is removed from the system.
 This is a good time to remove any package information from Zowe, but you should be careful because users may uninstall and later re-install,
-So you should not remove configuration information without consent.
+so you should not remove configuration information without consent.
 
 ### Adding Configuration to Conda Packages
 As a package manager, Conda is not responsible for configuration. Your packages can include defaults to utilize, 
-But if configuration is needed you should alert the user to perform a post-install task. `post-link.sh` could be used to print such an alert.
+but if configuration is needed you should alert the user to perform a post-install task. `post-link.sh` could be used to print such an alert.
 
 
 

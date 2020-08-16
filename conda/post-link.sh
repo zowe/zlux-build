@@ -46,6 +46,9 @@ fi
 echo "Finding instance... ZOWE_INST=${ZOWE_INST}, ZOWE_INSTANCE_DIR=${ZOWE_INSTANCE_DIR}, INSTANCE_DIR=${INSTANCE_DIR}, ZOWE_WORKSPACE_DIR=${ZOWE_WORKSPACE_DIR}, WORKSPACE_DIR=${WORKSPACE_DIR}" >> $PREFIX/.messages.txt
 
 
+# TODO this section only handles app-server plugins. Consult the api-mediation and cli Zowe community and
+# Documentation to learn what should be done for those types of plugins
+
 # Relevant environment variables hopefully exist by this time.
 # Here we determing if any automatic actions can be taken, based on what the package contains.
 if [ -e "$PREFIX/opt/zowe/plugins/$PKG_NAME/app-server/autoinstall.sh" ]; then

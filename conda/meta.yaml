@@ -1,10 +1,10 @@
 {% set data = load_setup_py_data(setup_file='./setup.py', from_recipe_dir=True) %}
 
-# This example is opinionated toward getting metata from an app framework plugin
-# That is not required, and you can write your own meta.yaml instead.
+# This example is opinionated toward getting metadata from an app framework plugin
+# that is not required, and you can write your own meta.yaml instead.
 # But for consistency if your package is for multiple zowe components
-# You should ensure that all metadata for the different components is related
-# So that end users can see the relationship.
+# you should ensure that all metadata for the different components is related
+# so that end users can see the relationship.
 
 package:
   name: "{{ data.get('name')|lower }}"
