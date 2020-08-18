@@ -1,7 +1,7 @@
 # Conda for Package Managment of Zowe Plugins
 
-As Zowe is composed of components which can be extended by plugins, 
-a standardized and simple way to find, install, upgrade, and list plugins in your Zowe environment
+As Zowe is composed of components which can be extended by Plugins, 
+a standardized and simple way to find, install, upgrade, and list Plugins in your Zowe environment
 is important to make it easy to get the most out of Zowe.
 
 Package management as a concept generally provides a way to find packages such as plugins,
@@ -14,7 +14,7 @@ that using Conda is very similar. But, there are some important abilities that m
 * Very cross platform: Conda is available, and acts very similar on z/OS, Windows, Linux, macOS, and various Unix.
                        Packages can state which platforms they support, so it easy to know what packages you can install.
 * Tagging: On z/OS, Conda packages can contain tagging information, to avoid issues around the difference between EBCDIC & ASCII.
-* Software neutrality: Language-specific package managers are becoming popular, but Conda does not assume the purpose of the package, so you can install most anything.
+* Software neutrality: Language-specific package managers are becoming popular, but Conda does not assume the purpose of the package, so you can install almost anything.
 * Environments: If desired, every user can have a different set of packages, because Conda can install & manage packages in personal folders instead of system ones.
                 A user can even have multiple such environments, and switch between them rapidly to work with different sets of related software without conflict.
 
@@ -22,7 +22,7 @@ that using Conda is very similar. But, there are some important abilities that m
 ## Initial Conda Setup
 
 If you have not installed Conda yet, it can be downloaded as an all-in-one package that has no extra dependencies, known as "miniconda".
-For Linux, Unix, and Windows, this can be downloaded at https://docs.conda.io/en/latest/miniconda.html
+For Linux, Unix, macOS, and Windows, this can be downloaded at https://docs.conda.io/en/latest/miniconda.html
 For z/OS, Conda can be downloaded from Rocket Software at https://www.rocketsoftware.com/zos-open-source
 
 Conda will prompt during the install for certain setup options, 
@@ -50,6 +50,7 @@ Once you have an environment, you should activate it so that the actions you do 
 Conda will detect whether the parameter is a path or a nickname, so this command works for both.
 
 Finally, you can view the Conda environment and other information by checking "info"
+
 `conda info`
 
 ## Managing Conda Channels
@@ -66,18 +67,19 @@ You can have multiple of each, and if a package is present in more than one loca
 
 ## Searching for Packages
 
-Conda has a search utility that checks all the Channels, but it's important to note that because any type of software
-can be installed through Conda, that you probably want to search through the details to help identify which ones are meant for Zowe,
-or use Channels that are distinctly for Zowe so that you can get packages that are strictly for Zowe.
+Conda has a search utility that searches for all Channels,
 
 `conda search anything_you_want`
-`conda search --info this_gives_more_details`
+
+but it's important to note that because any type of software can be installed through Conda, you probably want to search through a detailed view to help identify which ones are meant for Zowe, or use Channels that are distinctly for Zowe so that you can get packages that are strictly for Zowe.
+
+`conda search --info anything_you_want`
 
 ## Using Conda with Zowe
 
 Zowe is not yet available in the form of Conda packages yet, so it must be installed separately.
-If you have Zowe installed on the same system as Conda, some Zowe plugins installed through Conda will automatically register into Zowe.
-In order to do this, the plugins must be able to find Zowe. You should set environment variables before trying to install the plugins:
+If you have Zowe installed on the same system as Conda, some Zowe Plugins installed through Conda will automatically register into Zowe.
+In order to do this, the Plugins must be able to find Zowe. You should set environment variables before trying to install the Plugins:
 
 ### Setting environment variables temporarily:
 z/OS, Linux, Unix:
@@ -105,11 +107,11 @@ Try typing 'environment variable' into the Windows search bar to get to the rele
 ### Installing a Zowe Plugin
 
 A Conda package could contain one or more Zowe Plugins, and a Conda package could contain non-Zowe code alongside Zowe Plugins.
-This is left up to the program vendor, and regardless the install process is the same:
+This is left up to the program vendor and regardless the install process is the same:
 
 `conda install package_name`
 
-If the Zowe environment variables are set, such a package may automatically register plugins into the Zowe instance of your choice.
+If the Zowe environment variables are set, such a package may automatically register Plugins into the Zowe instance of your choice.
 
 ### Zowe Plugin Configuration
 
@@ -119,7 +121,7 @@ Zowe Plugins are intended to be found in a standardized location in the Conda en
 
 `/opt/zowe/plugins`
 
-This folder contains plugins, which in turn contain sub-folders that are the Zowe components that they utilize.
+This folder contains Plugins, which in turn contain sub-folders that are the Zowe components that they utilize.
 If a plugin uses multiple Zowe components, its contents could be found within multiple component folders.
 
 `/opt/zowe/plugins/my_plugin/app-server`
