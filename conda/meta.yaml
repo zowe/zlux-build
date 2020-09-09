@@ -1,12 +1,10 @@
 {% set data = load_setup_py_data(setup_file='./setup.py', from_recipe_dir=True) %}
 
-# This program and the accompanying materials are
-# made available under the terms of the Eclipse Public License v2.0 which accompanies
-# this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-# 
-# SPDX-License-Identifier: EPL-2.0
-# 
-# Copyright Contributors to the Zowe Project.
+# This example is opinionated toward getting metadata from an app framework plugin
+# that is not required, and you can write your own meta.yaml instead.
+# But for consistency if your package is for multiple zowe components
+# you should ensure that all metadata for the different components is related
+# so that end users can see the relationship.
 
 package:
   name: "{{ data.get('name')|lower }}"
@@ -26,6 +24,6 @@ build:
 about:
   home: "{{ data.get('homepage') }}"
   license: "{{ data.get('license') }}"
-  license_file: "LICENSE"
+#  license_file: "LICENSE"
   summary: "{{ data.get('description') }}"
   doc_url: "https://docs.zowe.org"
