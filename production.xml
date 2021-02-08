@@ -41,6 +41,7 @@
 	  
     <ant antfile="build.xml" dir="${capstone}/../dist/${buildRel}" inheritAll="false">
       <target name="deploy"/>
+	  <target name="test"/>
       <target name="build"/>
       <target name="removeSource"/>
       <property name="plugins" value="${plugins}"/>
