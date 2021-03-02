@@ -34,7 +34,11 @@
   <target name="production">
     <ant antfile="production.xml" dir="."/>
   </target>
-
+  
+  <target name="testing">
+	<ant antfile="testing.xml" dir="."/>
+  </target>
+	
   <target name="getVersion">
     <ant antfile="production.xml" dir="." target="publishVersion"/>
   </target>
