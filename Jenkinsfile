@@ -22,11 +22,11 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 def somedata = [
 	"PR_ZLUX_APP_MANAGER":"",
 	"PR_ZLUX_APP_SERVER":"",
-	"PR_ZLUX_BUILD":"",
+	"PR_ZLUX_BUILD":"52",
 	"PR_ZLUX_PLATFORM":"",
 	"PR_ZLUX_SERVER_FRAMEWORK":"",
 	"PR_ZLUX_SHARED":"",
-	"BUILD_CORE_FROM_PR":false
+	"BUILD_CORE_FROM_PR":true
 ]
 
 properties([
