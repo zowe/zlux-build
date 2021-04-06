@@ -19,6 +19,21 @@
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 
 
+def somedata = [
+	"PR_ZLUX_APP_MANAGER":"",
+	"PR_ZLUX_APP_SERVER":"",
+	"PR_ZLUX_BUILD":"",
+	"PR_ZLUX_PLATFORM":"",
+	"PR_ZLUX_SERVER_FRAMEWORK":"",
+	"PR_ZLUX_SHARED":"",
+	"BUILD_CORE_FROM_PR":false
+]
+
+properties([
+  parameters(somedata)
+])
+
+
 JENKINS_NODE = "zlux-agent"
 GITHUB_PROJECT = "zowe"
 GITHUB_TOKEN = "zowe-robot-github"
@@ -37,17 +52,14 @@ ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
 ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
-// PAX_HOSTNAME = "172.30.0.1"
-// PAX_HOSTNAME = "river.zowe.org"
 PAX_HOSTNAME = "zzow01.zowe.marist.cloud"
-// PAX_SSH_PORT = 2022
 PAX_SSH_PORT = 22
-// PAX_CREDENTIALS = "TestAdminzOSaaS2"
-// PAX_CREDENTIALS = "ssh-zdt-test-image-guest"
 PAX_CREDENTIALS = "ssh-marist-server-zzow01"
 NODE_VERSION = "v12.16.1"
 NODE_HOME = "/ZOWE/node/node-${NODE_VERSION}-os390-s390x"
 NODE_ENV_VARS = "_TAG_REDIR_ERR=txt _TAG_REDIR_IN=txt _TAG_REDIR_OUT=txt __UNTAGGED_READ_MODE=V6"
+
+
 
 def setGithubStatus(authToken, pullRequests, status, description) {
   pullRequests.each {
@@ -84,29 +96,6 @@ def getZoweVersion() {
   return (response.content =~ /"version"\s*:\s*"(.*)"/)[0][1]
 }
 
-
-def customParameters = []
-for (repoName in ZLUX_CORE_PLUGINS) {
-  customParameters.push(
-    string(
-      name: "PR_${repoName.toUpperCase().replaceAll('-', '_')}",
-      defaultValue: "",
-      description: "${repoName} PR number",
-      trim: true
-    )
-  )
-}
-customParameters.push(
-  booleanParam(
-    name: "BUILD_CORE_FROM_PR",
-    defaultValue: false,
-    description: "Rather than building just component paxs, build the entire zlux-core from all the prs"
-  )
-)
-
-properties([
-  parameters(customParameters)
-])
 
 def pullRequests = [:]
 def zoweVersion = null
