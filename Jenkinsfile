@@ -36,7 +36,6 @@ properties([
 ])
 
 
-
 JENKINS_NODE = "zlux-agent"
 GITHUB_PROJECT = "zowe"
 GITHUB_TOKEN = "zowe-robot-github"
@@ -61,7 +60,7 @@ PAX_CREDENTIALS = "ssh-marist-server-zzow01"
 NODE_VERSION = "v12.16.1"
 NODE_HOME = "/ZOWE/node/node-${NODE_VERSION}-os390-s390x"
 NODE_ENV_VARS = "_TAG_REDIR_ERR=txt _TAG_REDIR_IN=txt _TAG_REDIR_OUT=txt __UNTAGGED_READ_MODE=V6"
-
+BRANCH_NAME = "${env.BRANCH_NAME.toUpperCase().replaceAll('/', '-')}"
 
 
 def setGithubStatus(authToken, pullRequests, status, description) {
@@ -114,9 +113,9 @@ node(JENKINS_NODE) {
     stage("Prepare") {
 
       zoweVersion = getZoweVersion()
+	  echo "BRANCH_NAME"
       if (env.WEBHOOK) {
         webHook = readJSON text: env.WEBHOOK
-		echo "webHook"
         if (webHook.containsKey("pull_request")) {
           if (webHook["action"] in ["opened", "reopened", "synchronize"]) {
             pullRequests[webHook["repository"]["name"]] = webHook["pull_request"]
@@ -133,8 +132,18 @@ node(JENKINS_NODE) {
           }
           echo "---"
         }
+		params.each {
+          key, value ->
+          if (key.startsWith("PR_")) {
+            echo "key"
+			if (value) {
+              def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
+              pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
+            }
+          }
+        }
+		
       } else {
-		echo "params"
         params.each {
           key, value ->
           if (key.startsWith("PR_")) {
