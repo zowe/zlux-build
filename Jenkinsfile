@@ -116,7 +116,8 @@ node(JENKINS_NODE) {
       zoweVersion = getZoweVersion()
 	  BRANCH_NAME = "${env.BRANCH_NAME.toUpperCase().replaceAll('/', '-')}"
       if (env.BRANCH_NAME) {
-        webHook = readJSON text: env.BRANCH_NAME
+		echo ("$env.BRANCH_NAME")
+        webHook = readJSON text: env.WEBHOOK
         if (webHook.containsKey("pull_request")) {
           if (webHook["action"] in ["opened", "reopened", "synchronize"]) {
             pullRequests[webHook["repository"]["name"]] = webHook["pull_request"]
