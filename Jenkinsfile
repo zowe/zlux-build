@@ -116,6 +116,7 @@ node(JENKINS_NODE) {
       zoweVersion = getZoweVersion()
       if (env.WEBHOOK) {
         webHook = readJSON text: env.WEBHOOK
+		echo "webHook"
         if (webHook.containsKey("pull_request")) {
           if (webHook["action"] in ["opened", "reopened", "synchronize"]) {
             pullRequests[webHook["repository"]["name"]] = webHook["pull_request"]
@@ -133,10 +134,12 @@ node(JENKINS_NODE) {
           echo "---"
         }
       } else {
+		echo "params"
         params.each {
           key, value ->
           if (key.startsWith("PR_")) {
-            if (value) {
+            echo "key"
+			if (value) {
               def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
               pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
             }
