@@ -112,10 +112,9 @@ node(JENKINS_NODE) {
 		echo "im here"
 		echo "params"
 		echo "$params"
-		echo "parameters"
-		echo "$parameters"
+
 		zluxbuildpr = env.BRANCH_NAME
-		parameters.each{
+		params.each{
 			key, value ->
 			if (value) {
               def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
@@ -131,9 +130,13 @@ node(JENKINS_NODE) {
               def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
               pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
             }
+            
           }
         }
       }
+	  echo "im here"
+	  echo "params"
+	  echo "$params"
       setGithubStatus(GITHUB_TOKEN, pullRequests, "pending", "This commit is being built")
     }
     sshagent(credentials: [GITHUB_SSH_KEY]) {
