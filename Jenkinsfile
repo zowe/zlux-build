@@ -109,8 +109,13 @@ node(JENKINS_NODE) {
 
       zoweVersion = getZoweVersion()
       if (env.BRANCH_NAME) {
+		echo "im here"
+		echo "params"
+		echo "$params"
+		echo "parameters"
+		echo "$parameters"
 		zluxbuildpr = env.BRANCH_NAME
-		params.each{
+		parameters.each{
 			key, value ->
 			if (value) {
               def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
@@ -125,12 +130,6 @@ node(JENKINS_NODE) {
             if (value) {
               def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
               pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
-            }
-            if (buildCoreFromPr) {
-              if (branchName == ("-"+DEFAULT_BRANCH)) {
-                branchName = ""
-              }
-              branchName = "${branchName}${value?'-'+value:'-S'}"
             }
           }
         }
