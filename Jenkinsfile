@@ -99,6 +99,7 @@ def paxPackageDir = "/ZOWE/tmp/~${env.BUILD_TAG}"
 def mergedComponent = null
 def branchName = "-"+DEFAULT_BRANCH
 def buildCoreFromPr = false
+def zluxbuildpr = null
 
 node(JENKINS_NODE) {
   currentBuild.result = "SUCCESS"
@@ -108,7 +109,7 @@ node(JENKINS_NODE) {
 
       zoweVersion = getZoweVersion()
       if (env.BRANCH_NAME) {
-		zlux-build-pr = env.BRANCH_NAME
+		zluxbuildpr = env.BRANCH_NAME
 		params.each{
 			key, value ->
 			if (value) {
