@@ -112,7 +112,7 @@ node(JENKINS_NODE) {
 	  zluxbuildpr = env.BRANCH_NAME
 	  echo "zluxbuildpr"
 	  echo "$zluxbuildpr"
-	  if (zluxbuildpr.startsWith("PR_")){
+	  if (zluxbuildpr.startsWith("PR-")){
 		pullRequests['zlux-build'] = zluxbuildpr.drop(3)
 	  } else {
 		echo "building staging"
