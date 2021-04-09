@@ -145,7 +145,6 @@ node(JENKINS_NODE) {
                         git checkout ${DEFAULT_BRANCH}
                         """
         }
-		echo "$pullRequests"
         pullRequests.each {
           repoName, pullRequest ->
 		  sh \
