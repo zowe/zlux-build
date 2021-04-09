@@ -27,6 +27,9 @@ noInstall does not run 'npm install', only 'npm run build'. If node modules are 
 This flag is set in the following manner: -D [flag]=[value]
 The script logic only looks for the two option flags to be set, the value does not matter.
 
+To build zlux-core with multiple pull request edit the Jenkinsfile to point to the pull request you want to build with. There should be a map call zluxParameters with keys and values, just
+add the pull request number to the value of the key you want. If the value is empty it will default to staging.
+
 This program and the accompanying materials are
 made available under the terms of the Eclipse Public License v2.0 which accompanies
 this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html

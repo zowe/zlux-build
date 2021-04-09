@@ -10,7 +10,12 @@
  * Copyright Contributors to the Zowe Project.
  */
 
-def somedata = [
+/*
+* zluxParameters is a map with key and value, if the value is empty it will automatically use staging for the key. 
+* To build a specific pull request just add the pull request number to the value of the repository you want to build. 
+*/
+
+def zluxParameters = [
 	"PR_ZLUX_APP_MANAGER":"",
 	"PR_ZLUX_APP_SERVER":"",
 	"PR_ZLUX_PLATFORM":"",
@@ -20,7 +25,7 @@ def somedata = [
 ]
 
 properties([
-  parameters(somedata)
+  parameters(zluxParameters)
 ])
 
 
@@ -114,7 +119,7 @@ node(JENKINS_NODE) {
 		echo "building staging"
 	  }
 	  
-	  somedata.each {
+	  zluxParameters.each {
           key, value ->
           if (key.startsWith("PR_")) {
             if (value) {
