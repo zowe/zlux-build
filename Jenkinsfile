@@ -110,6 +110,8 @@ node(JENKINS_NODE) {
 
       zoweVersion = getZoweVersion()
 	  zluxbuildpr = env.BRANCH_NAME
+	  echo "zluxbuildpr"
+	  echo "$zluxbuildpr"
 	  if (zluxbuildpr.startsWith("PR_")){
 		pullRequests['zlux-build'] = zluxbuildpr.drop(3)
 	  } else {
