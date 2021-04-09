@@ -87,6 +87,7 @@ def somedata = [
 	"PR_ZLUX_PLATFORM":"",
 	"PR_ZLUX_SERVER_FRAMEWORK":"",
 	"PR_ZLUX_SHARED":"",
+	"PR_ZLUX_BUILD":""
 ]
 
 properties([
@@ -108,22 +109,14 @@ node(JENKINS_NODE) {
     stage("Prepare") {
 
       zoweVersion = getZoweVersion()
-      if (env.BRANCH_NAME) {
-		echo "im here"
-		echo "params"
-		echo "$params"
-
-		zluxbuildpr = env.BRANCH_NAME
-		somedata.each{
-			key, value ->
-			if (value) {
-              def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
-              pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
-            }
-		
-		}
-      } else {
-        params.each {
+	  zluxbuildpr = env.BRANCH_NAME
+	  if (zluxbuildpr.startsWith("PR_")){
+		pullRequests['zlux-build'] = zluxbuildpr.drop(3)
+	  } else {
+		echo "building staging"
+	  }
+	  
+	  somedata.each {
           key, value ->
           if (key.startsWith("PR_")) {
             if (value) {
@@ -133,10 +126,7 @@ node(JENKINS_NODE) {
             
           }
         }
-      }
-	  echo "im here"
-	  echo "somedata"
-	  echo "$somedata"
+		
       setGithubStatus(GITHUB_TOKEN, pullRequests, "pending", "This commit is being built")
     }
     sshagent(credentials: [GITHUB_SSH_KEY]) {
