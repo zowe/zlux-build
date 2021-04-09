@@ -109,15 +109,6 @@ node(JENKINS_NODE) {
     stage("Prepare") {
 
       zoweVersion = getZoweVersion()
-	  zluxbuildpr = env.BRANCH_NAME
-	  echo "zluxbuildpr"
-	  echo "$zluxbuildpr"
-	  if (zluxbuildpr.startsWith("PR-")){
-		pullRequests['zlux-build'] = zluxbuildpr.drop(3)
-	  } else {
-		echo "building staging"
-	  }
-	  
 	  somedata.each {
           key, value ->
           if (key.startsWith("PR_")) {
@@ -130,6 +121,13 @@ node(JENKINS_NODE) {
         }
 		
       setGithubStatus(GITHUB_TOKEN, pullRequests, "pending", "This commit is being built")
+	  
+	  zluxbuildpr = env.BRANCH_NAME
+	  if (zluxbuildpr.startsWith("PR-")){
+		pullRequests['zlux-build'] = zluxbuildpr.drop(3)
+	  } else {
+		echo "building staging"
+	  }
     }
     sshagent(credentials: [GITHUB_SSH_KEY]) {
       stage("Checkout") {
