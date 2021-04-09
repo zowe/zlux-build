@@ -10,6 +10,18 @@
  * Copyright Contributors to the Zowe Project.
  */
 
+def somedata = [
+	"PR_ZLUX_APP_MANAGER":"323",
+	"PR_ZLUX_APP_SERVER":"",
+	"PR_ZLUX_PLATFORM":"",
+	"PR_ZLUX_SERVER_FRAMEWORK":"",
+	"PR_ZLUX_SHARED":"",
+	"PR_ZLUX_BUILD":""
+]
+
+properties([
+  parameters(somedata)
+])
 
 
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
@@ -81,19 +93,6 @@ def getZoweVersion() {
 }
 
 
-def somedata = [
-	"PR_ZLUX_APP_MANAGER":"323",
-	"PR_ZLUX_APP_SERVER":"",
-	"PR_ZLUX_PLATFORM":"",
-	"PR_ZLUX_SERVER_FRAMEWORK":"",
-	"PR_ZLUX_SHARED":"",
-	"PR_ZLUX_BUILD":""
-]
-
-properties([
-  parameters(somedata)
-])
-
 def pullRequests = [:]
 def zoweVersion = null
 def paxPackageDir = "/ZOWE/tmp/~${env.BUILD_TAG}"
@@ -107,7 +106,6 @@ node(JENKINS_NODE) {
   try {
 
     stage("Prepare") {
-
       zoweVersion = getZoweVersion()
 	  zluxbuildpr = env.BRANCH_NAME
 	  if (zluxbuildpr.startsWith("PR-")){
@@ -115,6 +113,7 @@ node(JENKINS_NODE) {
 	  } else {
 		echo "building staging"
 	  }
+	  
 	  somedata.each {
           key, value ->
           if (key.startsWith("PR_")) {
@@ -149,7 +148,6 @@ node(JENKINS_NODE) {
 		echo "$pullRequests"
         pullRequests.each {
           repoName, pullRequest ->
-		  echo "origin pull/${pullRequest['number']}/head:pr"
 		  sh \
           """
                         cd zlux/${repoName}
@@ -208,8 +206,7 @@ node(JENKINS_NODE) {
 		    sh "cd zlux/zlux-build && ant -Dcapstone=../../dist removeSource"
 	  }
       stage("Package") {
-        if (!pullRequests || buildCoreFromPr) {
-          sh \
+		sh \
           """
             chmod +x dist/zlux-build/*.sh
             cd dist
@@ -275,79 +272,13 @@ node(JENKINS_NODE) {
             }
             sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
           }
-        } else {
-          sh \
-          """
-            chmod +x dist/zlux-build/*.sh
-            git clone -b feature/tag-script https://github.com/1000TurquoisePogs/zowe-install-packaging.git
-            """
-          pullRequests.each {
-            repoName, pullRequest ->
-            sh \
-            """
-                            cd dist &&
-                            tar cf ../${repoName}.tar -H ustar ${repoName}/* &&
-                            cd ..
-                            """
-            withCredentials([usernamePassword(
-              credentialsId: PAX_CREDENTIALS,
-              usernameVariable: "PAX_USERNAME",
-              passwordVariable: "PAX_PASSWORD"
-            )]) {
-              def PAX_SERVER = [
-                name         : PAX_HOSTNAME,
-                host         : PAX_HOSTNAME,
-                port         : PAX_SSH_PORT,
-                user         : PAX_USERNAME,
-                password     : PAX_PASSWORD,
-                allowAnyHosts: true
-              ]
-              sshCommand remote: PAX_SERVER, command: \
-              "rm -rf ${paxPackageDir} && mkdir -p ${paxPackageDir}"
-              sshPut remote: PAX_SERVER, from: "${repoName}.tar", into: "${paxPackageDir}/"
-              sshPut remote: PAX_SERVER, from: "zowe-install-packaging/scripts/tag-files.sh", into: "${paxPackageDir}/"
-              sshCommand remote: PAX_SERVER, command:  \
-              """
-                              cd ${paxPackageDir} &&
-                              chtag -tc iso8859-1 tag-files.sh &&
-                              chmod +x tag-files.sh &&
-                              mkdir ${repoName} && cd ${repoName} &&
-                              tar xpoUf ../${repoName}.tar &&
-                              _BPXK_AUTOCVT=ON ../tag-files.sh .
-                              """
-              if (repoName == "zlux-app-server") {
-                sshCommand remote: PAX_SERVER, command: \
-                """
-                                cd ${paxPackageDir}/${repoName} &&
-                                iconv -f iso8859-1 -t 1047 zlux-app-server/defaults/serverConfig/server.json > zlux-app-server/defaults/serverConfig/server.json.1047 &&
-                                mv zlux-app-server/defaults/serverConfig/server.json.1047 zlux-app-server/defaults/serverConfig/server.json &&
-                                chtag -tc 1047 zlux-app-server/defaults/serverConfig/server.json
-                                """
-              } else if (repoName == "zlux-server-framework") {
-                sshCommand remote: PAX_SERVER, command: \
-                """
-                                cd ${paxPackageDir}/${repoName}/zlux-server-framework &&
-                                rm -rf node_modules &&
-                                _BPXK_AUTOCVT=ON PATH=${NODE_HOME}/bin:$PATH npm install
-                                """
-              }
-              sshCommand remote: PAX_SERVER, command: \
-              """
-                              cd ${paxPackageDir}/${repoName} &&
-                              pax -x os390 -pp -wf ../${repoName}.pax *
-                              """
-              sshGet remote: PAX_SERVER, from: "${paxPackageDir}/${repoName}.pax", into: "${repoName}.pax"
-              sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
-            }
-          }
-        }
+		
       }
       stage("Deploy") {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-        if (!pullRequests || buildCoreFromPr) {
-          if (mergedComponent) {
+		if (mergedComponent) {
             target = "${ARTIFACTORY_REPO}/${mergedComponent}/" +
               "${zoweVersion}${branchName.toUpperCase()}/" +
               "${mergedComponent}-${zoweVersion}-${timestamp}"
@@ -377,20 +308,6 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
-        } else {
-          pullRequests.each {
-            repoName, pullRequest ->
-            target = "${ARTIFACTORY_REPO}/${repoName}/" +
-              "${zoweVersion}-PR-${pullRequest['number']}/" +
-              "${repoName}-${zoweVersion}-${timestamp}"
-            ["tar", "pax"].each {
-              def uploadSpec = """{"files": [{"pattern": "${repoName}.${it}", "target": "${target}.${it}"}]}"""
-              def buildInfo = Artifactory.newBuildInfo()
-              artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
-              artifactoryServer.publishBuildInfo buildInfo
-            }
-          }
-        }
       }
     }
   } catch (FlowInterruptedException  e) {
