@@ -146,9 +146,9 @@ node(JENKINS_NODE) {
                         git checkout ${DEFAULT_BRANCH}
                         """
         }
+		echo "$pullRequests"
         pullRequests.each {
           repoName, pullRequest ->
-          echo "look now"
 		  echo "origin pull/${pullRequest['number']}/head:pr"
 		  sh \
           """
