@@ -7,7 +7,14 @@ SPDX-License-Identifier: EPL-2.0
 Copyright Contributors to the Zowe Project.
 
 # zlux-build
-Repository for build scripts used for ease of building Zowe App Framework code as well as Apps that rely upon it.
+
+This repository includes build scripts used for building Zowe App Framework code, and build pipeline used for building Zowe App Framework with multiple pull request.
+
+- [Build Scripts](#build-scripts)
+- [Build Pipeline](#build-pipeline)
+- [Copyright](#copyright)
+
+## Build Scripts
 
 **To request features or report bugs, please use the issues page at the [zlux repo](https://github.com/zowe/zlux/issues) with the CI/CD tag**
 
@@ -27,8 +34,12 @@ noInstall does not run 'npm install', only 'npm run build'. If node modules are 
 This flag is set in the following manner: -D [flag]=[value]
 The script logic only looks for the two option flags to be set, the value does not matter.
 
+## Build Pipeline
+
 To build zlux-core with multiple pull request edit the Jenkinsfile to point to the pull request you want to build with. There should be a map call zluxParameters with keys and values, just
 add the pull request number to the value of the key you want. If the value is empty it will default to staging.
+
+## Copyright
 
 This program and the accompanying materials are
 made available under the terms of the Eclipse Public License v2.0 which accompanies

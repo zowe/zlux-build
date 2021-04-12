@@ -16,12 +16,12 @@
 */
 
 def zluxParameters = [
-	"PR_ZLUX_APP_MANAGER":"",
-	"PR_ZLUX_APP_SERVER":"",
-	"PR_ZLUX_PLATFORM":"",
-	"PR_ZLUX_SERVER_FRAMEWORK":"",
-	"PR_ZLUX_SHARED":"",
-	"PR_ZLUX_BUILD":""
+  "PR_ZLUX_APP_MANAGER" : "",
+  "PR_ZLUX_APP_SERVER" : "",
+  "PR_ZLUX_PLATFORM" : "",
+  "PR_ZLUX_SERVER_FRAMEWORK" : "",
+  "PR_ZLUX_SHARED" : "",
+  "PR_ZLUX_BUILD" : ""
 ]
 
 properties([
@@ -59,6 +59,9 @@ PAX_SSH_PORT = 22
 // PAX_CREDENTIALS = "ssh-zdt-test-image-guest"
 PAX_CREDENTIALS = "ssh-marist-server-zzow01"
 NODE_VERSION = "v12.16.1"
+USER_EMAIL = "zowe-robot@zowe.org"
+USER_NAME = "Zowe Robot"
+
 NODE_HOME = "/ZOWE/node/node-${NODE_VERSION}-os390-s390x"
 NODE_ENV_VARS = "_TAG_REDIR_ERR=txt _TAG_REDIR_IN=txt _TAG_REDIR_OUT=txt __UNTAGGED_READ_MODE=V6"
 
@@ -70,14 +73,14 @@ def setGithubStatus(authToken, pullRequests, status, description) {
       url: "https://api.github.com/repos/${GITHUB_PROJECT}/${repoName}/" +
       "statuses/${pullRequest['head']['sha']}",
       requestBody: \
-    """
-                    {
-                        "state": "${status}",
-                        "target_url": "${env.RUN_DISPLAY_URL}",
-                        "description": "${description}",
-                        "context": "continuous-integration/jenkins/pr-merge"
-                    }
-                    """
+		"""
+			{
+				"state": "${status}",
+				"target_url": "${env.RUN_DISPLAY_URL}",
+				"description": "${description}",
+				"context": "continuous-integration/jenkins/pr-merge"
+			}
+		"""
   }
 }
 
@@ -103,7 +106,6 @@ def zoweVersion = null
 def paxPackageDir = "/ZOWE/tmp/~${env.BUILD_TAG}"
 def mergedComponent = null
 def branchName = "-"+DEFAULT_BRANCH
-def buildCoreFromPr = false
 def zluxbuildpr = null
 
 node(JENKINS_NODE) {
@@ -137,27 +139,27 @@ node(JENKINS_NODE) {
       stage("Checkout") {
         sh \
         """
-                    mkdir zlux
-                    git config --global user.email "zowe-robot@zowe.org"
-                    git config --global user.name "Zowe Robot"
-                    """
+			mkdir zlux
+			git config --global user.email ${USER_EMAIL}
+			git config --global user.name ${USER_NAME}
+		"""
         ZLUX_CORE_PLUGINS.each {
           sh \
           """
-                        cd zlux
-                        git clone https://github.com/zowe/${it}.git
-                        cd ${it}
-                        git checkout ${DEFAULT_BRANCH}
-                        """
+			cd zlux
+			git clone https://github.com/zowe/${it}.git
+			cd ${it}
+			git checkout ${DEFAULT_BRANCH}
+			"""
         }
         pullRequests.each {
           repoName, pullRequest ->
 		  sh \
           """
-                        cd zlux/${repoName}
-                        git fetch origin pull/${pullRequest['number']}/head:pr
-                        git merge pr
-                        """
+			cd zlux/${repoName}
+			git fetch origin pull/${pullRequest['number']}/head:pr
+			git merge pr
+			"""
         }
       }
       stage("Set version") {
@@ -342,7 +344,6 @@ node(JENKINS_NODE) {
       subject: """${env.JOB_NAME} [${env.BUILD_NUMBER}]: ${currentBuild.result}""",
       attachLog: true,
         mimeType: "text/html",
-        //to: "dnikolaev@rocketsoftware.com",
         recipientProviders: [
         [$class: "RequesterRecipientProvider"],
         [$class: "CulpritsRecipientProvider"],
