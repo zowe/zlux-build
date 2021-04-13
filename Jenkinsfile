@@ -109,14 +109,14 @@ node(JENKINS_NODE) {
 
     stage("Prepare") {
       zoweVersion = getZoweVersion()
-	  zluxbuildpr = env.BRANCH_NAME
-	  if (zluxbuildpr.startsWith("PR-")){
-		pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
-	  } else {
-		echo "building staging"
-	  }
-	  
-	  zluxParameters.each {
+    zluxbuildpr = env.BRANCH_NAME
+    if (zluxbuildpr.startsWith("PR-")){
+    pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
+    } else {
+    echo "building staging"
+    }
+    
+    zluxParameters.each {
           key, value ->
           if (key.startsWith("PR_")) {
             if (value) {
@@ -126,7 +126,7 @@ node(JENKINS_NODE) {
             
           }
         }
-		
+    
       setGithubStatus(GITHUB_TOKEN, pullRequests, "pending", "This commit is being built")
 
     }
@@ -149,7 +149,7 @@ node(JENKINS_NODE) {
         }
         pullRequests.each {
           repoName, pullRequest ->
-		  sh \
+      sh \
           """
            cd zlux/${repoName}
            git fetch origin pull/${pullRequest['number']}/head:pr
@@ -197,16 +197,16 @@ node(JENKINS_NODE) {
              packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
              for package in \$packages
              do
-			    sh -c "cd `dirname \$package` && npm run test --if-present"
-			 done
+          sh -c "cd `dirname \$package` && npm run test --if-present"
+       done
             """
           }
         }
         setGithubStatus(GITHUB_TOKEN, pullRequests, "success", "This commit looks good")
-		    sh "cd zlux/zlux-build && ant -Dcapstone=../../dist removeSource"
-	  }
+        sh "cd zlux/zlux-build && ant -Dcapstone=../../dist removeSource"
+    }
       stage("Package") {
-		sh \
+    sh \
           """
             chmod +x dist/zlux-build/*.sh
             cd dist
@@ -272,13 +272,13 @@ node(JENKINS_NODE) {
             }
             sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
           }
-		
+    
       }
       stage("Deploy") {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-		if (mergedComponent) {
+    if (mergedComponent) {
             target = "${ARTIFACTORY_REPO}/${mergedComponent}/" +
               "${zoweVersion}${branchName.toUpperCase()}/" +
               "${mergedComponent}-${zoweVersion}-${timestamp}"
