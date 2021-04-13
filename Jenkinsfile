@@ -69,12 +69,12 @@ def setGithubStatus(authToken, pullRequests, status, description) {
       "statuses/${pullRequest['head']['sha']}",
       requestBody: \
 		"""
-            {
-                "state": "${status}",
-                "target_url": "${env.RUN_DISPLAY_URL}",
-                "description": "${description}",
-                "context": "continuous-integration/jenkins/pr-merge"
-            }
+         {
+           "state": "${status}",
+           "target_url": "${env.RUN_DISPLAY_URL}",
+           "description": "${description}",
+           "context": "continuous-integration/jenkins/pr-merge"
+          }
 		"""
   }
 }
@@ -134,26 +134,26 @@ node(JENKINS_NODE) {
       stage("Checkout") {
         sh \
         """
-          mkdir zlux
-          git config --global user.email ${USER_EMAIL}
-          git config --global user.name ${USER_NAME}
+         mkdir zlux
+         git config --global user.email ${USER_EMAIL}
+         git config --global user.name ${USER_NAME}
 		"""
         ZLUX_CORE_PLUGINS.each {
           sh \
           """
-			cd zlux
-			git clone https://github.com/zowe/${it}.git
-			cd ${it}
-			git checkout ${DEFAULT_BRANCH}
+           cd zlux
+           git clone https://github.com/zowe/${it}.git
+           cd ${it}
+           git checkout ${DEFAULT_BRANCH}
 		  """
         }
         pullRequests.each {
           repoName, pullRequest ->
 		  sh \
           """
-			cd zlux/${repoName}
-			git fetch origin pull/${pullRequest['number']}/head:pr
-			git merge pr
+           cd zlux/${repoName}
+           git fetch origin pull/${pullRequest['number']}/head:pr
+           git merge pr
 		  """
         }
       }
