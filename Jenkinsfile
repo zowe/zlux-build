@@ -50,13 +50,8 @@ ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
 ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
-// PAX_HOSTNAME = "172.30.0.1"
-// PAX_HOSTNAME = "river.zowe.org"
 PAX_HOSTNAME = "zzow01.zowe.marist.cloud"
-// PAX_SSH_PORT = 2022
 PAX_SSH_PORT = 22
-// PAX_CREDENTIALS = "TestAdminzOSaaS2"
-// PAX_CREDENTIALS = "ssh-zdt-test-image-guest"
 PAX_CREDENTIALS = "ssh-marist-server-zzow01"
 NODE_VERSION = "v12.16.1"
 USER_EMAIL = "zowe-robot@zowe.org"
@@ -74,12 +69,12 @@ def setGithubStatus(authToken, pullRequests, status, description) {
       "statuses/${pullRequest['head']['sha']}",
       requestBody: \
 		"""
-			{
-				"state": "${status}",
-				"target_url": "${env.RUN_DISPLAY_URL}",
-				"description": "${description}",
-				"context": "continuous-integration/jenkins/pr-merge"
-			}
+            {
+                "state": "${status}",
+                "target_url": "${env.RUN_DISPLAY_URL}",
+                "description": "${description}",
+                "context": "continuous-integration/jenkins/pr-merge"
+            }
 		"""
   }
 }
@@ -139,9 +134,9 @@ node(JENKINS_NODE) {
       stage("Checkout") {
         sh \
         """
-			mkdir zlux
-			git config --global user.email ${USER_EMAIL}
-			git config --global user.name ${USER_NAME}
+          mkdir zlux
+          git config --global user.email ${USER_EMAIL}
+          git config --global user.name ${USER_NAME}
 		"""
         ZLUX_CORE_PLUGINS.each {
           sh \
@@ -150,7 +145,7 @@ node(JENKINS_NODE) {
 			git clone https://github.com/zowe/${it}.git
 			cd ${it}
 			git checkout ${DEFAULT_BRANCH}
-			"""
+		  """
         }
         pullRequests.each {
           repoName, pullRequest ->
@@ -159,35 +154,34 @@ node(JENKINS_NODE) {
 			cd zlux/${repoName}
 			git fetch origin pull/${pullRequest['number']}/head:pr
 			git merge pr
-			"""
+		  """
         }
       }
       stage("Set version") {
         def (majorVersion, minorVersion, microVersion) = zoweVersion.tokenize(".")
         sh \
         """
-                    cd zlux/zlux-build
-                    sed -i -e "s/MAJOR_VERSION=0/MAJOR_VERSION=${majorVersion}/" \\
-                           -e "s/MINOR_VERSION=8/MINOR_VERSION=${minorVersion}/" \\
-                           -e "s/REVISION=4/REVISION=${microVersion}/" \\
-                            version.properties
-                    echo "Set version to:"
-                    cat version.properties
-                    cd ../zlux-app-server
-                    if [ -e "manifest.yaml" ]; then
-                      export commit_hash=\$(git rev-parse --verify HEAD)
-                      export current_timestamp=\$(date +%s%3N)
-					  export zlux_version="${majorVersion}.${minorVersion}.${microVersion}"
-                      sed -i -e "s|{{build\\.branch}}|${BRANCH_NAME}|g" \\
-                             -e "s|{{build\\.number}}|${BUILD_NUMBER}|g" \\
-                             -e "s|{{build\\.commitHash}}|\${commit_hash}|g" \\
-                             -e "s|{{build\\.timestamp}}|\${current_timestamp}|g" \\
-							 -e "s|{{build\\.version}}|\${zlux_version}|g" \\
-                             "manifest.yaml"
-                      echo "manifest is:"
-                      cat manifest.yaml
-                    fi
-
+            cd zlux/zlux-build
+            sed -i -e "s/MAJOR_VERSION=0/MAJOR_VERSION=${majorVersion}/" \\
+                   -e "s/MINOR_VERSION=8/MINOR_VERSION=${minorVersion}/" \\
+                   -e "s/REVISION=4/REVISION=${microVersion}/" \\
+                    version.properties
+            echo "Set version to:"
+            cat version.properties
+            cd ../zlux-app-server
+            if [ -e "manifest.yaml" ]; then
+              export commit_hash=\$(git rev-parse --verify HEAD)
+              export current_timestamp=\$(date +%s%3N)
+              export zlux_version="${majorVersion}.${minorVersion}.${microVersion}"
+              sed -i -e "s|{{build\\.branch}}|${BRANCH_NAME}|g" \\
+                     -e "s|{{build\\.number}}|${BUILD_NUMBER}|g" \\
+                     -e "s|{{build\\.commitHash}}|\${commit_hash}|g" \\
+                     -e "s|{{build\\.timestamp}}|\${current_timestamp}|g" \\
+                     -e "s|{{build\\.version}}|\${zlux_version}|g" \\
+                     "manifest.yaml"
+              echo "manifest is:"
+              cat manifest.yaml
+            fi
         """
       }
       stage("Build") {
@@ -198,14 +192,14 @@ node(JENKINS_NODE) {
           repoName, pullRequest ->
           if (repoName != "zlux-app-server") {
             sh \
-            """
-                    cd dist
-                    packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
-                    for package in \$packages
-                    do
-                        sh -c "cd `dirname \$package` && npm run test --if-present"
-                    done
-                    """
+			"""
+			 cd dist
+			 packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
+			 for package in \$packages
+			 do
+			    sh -c "cd `dirname \$package` && npm run test --if-present"
+			 done
+			"""
           }
         }
         setGithubStatus(GITHUB_TOKEN, pullRequests, "success", "This commit looks good")
