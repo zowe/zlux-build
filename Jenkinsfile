@@ -192,11 +192,11 @@ node(JENKINS_NODE) {
           repoName, pullRequest ->
           if (repoName != "zlux-app-server") {
             sh \
-			"""
-			 cd dist
-			 packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
-			 for package in \$packages
-			 do
+            """
+             cd dist
+             packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
+             for package in \$packages
+             do
 			    sh -c "cd `dirname \$package` && npm run test --if-present"
 			 done
 			"""
