@@ -197,8 +197,8 @@ node(JENKINS_NODE) {
              packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
              for package in \$packages
              do
-          sh -c "cd `dirname \$package` && npm run test --if-present"
-       done
+               sh -c "cd `dirname \$package` && npm run test --if-present"
+             done
             """
           }
         }
