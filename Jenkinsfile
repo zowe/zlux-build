@@ -68,14 +68,14 @@ def setGithubStatus(authToken, pullRequests, status, description) {
       url: "https://api.github.com/repos/${GITHUB_PROJECT}/${repoName}/" +
       "statuses/${pullRequest['head']['sha']}",
       requestBody: \
-		"""
+      """
          {
            "state": "${status}",
            "target_url": "${env.RUN_DISPLAY_URL}",
            "description": "${description}",
            "context": "continuous-integration/jenkins/pr-merge"
           }
-		"""
+      """
   }
 }
 
@@ -137,7 +137,7 @@ node(JENKINS_NODE) {
          mkdir zlux
          git config --global user.email ${USER_EMAIL}
          git config --global user.name ${USER_NAME}
-		"""
+        """
         ZLUX_CORE_PLUGINS.each {
           sh \
           """
@@ -145,7 +145,7 @@ node(JENKINS_NODE) {
            git clone https://github.com/zowe/${it}.git
            cd ${it}
            git checkout ${DEFAULT_BRANCH}
-		  """
+          """
         }
         pullRequests.each {
           repoName, pullRequest ->
@@ -154,34 +154,34 @@ node(JENKINS_NODE) {
            cd zlux/${repoName}
            git fetch origin pull/${pullRequest['number']}/head:pr
            git merge pr
-		  """
+          """
         }
       }
       stage("Set version") {
         def (majorVersion, minorVersion, microVersion) = zoweVersion.tokenize(".")
         sh \
         """
-            cd zlux/zlux-build
-            sed -i -e "s/MAJOR_VERSION=0/MAJOR_VERSION=${majorVersion}/" \\
-                   -e "s/MINOR_VERSION=8/MINOR_VERSION=${minorVersion}/" \\
-                   -e "s/REVISION=4/REVISION=${microVersion}/" \\
-                    version.properties
-            echo "Set version to:"
-            cat version.properties
-            cd ../zlux-app-server
-            if [ -e "manifest.yaml" ]; then
-              export commit_hash=\$(git rev-parse --verify HEAD)
-              export current_timestamp=\$(date +%s%3N)
-              export zlux_version="${majorVersion}.${minorVersion}.${microVersion}"
-              sed -i -e "s|{{build\\.branch}}|${BRANCH_NAME}|g" \\
-                     -e "s|{{build\\.number}}|${BUILD_NUMBER}|g" \\
-                     -e "s|{{build\\.commitHash}}|\${commit_hash}|g" \\
-                     -e "s|{{build\\.timestamp}}|\${current_timestamp}|g" \\
-                     -e "s|{{build\\.version}}|\${zlux_version}|g" \\
-                     "manifest.yaml"
-              echo "manifest is:"
-              cat manifest.yaml
-            fi
+          cd zlux/zlux-build
+          sed -i -e "s/MAJOR_VERSION=0/MAJOR_VERSION=${majorVersion}/" \\
+                 -e "s/MINOR_VERSION=8/MINOR_VERSION=${minorVersion}/" \\
+                 -e "s/REVISION=4/REVISION=${microVersion}/" \\
+                  version.properties
+          echo "Set version to:"
+          cat version.properties
+          cd ../zlux-app-server
+          if [ -e "manifest.yaml" ]; then
+            export commit_hash=\$(git rev-parse --verify HEAD)
+            export current_timestamp=\$(date +%s%3N)
+            export zlux_version="${majorVersion}.${minorVersion}.${microVersion}"
+            sed -i -e "s|{{build\\.branch}}|${BRANCH_NAME}|g" \\
+                   -e "s|{{build\\.number}}|${BUILD_NUMBER}|g" \\
+                   -e "s|{{build\\.commitHash}}|\${commit_hash}|g" \\
+                   -e "s|{{build\\.timestamp}}|\${current_timestamp}|g" \\
+                   -e "s|{{build\\.version}}|\${zlux_version}|g" \\
+                   "manifest.yaml"
+            echo "manifest is:"
+            cat manifest.yaml
+          fi
         """
       }
       stage("Build") {
