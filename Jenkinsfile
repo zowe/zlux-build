@@ -199,7 +199,7 @@ node(JENKINS_NODE) {
              do
 			    sh -c "cd `dirname \$package` && npm run test --if-present"
 			 done
-			"""
+            """
           }
         }
         setGithubStatus(GITHUB_TOKEN, pullRequests, "success", "This commit looks good")
