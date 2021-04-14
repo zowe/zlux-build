@@ -70,11 +70,11 @@ def setGithubStatus(authToken, pullRequests, status, description) {
       requestBody: \
       """
          {
-           "state": "${status}",
-           "target_url": "${env.RUN_DISPLAY_URL}",
-           "description": "${description}",
-           "context": "continuous-integration/jenkins/pr-merge"
-          }
+          "state": "${status}",
+          "target_url": "${env.RUN_DISPLAY_URL}",
+          "description": "${description}",
+          "context": "continuous-integration/jenkins/pr-merge"
+         }
       """
   }
 }
@@ -150,11 +150,11 @@ node(JENKINS_NODE) {
         pullRequests.each {
           repoName, pullRequest ->
       sh \
-          """
-           cd zlux/${repoName}
-           git fetch origin pull/${pullRequest['number']}/head:pr
-           git merge pr
-          """
+      """
+       cd zlux/${repoName}
+       git fetch origin pull/${pullRequest['number']}/head:pr
+       git merge pr
+      """
         }
       }
       stage("Set version") {
