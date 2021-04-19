@@ -271,9 +271,9 @@ node(JENKINS_NODE) {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-		if (zluxbuildpr.startsWith("PR-")){
-			target = "${ARTIFACTORY_REPO}/zlux-core/" +
-            "${zoweVersion}${zluxbuildpr}/" +
+        if (zluxbuildpr.startsWith("PR-")){
+            target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${zluxbuildpr}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
           ["tar", "pax"].each {
             def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
@@ -281,8 +281,7 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
-		}
-
+         }else{
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}${branchName.toUpperCase()}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
@@ -301,6 +300,7 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
+        }
       }
     }
   } catch (FlowInterruptedException  e) {
