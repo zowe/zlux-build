@@ -17,7 +17,7 @@
 
 def zluxParameters = [
   "PR_ZLUX_APP_MANAGER" : "",
-  "PR_ZLUX_APP_SERVER" : "",
+  "PR_ZLUX_APP_SERVER" : "166",
   "PR_ZLUX_PLATFORM" : "",
   "PR_ZLUX_SERVER_FRAMEWORK" : "",
   "PR_ZLUX_SHARED" : "",
@@ -45,7 +45,7 @@ ZLUX_CORE_PLUGINS = [
   "zlux-server-framework",
   "zlux-shared"
 ]
-DEFAULT_BRANCH = "staging"
+DEFAULT_BRANCH = "rc"
 ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
