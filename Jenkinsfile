@@ -24,6 +24,8 @@ def zluxParameters = [
   "PR_ZLUX_BUILD" : ""
 ]
 
+DEFAULT_BRANCH = "staging"
+
 properties([
   parameters(zluxParameters)
 ])
@@ -45,7 +47,6 @@ ZLUX_CORE_PLUGINS = [
   "zlux-server-framework",
   "zlux-shared"
 ]
-DEFAULT_BRANCH = "staging"
 ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
@@ -113,7 +114,8 @@ node(JENKINS_NODE) {
       if (zluxbuildpr.startsWith("PR-")){
         pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
       } else {
-        echo "building staging"
+        DEFAULT_BRANCH = env.BRANCH_NAME.toLowerCase()
+        echo "building ${DEFAULT_BRANCH}"
       }
       
       zluxParameters.each {
@@ -264,15 +266,6 @@ node(JENKINS_NODE) {
             pax -x os390 -pp -wf ../zlux.pax *
           """
           sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
-          if (mergedComponent) {
-            sshCommand remote: PAX_SERVER, command:  \
-            """
-              cd ${paxPackageDir} &&
-              cd zlux &&
-              pax -x os390 -pp -wf ../${mergedComponent}.pax ${mergedComponent}
-            """
-            sshGet remote: PAX_SERVER, from: "${paxPackageDir}/${mergedComponent}.pax", into: "${mergedComponent}.pax"
-          }
           sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
         }
       }
@@ -281,7 +274,26 @@ node(JENKINS_NODE) {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-        if (mergedComponent) {
+        if (zluxbuildpr.startsWith("PR-")){
+          target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${zluxbuildpr}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
+          }
+        }else{
+          target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}${branchName.toUpperCase()}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
+          }
           target = "${ARTIFACTORY_REPO}/${mergedComponent}/" +
             "${zoweVersion}${branchName.toUpperCase()}/" +
             "${mergedComponent}-${zoweVersion}-${timestamp}"
@@ -291,26 +303,6 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
-        }
-        
-        target = "${ARTIFACTORY_REPO}/zlux-core/" +
-          "${zoweVersion}${branchName.toUpperCase()}/" +
-          "zlux-core-${zoweVersion}-${timestamp}"
-        ["tar", "pax"].each {
-          def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
-          def buildInfo = Artifactory.newBuildInfo()
-          artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
-          artifactoryServer.publishBuildInfo buildInfo
-        }
-        
-        target = "${ARTIFACTORY_REPO}/${mergedComponent}/" +
-          "${zoweVersion}${branchName.toUpperCase()}/" +
-          "${mergedComponent}-${zoweVersion}-${timestamp}"
-        ["tar", "pax"].each {
-          def uploadSpec = """{"files": [{"pattern": "${mergedComponent}.${it}", "target": "${target}.${it}"}]}"""
-          def buildInfo = Artifactory.newBuildInfo()
-          artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
-          artifactoryServer.publishBuildInfo buildInfo
         }
       }
     }
