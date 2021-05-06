@@ -107,6 +107,10 @@ def zluxbuildpr = null
 node(JENKINS_NODE) {
   currentBuild.result = "SUCCESS"
   try {
+    stage("paramTest"){
+	  echo " FOOBAR value: ${params.'FOOBAR'}"
+	
+	}
 
     stage("Prepare") {
       zoweVersion = getZoweVersion()
