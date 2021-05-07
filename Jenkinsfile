@@ -107,13 +107,6 @@ def zluxbuildpr = null
 node(JENKINS_NODE) {
   currentBuild.result = "SUCCESS"
   try {
-    stage("paramTest"){
-	  if (params.'STARTED_JOB'){
-	    echo "hey it worked"
-	  }
-	  echo " REPO_NAME value: ${params.'REPO_NAME'}"
-	
-	}
 
     stage("Prepare") {
       zoweVersion = getZoweVersion()
@@ -165,8 +158,17 @@ node(JENKINS_NODE) {
               git merge pr
             """
         }
+		if (params.'STARTED_JOB'){
+		  sh \
+		  """
+		    cd zlux/${params.'REPO_NAME'}
+			git fetch origin pull/${params.'PR_NUMBER'}/head:pr
+			git merge pr
+          """
+		}
+		
       }
-
+	  
       stage("Set version") {
         def (majorVersion, minorVersion, microVersion) = zoweVersion.tokenize(".")
         sh \
@@ -291,7 +293,17 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
-        }else{
+        } else if(params.'STARTED_JOB'){
+		  target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${params.'PR_NUMBER'}-${params.'REPO_NAME}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
+          }
+		} else {
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}${branchName.toUpperCase()}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
