@@ -108,7 +108,7 @@ node(JENKINS_NODE) {
   currentBuild.result = "SUCCESS"
   try {
     stage("paramTest"){
-	  echo " FOOBAR value: ${params.'FOOBAR'}"
+	  echo " REPO_NAME value: ${params.'REPO_NAME'}"
 	
 	}
 
