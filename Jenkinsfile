@@ -107,11 +107,6 @@ def zluxbuildpr = null
 node(JENKINS_NODE) {
   currentBuild.result = "SUCCESS"
   try {
-    stage("paramTest"){
-	  echo " REPO_NAME value: ${params.'REPO_NAME'}"
-	
-	}
-
     stage("Prepare") {
       zoweVersion = getZoweVersion()
       zluxbuildpr = env.BRANCH_NAME
