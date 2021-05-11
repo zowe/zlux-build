@@ -113,7 +113,10 @@ node(JENKINS_NODE) {
       zluxbuildpr = env.BRANCH_NAME
       if (zluxbuildpr.startsWith("PR-")){
         pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
-      } else {
+      } else if (params.'BUILD_DEFAULT'){
+	    DEFAULT_BRANCH = params.'REPO_NAME'
+	    echo "building ${DEFAULT_BRANCH}"
+	  } else {
         DEFAULT_BRANCH = env.BRANCH_NAME.toLowerCase()
         echo "building ${DEFAULT_BRANCH}"
       }
