@@ -285,9 +285,7 @@ node(JENKINS_NODE) {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-		echo "${params.'STARTED_JOB'}"
-		echo "${zluxbuildpr}"
-        if (zluxbuildpr.startsWith("PR-")){
+        if (zluxbuildpr.startsWith("PR-") && !params.'STARTED_JOB' && !params.'BUILD_DEFAULT'){
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}-${zluxbuildpr}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
