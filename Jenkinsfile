@@ -113,7 +113,10 @@ node(JENKINS_NODE) {
       zluxbuildpr = env.BRANCH_NAME
       if (zluxbuildpr.startsWith("PR-")){
         pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
-      } else {
+      } else if (params.'BUILD_DEFAULT'){
+	    DEFAULT_BRANCH = params.'REPO_NAME'
+	    echo "building ${DEFAULT_BRANCH}"
+	  } else {
         DEFAULT_BRANCH = env.BRANCH_NAME.toLowerCase()
         echo "building ${DEFAULT_BRANCH}"
       }
@@ -158,8 +161,16 @@ node(JENKINS_NODE) {
               git merge pr
             """
         }
+        if (params.'STARTED_JOB'){
+          sh \
+          """
+            cd zlux/${params.'REPO_NAME'}
+            git fetch origin pull/${params.'PR_NUMBER'}/head:pr
+            git merge pr
+          """
+        }
       }
-
+     
       stage("Set version") {
         def (majorVersion, minorVersion, microVersion) = zoweVersion.tokenize(".")
         sh \
@@ -274,7 +285,7 @@ node(JENKINS_NODE) {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-        if (zluxbuildpr.startsWith("PR-")){
+        if (zluxbuildpr.startsWith("PR-") && !params.'STARTED_JOB' && !params.'BUILD_DEFAULT'){
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}-${zluxbuildpr}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
@@ -284,7 +295,17 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
-        }else{
+        } else if(params.'STARTED_JOB'){
+          target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${params.'PR_NUMBER'}-${params.'REPO_NAME'}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
+          }
+        } else {
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}${branchName.toUpperCase()}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
