@@ -24,6 +24,8 @@ def zluxParameters = [
   "PR_ZLUX_BUILD" : ""
 ]
 
+DEFAULT_BRANCH = "staging"
+
 properties([
   parameters(zluxParameters)
 ])
@@ -45,7 +47,6 @@ ZLUX_CORE_PLUGINS = [
   "zlux-server-framework",
   "zlux-shared"
 ]
-DEFAULT_BRANCH = "staging"
 ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
@@ -109,27 +110,33 @@ node(JENKINS_NODE) {
 
     stage("Prepare") {
       zoweVersion = getZoweVersion()
-    zluxbuildpr = env.BRANCH_NAME
-    if (zluxbuildpr.startsWith("PR-")){
-    pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
-    } else {
-    echo "building staging"
-    }
-    
-    zluxParameters.each {
-          key, value ->
-          if (key.startsWith("PR_")) {
-            if (value) {
-              def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
-              pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
-            }
-            
+      zluxbuildpr = env.BRANCH_NAME
+      if (zluxbuildpr.startsWith("PR-")){
+        pullRequests['zlux-build'] = getPullRequest(GITHUB_TOKEN, 'zlux-build', zluxbuildpr.drop(3)) 
+      }else if (env.BRANCH_NAME.toLowerCase() == 'rc') {
+	    currentBuild.result = 'ABORTED'
+	  } else if (params.'BUILD_DEFAULT'){
+	    DEFAULT_BRANCH = params.'REPO_NAME'
+	    echo "building ${DEFAULT_BRANCH}"
+	  } else {
+        DEFAULT_BRANCH = env.BRANCH_NAME.toLowerCase()
+        echo "building ${DEFAULT_BRANCH}"
+      }
+      
+      zluxParameters.each {
+        key, value ->
+        if (key.startsWith("PR_")) {
+          if (value) {
+            def repoName = key[3..-1].toLowerCase().replaceAll('_', '-')
+            pullRequests[repoName] = getPullRequest(GITHUB_TOKEN, repoName, value)
           }
+          
         }
-    
+      }
+      
       setGithubStatus(GITHUB_TOKEN, pullRequests, "pending", "This commit is being built")
-
     }
+    
     sshagent(credentials: [GITHUB_SSH_KEY]) {
       stage("Checkout") {
         sh \
@@ -149,14 +156,23 @@ node(JENKINS_NODE) {
         }
         pullRequests.each {
           repoName, pullRequest ->
-      sh \
-      """
-       cd zlux/${repoName}
-       git fetch origin pull/${pullRequest['number']}/head:pr
-       git merge pr
-      """
+            sh \
+            """
+              cd zlux/${repoName}
+              git fetch origin pull/${pullRequest['number']}/head:pr
+              git merge pr
+            """
+        }
+        if (params.'STARTED_JOB'){
+          sh \
+          """
+            cd zlux/${params.'REPO_NAME'}
+            git fetch origin pull/${params.'PR_NUMBER'}/head:pr
+            git merge pr
+          """
         }
       }
+     
       stage("Set version") {
         def (majorVersion, minorVersion, microVersion) = zoweVersion.tokenize(".")
         sh \
@@ -184,21 +200,23 @@ node(JENKINS_NODE) {
           fi
         """
       }
+
       stage("Build") {
         sh "bash -c 'cd zlux/zlux-build && set -o pipefail && ant testing 2>&1 | grep -vE \"^\\s+\\[exec\\]\\s+0\\% compiling\"'"
       }
+
       stage("Test") {
         pullRequests.each {
           repoName, pullRequest ->
           if (repoName != "zlux-app-server") {
             sh \
             """
-             cd dist
-             packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
-             for package in \$packages
-             do
-               sh -c "cd `dirname \$package` && npm run test --if-present"
-             done
+              cd dist
+              packages=\$(find ./${repoName} -name package.json | { grep -v node_modules || true; })
+              for package in \$packages
+              do
+                sh -c "cd `dirname \$package` && npm run test --if-present"
+              done
             """
           }
         }
@@ -206,90 +224,90 @@ node(JENKINS_NODE) {
         sh "cd zlux/zlux-build && ant -Dcapstone=../../dist removeSource"
     }
       stage("Package") {
-    sh \
-          """
-            chmod +x dist/zlux-build/*.sh
-            cd dist
-            tar cf ../zlux.tar -H ustar *
-            cd ..
-            git clone -b feature/tag-script https://github.com/1000TurquoisePogs/zowe-install-packaging.git
-            """
-          withCredentials([usernamePassword(
-            credentialsId: PAX_CREDENTIALS,
-            usernameVariable: "PAX_USERNAME",
-            passwordVariable: "PAX_PASSWORD"
-          )]) {
-            def PAX_SERVER = [
-              name         : PAX_HOSTNAME,
-              host         : PAX_HOSTNAME,
-              port         : PAX_SSH_PORT,
+        sh \
+        """
+          chmod +x dist/zlux-build/*.sh
+          cd dist
+          tar cf ../zlux.tar -H ustar *
+          cd ..
+          git clone -b feature/tag-script https://github.com/1000TurquoisePogs/zowe-install-packaging.git
+        """
+        withCredentials([usernamePassword(
+          credentialsId: PAX_CREDENTIALS,
+          usernameVariable: "PAX_USERNAME",
+          passwordVariable: "PAX_PASSWORD"
+        )]) {
+          def PAX_SERVER = [
+            name         : PAX_HOSTNAME,
+            host         : PAX_HOSTNAME,
+            port         : PAX_SSH_PORT,
               user         : PAX_USERNAME,
-              password     : PAX_PASSWORD,
-              allowAnyHosts: true
-            ]
-            sshCommand remote: PAX_SERVER, command: \
-            "rm -rf ${paxPackageDir} && mkdir -p ${paxPackageDir}"
-            sshPut remote: PAX_SERVER, from: "zlux.tar", into: "${paxPackageDir}/"
-            sshPut remote: PAX_SERVER, from: "zowe-install-packaging/scripts/tag-files.sh", into: "${paxPackageDir}/"
-            sshCommand remote: PAX_SERVER, command:  \
-            """
-              export _BPXK_AUTOCVT=ON &&
-              cd ${paxPackageDir} &&
-              chtag -tc iso8859-1 tag-files.sh &&
-              chmod +x tag-files.sh &&
-              mkdir -p zlux/share && cd zlux &&
-              mkdir bin && cd share &&
-              tar xpoUf ../../zlux.tar &&
-              ../../tag-files.sh . &&
-              cd zlux-server-framework &&
-              rm -rf node_modules &&
-              ${NODE_ENV_VARS} PATH=${NODE_HOME}/bin:$PATH npm install &&
-              cd .. &&
-              iconv -f iso8859-1 -t 1047 zlux-app-server/defaults/serverConfig/server.json > zlux-app-server/defaults/serverConfig/server.json.1047 &&
-              mv zlux-app-server/defaults/serverConfig/server.json.1047 zlux-app-server/defaults/serverConfig/server.json &&
-              chtag -tc 1047 zlux-app-server/defaults/serverConfig/server.json &&
-              cd zlux-app-server/bin &&
-              cp start.sh configure.sh ../../../bin &&
-              if [ -e "validate.sh" ]; then
-                cp validate.sh ../../../bin
-              fi
-              cd ..
-              if [ -e "manifest.yaml" ]; then
-                cp manifest.yaml ../../
-              fi
-              cd ../../
-              pax -x os390 -pp -wf ../zlux.pax *
-              """
-            sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
-            if (mergedComponent) {
-              sshCommand remote: PAX_SERVER, command:  \
-              """
-                                cd ${paxPackageDir} &&
-                                cd zlux &&
-                                pax -x os390 -pp -wf ../${mergedComponent}.pax ${mergedComponent}
-                                """
-              sshGet remote: PAX_SERVER, from: "${paxPackageDir}/${mergedComponent}.pax", into: "${mergedComponent}.pax"
-            }
-            sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
-          }
-    
+            password     : PAX_PASSWORD,
+            allowAnyHosts: true
+          ]
+          sshCommand remote: PAX_SERVER, command: \
+          "rm -rf ${paxPackageDir} && mkdir -p ${paxPackageDir}"
+          sshPut remote: PAX_SERVER, from: "zlux.tar", into: "${paxPackageDir}/"
+          sshPut remote: PAX_SERVER, from: "zowe-install-packaging/scripts/tag-files.sh", into: "${paxPackageDir}/"
+          sshCommand remote: PAX_SERVER, command:  \
+          """
+            export _BPXK_AUTOCVT=ON &&
+            cd ${paxPackageDir} &&
+            chtag -tc iso8859-1 tag-files.sh &&
+            chmod +x tag-files.sh &&
+            mkdir -p zlux/share && cd zlux &&
+            mkdir bin && cd share &&
+            tar xpoUf ../../zlux.tar &&
+            ../../tag-files.sh . &&
+            cd zlux-server-framework &&
+            rm -rf node_modules &&
+            ${NODE_ENV_VARS} PATH=${NODE_HOME}/bin:$PATH npm install &&
+            cd .. &&
+            iconv -f iso8859-1 -t 1047 zlux-app-server/defaults/serverConfig/server.json > zlux-app-server/defaults/serverConfig/server.json.1047 &&
+            mv zlux-app-server/defaults/serverConfig/server.json.1047 zlux-app-server/defaults/serverConfig/server.json &&
+            chtag -tc 1047 zlux-app-server/defaults/serverConfig/server.json &&
+            cd zlux-app-server/bin &&
+            cp start.sh configure.sh ../../../bin &&
+            if [ -e "validate.sh" ]; then
+              cp validate.sh ../../../bin
+            fi
+            cd ..
+            if [ -e "manifest.yaml" ]; then
+              cp manifest.yaml ../../
+            fi
+            cd ../../
+            pax -x os390 -pp -wf ../zlux.pax *
+          """
+          sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
+          sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
+        }
       }
+      
       stage("Deploy") {
         def artifactoryServer = Artifactory.server ARTIFACTORY_SERVER
         def timestamp = (new Date()).format("yyyyMMdd.HHmmss")
         def target = null
-    if (mergedComponent) {
-            target = "${ARTIFACTORY_REPO}/${mergedComponent}/" +
-              "${zoweVersion}${branchName.toUpperCase()}/" +
-              "${mergedComponent}-${zoweVersion}-${timestamp}"
-            ["tar", "pax"].each {
-              def uploadSpec = """{"files": [{"pattern": "${mergedComponent}.${it}", "target": "${target}.${it}"}]}"""
-              def buildInfo = Artifactory.newBuildInfo()
-              artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
-              artifactoryServer.publishBuildInfo buildInfo
-            }
+        if (zluxbuildpr.startsWith("PR-") && !params.'STARTED_JOB' && !params.'BUILD_DEFAULT'){
+          target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${zluxbuildpr}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
           }
-
+        } else if(params.'STARTED_JOB'){
+          target = "${ARTIFACTORY_REPO}/zlux-core/" +
+            "${zoweVersion}-${params.'PR_NUMBER'}-${params.'REPO_NAME'}/" +
+            "zlux-core-${zoweVersion}-${timestamp}"
+          ["tar", "pax"].each {
+            def uploadSpec = """{"files": [{"pattern": "zlux.${it}", "target": "${target}.${it}"}]}"""
+            def buildInfo = Artifactory.newBuildInfo()
+            artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
+            artifactoryServer.publishBuildInfo buildInfo
+          }
+        } else {
           target = "${ARTIFACTORY_REPO}/zlux-core/" +
             "${zoweVersion}${branchName.toUpperCase()}/" +
             "zlux-core-${zoweVersion}-${timestamp}"
@@ -308,6 +326,7 @@ node(JENKINS_NODE) {
             artifactoryServer.upload spec: uploadSpec, buildInfo: buildInfo
             artifactoryServer.publishBuildInfo buildInfo
           }
+        }
       }
     }
   } catch (FlowInterruptedException  e) {
@@ -345,17 +364,17 @@ node(JENKINS_NODE) {
         [$class: "UpstreamComitterRecipientProvider"]
       ],
         body: \
-      """
-                    <p><b>${currentBuild.result}</b></p>
-                    <hr/>
-                    <ul>
-                        <li>Duration: ${currentBuild.durationString[0..-14]}</li>
-                        <li>Build link: <a href="${env.RUN_DISPLAY_URL}">
-                            ${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></li>
-                        <li>Pull requests: ${prettyParams}</li>
-                    </ul>
-                    <hr/>
-                    """
+        """
+          <p><b>${currentBuild.result}</b></p>
+          <hr/>
+          <ul>
+            <li>Duration: ${currentBuild.durationString[0..-14]}</li>
+            <li>Build link: <a href="${env.RUN_DISPLAY_URL}">
+              ${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></li>
+            <li>Pull requests: ${prettyParams}</li>
+          </ul>
+          <hr/>
+        """
     }
   }
 }
