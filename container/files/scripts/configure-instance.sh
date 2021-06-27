@@ -1,4 +1,5 @@
-/*
+#!/bin/bash
+
 #########################################################################################
 #                                                                                       #
 # This program and the accompanying materials are made available under the terms of the #
@@ -10,27 +11,12 @@
 # Copyright IBM Corporation 2021                                                        #
 #                                                                                       #
 #########################################################################################
-*/
 
-const { binaryDependencies: zowePackages } = require('./files/manifest.json');
-const baseUrl = process.env.ZOWE_REPOSITORY || 'https://zowe.jfrog.io/artifactory';
-function getPackageUrls() {
-    let zluxPrefix = 'org.zowe.zlux';
-    let urls = []
-    let packages = [] 
-    for (const [key, value] of Object.entries(zowePackages)) {
-        if (key.startsWith(zluxPrefix)) {
-            let packageName = key.replace(zluxPrefix + '.', '');
-            packages.push(packageName)
-            let { repository, version, artifact } = value;
-            urls.push(`${baseUrl}/${repository}/org/zowe/zlux/${packageName}/${version}/${artifact.replace('.pax', '.tar')}`);
-        }
-    }
-    //console.log(urls);
-    return `${packages.toString()};${urls.toString()}`;
-}
+# This script borrowed from zowe-configure-instance.sh
+LOG_DIR=${INSTANCE_DIR}/logs
+mkdir -p ${LOG_DIR}
+chmod 777 ${LOG_DIR}
+export LOG_FILE=${LOG_DIR}/"configure-app-server`date +%Y-%m-%d-%H-%M-%S`.log"
 
-console.log(getPackageUrls())
-
-
-
+# cd ${ZOWE_ROOT_DIR}/components/app-server/share/zlux-app-server/bin
+./internal-install.sh

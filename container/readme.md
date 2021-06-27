@@ -7,10 +7,12 @@
 - download-zlux.sh - downloads component builds listed in manifest.json
 - build.sh - build pp-server container based on Dockerfile.zlux
 - start.sh - start built container on localhost, modify target zosmf, zss hostname and ports in this script
+- run.sh - run all helper scripts in sequence pull,download,build,and then start
 
 # TODO:
-- container script `run-app-installs.sh` copied from server-bundle is not used as of now
-
+- container script `run-app-installs.sh` copied from `server-bundle` is not used as of now
+- `internal-install.sh` will directly come from `zlux-app-server/bin` instead of `files/scripts`
 # Steps
-- run.sh - run all helper scripts in sequence pull,download,build,and then start
-  Modify start.sh zss & zosmf params before executing run.sh
+- cd container
+- Modify container/start.sh parameter for zss & zosmf
+- ./run.sh

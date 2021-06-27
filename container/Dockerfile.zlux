@@ -6,7 +6,7 @@
 #                                                                                       #
 # SPDX-License-Identifier: EPL-2.0                                                      #
 #                                                                                       #
-# Copyright IBM Corporation 2020, 2021                                                  #
+# Copyright IBM Corporation 2021                                                        #
 #                                                                                       #
 #########################################################################################
 FROM node:12
@@ -38,9 +38,8 @@ ADD files ${INSTALL_DIR}/files
 
 RUN  \
 cp ${INSTALL_DIR}/files/scripts/pre-start.sh ${BASE_DIR}/bin && \
-cd ${INSTALL_DIR}/files/scripts && ./install.sh && \
-cd ${INSTALL_DIR}/files/scripts && ./internal-install.sh  && \
 mkdir -p ${ZLUX_INSTANCE_ROOT} && \
+cd ${INSTALL_DIR}/files/scripts && ./configure-instance.sh  && \
 rm -rf ${INSTALL_DIR}/files
 
 EXPOSE 8544/tcp
