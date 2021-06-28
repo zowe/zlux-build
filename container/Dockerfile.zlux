@@ -23,8 +23,8 @@ ADD files/zlux-core.tar  ${ROOT_DIR}/components/app-server/share/
 # copy all packages & scripts to install
 ADD files ${INSTALL_DIR}/files
 
-RUN cd ${INSTALL_DIR}/files/scripts && \
-chmod +x start-container.sh configure-container.sh internal-install.sh install-container.sh && \ 
+RUN cd ${ROOT_DIR}/components/app-server/share/zlux-app-server/bin && \
+chmod +x *.sh && \
 ./install-container.sh
 
 EXPOSE 8544/tcp

@@ -1,4 +1,4 @@
 *.tar
 files/zlux
-manifest.json
+# manifest.json
 logs

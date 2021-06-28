@@ -13,6 +13,9 @@
 - container script `run-app-installs.sh` copied from `server-bundle` is not used as of now
 - `internal-install.sh` will directly come from `zlux-app-server/bin` instead of `files/scripts`
 # Steps
-- cd container
-- Modify container/start.sh parameter for zss & zosmf
-- ./run.sh
+```
+  cd container
+  chmod +x *.sh
+  #edit start.sh parameter for zss & zosmf
+  ./run.sh
+```

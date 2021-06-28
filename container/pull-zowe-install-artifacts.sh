@@ -21,7 +21,9 @@ mkdir -p files/zlux
 
 # clone zowe-install-packaging - copy manifest, files/zlux/config
 git clone https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
-cp files/zowe-install-packaging/manifest.json.template files/manifest.json
+
+# un-comment cp manifest.json
+#cp files/zowe-install-packaging/manifest.json.template files/manifest.json
 mv files/zowe-install-packaging/files/zlux/config files/zlux/config
 # clear zowe-install-packaging
 rm -rf files/zowe-install-packaging
