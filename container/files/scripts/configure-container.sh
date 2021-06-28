@@ -12,7 +12,7 @@
 #                                                                                       #
 #########################################################################################
 
-# This script borrowed from zowe-configure-instance.sh
+# This script borrowed from zowe-configure-container.sh
 LOG_DIR=${INSTANCE_DIR}/logs
 mkdir -p ${LOG_DIR}
 chmod 777 ${LOG_DIR}

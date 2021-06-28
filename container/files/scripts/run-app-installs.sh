@@ -14,13 +14,13 @@
 
 # This script is placholder from server-bundle install apps, based on apps mountpoint
 if [ -d "${apps_dir}" ]; then
-  export ZLUX_ROOT=/home/zowe/install/components/app-server/share
+  export ZLUX_SHARE=/home/zowe/install/components/app-server/share
   cd ${apps_dir}
   for D in */;
    do
     if test -f "$D/autoinstall.sh"; then
       app=$(cd $D && pwd)
-      ZLUX_ROOT=$ZLUX_ROOT APP_PLUGIN_DIR=app ./$D/autoinstall.sh
+      ZLUX_SHARE=$ZLUX_SHARE APP_PLUGIN_DIR=app ./$D/autoinstall.sh
     elif test -f "$D/pluginDefinition.json"; then
         $INSTANCE_DIR/bin/install-app.sh ${apps_dir}/$D
     elif test -f "$D/manifest.yaml"; then
