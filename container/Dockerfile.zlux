@@ -37,9 +37,11 @@ cp ${ZLUX_APP_SERVER}/bin/configure.sh ${BASE_DIR}/bin
 ADD files ${INSTALL_DIR}/files
 
 RUN  \
-cp ${INSTALL_DIR}/files/scripts/pre-start.sh ${BASE_DIR}/bin && \
+cp ${INSTALL_DIR}/files/scripts/pre-start.sh ${BASE_DIR}/bin && chmod +x ${BASE_DIR}/bin/pre-start.sh && \
 mkdir -p ${ZLUX_INSTANCE_ROOT} && \
-cd ${INSTALL_DIR}/files/scripts && ./configure-instance.sh  && \
+cd ${INSTALL_DIR}/files/scripts && \
+chmod +x ${INSTALL_DIR}/files/scripts/configure-instance.sh && \
+chmod +x ${INSTALL_DIR}/files/scripts/internal-install.sh && ./configure-instance.sh && \
 rm -rf ${INSTALL_DIR}/files
 
 EXPOSE 8544/tcp
