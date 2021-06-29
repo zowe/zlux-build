@@ -3,15 +3,21 @@
 - files/zlux/config - zowe-install-packaging
 
 # Helper Scripts
-- pull-zowe-install-artifacts.sh 
-- download-zlux.sh - downloads component builds listed in manifest.json
-- build.sh - build pp-server container based on Dockerfile.zlux
-- start.sh - start built container on localhost, modify target zosmf, zss hostname and ports in this script
-- run.sh - run all helper scripts in sequence pull,download,build,and then start
+- `pull-zowe-install-artifacts.sh` 
+- `download-zlux.sh` - downloads component builds listed in manifest.json
+- `build.sh` - build pp-server container based on Dockerfile.zlux
+- `start.sh` - start built container on localhost, modify target zosmf, zss hostname and ports in this script
+- `run.sh` - run scripts in sequence `pull-zowe-install-artifacts.sh`, `download-zlux.sh`, `build.sh`, and then `start.sh`
 
 # TODO:
-- container script `run-app-installs.sh` copied from `server-bundle` is not used as of now
-- `internal-install.sh` will directly come from `zlux-app-server/bin` instead of `files/scripts`
+- container script `app-install-container.sh` copied from `server-bundle` is not used as of now
+
+# Container Scripts
+- `install-container.sh`  -> layout binaries, and scripts
+- `configure-container.sh` -> create logs folder, and calls `internal-install.sh`
+- `internal-install.sh` -> copy default plugin tars and default plugins configs
+- `start-container.sh` -> entrypoint, calls lifecycle scripts `configure.sh` & `start.sh`
+
 # Steps
 ```
   cd container
