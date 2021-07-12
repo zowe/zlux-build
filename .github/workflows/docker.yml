@@ -30,8 +30,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: zowe.jfrog.io
-          username: ${{ secrets.JFROG_USER_WRITER }}
-          password: ${{ secrets.JFROG_PASSWORD_WRITER }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
           
 
       # Runs a set of commands using the runners shell
