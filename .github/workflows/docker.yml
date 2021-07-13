@@ -43,6 +43,7 @@ jobs:
           ./download-zlux.sh
           cd files
           IMAGE_VERSION=$(grep -Po '"version": *\K"[^"]*"'  manifest.json | head -n1)
+          IMAGE_VERSION=`echo $IMAGE_VERSION | sed 's/.\(.*\)/\1/' | sed 's/\(.*\)./\1/'`
           cd ..
           ./build.sh
           docker tag zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing zowe-docker-snapshot.jfrog.io/ompzowe/app-server:$IMAGE_VERSION
