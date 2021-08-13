@@ -1,0 +1,19 @@
+name: Build docker image with sources
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Tag of ompzowe/app-server to use in build'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
+        with:
+          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag}}
+          node-version:
+          registry-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
