@@ -46,6 +46,6 @@ jobs:
           IMAGE_VERSION=`echo $IMAGE_VERSION | sed 's/.\(.*\)/\1/' | sed 's/\(.*\)./\1/'`
           cd ..
           ./build.sh
-          docker tag zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYK
+          docker tag zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYKbuster
           docker push zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYKbuster
    
