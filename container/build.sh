@@ -13,5 +13,5 @@
 #########################################################################################
 
 mkdir -p logs
-docker pull node:12.22.3-stretch
+docker pull node:fermium-buster-slim
 docker build --pull -f Dockerfile.zlux --no-cache --progress=plain -t zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing . 2>&1 | tee logs/docker-build.log
