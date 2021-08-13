@@ -47,5 +47,5 @@ jobs:
           cd ..
           ./build.sh
           docker tag zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYK
-          docker push zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYK
+          docker push zowe-docker-snapshot.jfrog.io/ompzowe/app-server:SNYK-buster
    
