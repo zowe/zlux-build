@@ -8,6 +8,7 @@ on:
   pull_request:
     branches: [staging] 
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +16,7 @@ jobs:
     steps:
       - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
         with:
-          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag}}
+          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
           node-version:
           registry-username: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
