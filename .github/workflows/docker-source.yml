@@ -6,8 +6,10 @@ on:
         description: 'Tag of ompzowe/app-server to use in build'
         required: true
   pull_request:
-    branches: [staging] 
+    branches: [staging]
 
+env:
+  ZOWE_DOCKER_REGISTRY: zowe-docker-snapshot.jfrog.io
 
 jobs:
   build:
@@ -23,6 +25,7 @@ jobs:
           
       - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
         with:
+          
           image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
 #          node-version:
           registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
