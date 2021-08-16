@@ -27,11 +27,11 @@ jobs:
         with:
           image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:1.22.0
 #          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
-#          node-version:
+          node-version: 12.19.0
           registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
       - uses: zowe-actions/shared-actions/docker-build-local@main
         with:
           dockerfile: ${{ github.workspace }}/docker-build-local/Dockerfile.sources
-          build-arg-list: IMAGE_NAME=${{ github.event.inputs.image-name }} NODE_VERSION=${{ github.event.inputs.node-version }}
+          build-arg-list: IMAGE_NAME=zowe-docker-snapshot.jfrog.io/ompzowe/app-server:1.22.0 NODE_VERSION=12.19.0
