@@ -5,6 +5,8 @@ on:
       image_tag:
         description: 'Tag of ompzowe/app-server to use in build'
         required: true
+  pull_request:
+    branches: [staging] 
 
 jobs:
   build:
