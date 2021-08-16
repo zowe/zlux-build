@@ -14,9 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - uses: zowe-actions/shared-actions/docker-prepare@main
+        with:
+          registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+#          base-directory: ${{ github.action_path }}/../utils
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+          
       - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
         with:
           image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
           node-version:
           registry-username: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+      - uses: zowe-actions/shared-actions/docker-build-local@main
+        with:
+          dockerfile: ${{ github.action_path }}/../utils/Dockerfile.sources
+          build-arg-list: IMAGE_NAME=${{ github.event.inputs.image-name }} NODE_VERSION=${{ github.event.inputs.node-version }}
