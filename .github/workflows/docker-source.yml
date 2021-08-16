@@ -33,5 +33,5 @@ jobs:
 
       - uses: zowe-actions/shared-actions/docker-build-local@main
         with:
-          dockerfile: ${{ github.action_path }}/../utils/Dockerfile.sources
+          dockerfile: ${{ github.workspace }}/docker-build-local/Dockerfile.sources
           build-arg-list: IMAGE_NAME=${{ github.event.inputs.image-name }} NODE_VERSION=${{ github.event.inputs.node-version }}
