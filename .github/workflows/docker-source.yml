@@ -34,4 +34,4 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-build-local@main
         with:
           dockerfile: ${{ github.workspace }}/docker-build-local/Dockerfile.sources
-          build-arg-list: IMAGE_NAME=ompzowe/app-server:1.22.0 NODE_VERSION=12.19.0
+          build-arg-list: IMAGE_NAME=zowe-docker-snapshot.jfrog.io/ompzowe/app-server:1.22.0 NODE_VERSION=12.19.0
