@@ -25,8 +25,7 @@ jobs:
           
       - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
         with:
-          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:1.22.0
-#          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
+          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
           node-version: 12.19.0
           registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
@@ -36,4 +35,4 @@ jobs:
           IMAGE_DIRECTORY: ${{ github.workspace }}/docker-build-local
         with:
           dockerfile: Dockerfile.sources
-          build-arg-list: IMAGE_NAME=zowe-docker-snapshot.jfrog.io/ompzowe/app-server:1.22.0
+          build-arg-list: IMAGE_NAME=zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
