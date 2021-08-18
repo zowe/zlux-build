@@ -31,7 +31,7 @@ jobs:
           registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
-      - uses: zowe-actions/shared-actions/docker-build-local@main
+      - uses: zowe-actions/shared-actions/docker-build-local@feature/get-docker-sources
         env:
           IMAGE_DIRECTORY: ${{ github.workspace }}/docker-build-local
         with:
