@@ -46,8 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      #- uses: zowe-actions/shared-actions/prepare-workflow@main
-
       - uses: zowe-actions/shared-actions/docker-prepare@main
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
