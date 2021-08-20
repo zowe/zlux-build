@@ -9,7 +9,7 @@
 # Copyright IBM Corporation 2021                                                        #
 #                                                                                       #
 #########################################################################################
-FROM node:12.22.5-buster
+FROM node:12
 
 #ENV VARS
 ENV INSTALL_DIR=/home/zowe
