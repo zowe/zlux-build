@@ -1,0 +1,19 @@
+---
+name: app-server
+# Component identifier. This identifier matches artifact path in Zowe Artifactory https://zowe.jfrog.io/.
+id: org.zowe.app-server
+# Component version is defined in gradle.properties for Gradle project
+# Human readable component name
+title: App Server
+# Human readable component description
+license: EPL-2.0
+repository:
+  type: git
+  url: https://github.com/zowe/zlux-build.git
+build:
+  branch: "{{build.branch}}"
+  number: "{{build.number}}"
+  commitHash: "{{build.commitHash}}"
+  timestamp: "{{build.timestamp}}"
+commands:
+  start: bin/start.sh
