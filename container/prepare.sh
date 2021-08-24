@@ -75,6 +75,7 @@ rm -fr "${BASE_DIR}/${WORK_DIR}"
 mkdir -p "${BASE_DIR}/${WORK_DIR}"
 
 
+
 ###############################
 # Container scripts
 echo ">>>> running container scripts"
@@ -84,13 +85,13 @@ if [ ! -f pull-zowe-install-artifacts.sh ]; then
   echo "Error: pull-zowe-install-artifacts script is missing."
   exit 3
 fi
-./pull-zowe-install-artifacts.sh
-
 if [ ! -f download-zlux.sh ]; then
   echo "Error: download-zlux script is missing."
   exit 4
 fi
-./download-zlux.sh
+cd "${BASE_DIR}/${WORK_DIR}"
+../pull-zowe-install-artifacts.sh
+../download-zlux.sh
 
 
 
@@ -101,8 +102,6 @@ cp README.md "${BASE_DIR}/${WORK_DIR}"
 cp LICENSE "${BASE_DIR}/${WORK_DIR}"
 cp package.json "${BASE_DIR}/${WORK_DIR}"
 
-cd "cd "${BASE_DIR}/${WORK_DIR}""
-cp -rf ../files "${BASE_DIR}/${WORK_DIR}"
 find "${BASE_DIR}/${WORK_DIR}"
 
 ###############################
