@@ -101,9 +101,9 @@ cp README.md "${BASE_DIR}/${WORK_DIR}"
 cp LICENSE "${BASE_DIR}/${WORK_DIR}"
 cp package.json "${BASE_DIR}/${WORK_DIR}"
 
-cd "${BASE_DIR}"
-cp -rf files "${BASE_DIR}/${WORK_DIR}"
-
+cd "cd "${BASE_DIR}/${WORK_DIR}""
+cp -rf ../files "${BASE_DIR}/${WORK_DIR}"
+find "${BASE_DIR}/${WORK_DIR}"
 
 ###############################
 echo ">>>>> prepare manifest.json"
