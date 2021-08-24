@@ -11,6 +11,16 @@
 #########################################################################################
 FROM node:12
 
+##################################
+# labels
+LABEL name="App Server" \
+      maintainer="jstruga@rocketsoftware.component" \
+      vendor="Zowe" \
+      version="0.0.0" \
+      release="0" \
+      description="This Zowe UI component can display jobs running on z/OS"
+
+
 #ENV VARS
 ENV INSTALL_DIR=/home/zowe
 ENV ROOT_DIR=${INSTALL_DIR}/install
