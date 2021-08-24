@@ -80,20 +80,8 @@ echo ">>>>> prepare basic files"
 cd "${REPO_ROOT_DIR}"
 cp README.md "${BASE_DIR}/${WORK_DIR}"
 cp LICENSE "${BASE_DIR}/${WORK_DIR}"
-cp CHANGELOG.md "${BASE_DIR}/${WORK_DIR}"
 cp package.json "${BASE_DIR}/${WORK_DIR}"
-cp package-lock.json "${BASE_DIR}/${WORK_DIR}"
-cp pluginDefinition.json "${BASE_DIR}/${WORK_DIR}"
-cp pluginDefinition.prod.json "${BASE_DIR}/${WORK_DIR}"
-cp webpack.config.js "${BASE_DIR}/${WORK_DIR}"
-cp jsconfig.json "${BASE_DIR}/${WORK_DIR}"
-cp .npmrc "${BASE_DIR}/${WORK_DIR}"
-cp .npmignore "${BASE_DIR}/${WORK_DIR}"
-cp apiml-static-registration.yaml.template "${BASE_DIR}/${WORK_DIR}"
-cp -r plugin-definition "${BASE_DIR}/${WORK_DIR}"
-cp -r WebContent "${BASE_DIR}/${WORK_DIR}"
-mkdir ${BASE_DIR}/${WORK_DIR}/bin
-cp bin/start.sh ${BASE_DIR}/${WORK_DIR}/bin
+
 
 ###############################
 echo ">>>>> prepare manifest.json"
