@@ -109,5 +109,23 @@ echo ">>>>> copy to target build context"
 cp -r "${BASE_DIR}/${WORK_DIR}" "${BASE_DIR}/${linux_distro}/${cpu_arch}/component"
 
 ###############################
+# Container scripts
+echo ">>>> running container scripts"
+cd "${BASE_DIR}"
+chmod +x *.sh
+if [ ! -f pull-zowe-install-artifacts.sh ]; then
+  echo "Error: pull-zowe-install-artifacts script is missing."
+  exit 3
+fi
+./pull-zowe-install-artifacts.sh
+
+if [ ! -f download-zlux.sh ]; then
+  echo "Error: download-zlux script is missing."
+  exit 4
+fi
+./download-zlux.sh
+
+
+###############################
 # done
 echo ">>>>> all done"
