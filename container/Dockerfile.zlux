@@ -25,16 +25,16 @@ LABEL name="App Server" \
 
 
 #ENV VARS
-ENV INSTALL_DIR=/home/zowe
+ENV INSTALL_DIR=/component
 ENV ROOT_DIR=${INSTALL_DIR}/install
 ENV ZOWE_ROOT_DIR=${ROOT_DIR}
 ENV INSTANCE_DIR=${INSTALL_DIR}/instance
 ENV WORKSPACE_DIR=${INSTANCE_DIR}/workspace
 
 # COPY zlux-core to /home/zowe/install/components/app-server/share
-ADD files/zlux-core.tar  ${ROOT_DIR}/components/app-server/share/
+ADD component/files/zlux-core.tar  ${ROOT_DIR}/components/app-server/share/
 # copy all packages & scripts to install
-ADD files ${INSTALL_DIR}/files
+ADD component/files ${INSTALL_DIR}/files
 
 RUN cd ${ROOT_DIR}/components/app-server/share/zlux-app-server/bin && \
 chmod +x *.sh && \
