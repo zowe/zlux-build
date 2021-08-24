@@ -125,7 +125,7 @@ cat manifest.yaml | \
  ###############################
 # copy to target context
 echo ">>>>> copy to target build context"
-cp -r "${BASE_DIR}/${WORK_DIR}" "${BASE_DIR}/${linux_distro}/${cpu_arch}"
+cp -r "${BASE_DIR}/${WORK_DIR}/." "${BASE_DIR}/${linux_distro}/${cpu_arch}"
 
 ###############################
 # done
