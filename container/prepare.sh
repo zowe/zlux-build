@@ -77,8 +77,8 @@ mkdir -p "${BASE_DIR}/${WORK_DIR}"
 
 
 ###############################
-# Container scripts
-echo ">>>> running container scripts"
+# Download zlux
+echo ">>>> prepare zlux"
 cd "${BASE_DIR}"
 chmod +x *.sh
 if [ ! -f pull-zowe-install-artifacts.sh ]; then
@@ -89,11 +89,8 @@ if [ ! -f download-zlux.sh ]; then
   echo "Error: download-zlux script is missing."
   exit 4
 fi
-cd "${BASE_DIR}/${WORK_DIR}"
-../pull-zowe-install-artifacts.sh
-../download-zlux.sh
-
-
+./pull-zowe-install-artifacts.sh
+./download-zlux.sh
 
 ###############################
 echo ">>>>> prepare basic files"
@@ -101,8 +98,9 @@ cd "${REPO_ROOT_DIR}"
 cp README.md "${BASE_DIR}/${WORK_DIR}"
 cp LICENSE "${BASE_DIR}/${WORK_DIR}"
 cp package.json "${BASE_DIR}/${WORK_DIR}"
-
-find "${BASE_DIR}/${WORK_DIR}"
+mv "${BASE_DIR}/files" "${BASE_DIR}/${WORK_DIR}"
+cd "${BASE_DIR}/${WORK_DIR}"
+find .
 
 ###############################
 echo ">>>>> prepare manifest.json"
