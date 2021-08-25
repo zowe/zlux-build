@@ -11,6 +11,7 @@ on:
 
 env:
   IMAGE_BASE_DIR: container
+  RELEASE: true
 
 jobs:
   build:
@@ -52,7 +53,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ env.RELEASE }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubuntu

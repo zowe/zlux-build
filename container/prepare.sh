@@ -48,33 +48,15 @@ fi
 BASE_DIR=$(cd $(dirname $0);pwd)
 REPO_ROOT_DIR=$(cd $(dirname $0)/../;pwd)
 WORK_DIR=tmp
+UNTAR_DIR=untar
 JFROG_REPO_SNAPSHOT=libs-snapshot-local
 JFROG_REPO_RELEASE=libs-release-local
 JFROG_URL=https://zowe.jfrog.io/zowe/
 
 ###############################
-echo ">>>>> prepare basic files"
-cd "${REPO_ROOT_DIR}"
-package_version=$(jq -r '.version' package.json)
-package_release=$(echo "${package_version}" | awk -F. '{print $1;}')
-
-###############################
-# copy Dockerfile
-echo ">>>>> copy Dockerfile to ${linux_distro}/${cpu_arch}/Dockerfile"
-cd "${BASE_DIR}"
-mkdir -p "${linux_distro}/${cpu_arch}"
-if [ ! -f Dockerfile.zlux ]; then
-  echo "Error: Dockerfile file is missing."
-  exit 2
-fi
-cat Dockerfile.zlux | sed -e "s#version=\"0\.0\.0\"#version=\"${package_version}\"#" -e "s#release=\"0\"#release=\"${package_release}\"#" > "${linux_distro}/${cpu_arch}/Dockerfile"
-
-###############################
 echo ">>>>> clean up folder"
 rm -fr "${BASE_DIR}/${WORK_DIR}"
 mkdir -p "${BASE_DIR}/${WORK_DIR}"
-
-
 
 ###############################
 # Container scripts
@@ -93,7 +75,33 @@ cd "${BASE_DIR}/${WORK_DIR}"
 ../pull-zowe-install-artifacts.sh
 ../download-zlux.sh
 
+###############################
+# untar zlux-core and copy package.json,manifest.yaml
+echo ">>>>> clean up folder"
+rm -fr "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
+mkdir -p "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
+cd "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
+tar -xvf ../zlux-core.tar
+cp zlux-app-server/manifest.yaml "${REPO_ROOT_DIR}"
+cp zlux-app-server/package.json "${REPO_ROOT_DIR}"
+rm -fr "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
 
+###############################
+echo ">>>>> prepare basic files"
+cd "${REPO_ROOT_DIR}"
+package_version=$(jq -r '.version' package.json)
+package_release=$(echo "${package_version}" | awk -F. '{print $1;}')
+
+###############################
+# copy Dockerfile
+echo ">>>>> copy Dockerfile to ${linux_distro}/${cpu_arch}/Dockerfile"
+cd "${BASE_DIR}"
+mkdir -p "${linux_distro}/${cpu_arch}"
+if [ ! -f Dockerfile.zlux ]; then
+  echo "Error: Dockerfile file is missing."
+  exit 2
+fi
+cat Dockerfile.zlux | sed -e "s#version=\"0\.0\.0\"#version=\"${package_version}\"#" -e "s#release=\"0\"#release=\"${package_release}\"#" > "${linux_distro}/${cpu_arch}/Dockerfile"
 
 ###############################
 echo ">>>>> prepare basic files"
