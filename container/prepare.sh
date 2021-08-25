@@ -80,13 +80,7 @@ echo ">>>>> create tmp folder to extract tar"
 rm -fr "${BASE_DIR}/${UNTAR_DIR}"
 mkdir -p "${BASE_DIR}/${UNTAR_DIR}"
 cd "${BASE_DIR}/${UNTAR_DIR}"
-for entry in "${BASE_DIR}"
-do
-  if [ -f "$entry" ];then
-    echo "$entry"
-  fi
-done
-tar -xvf ../zlux-core.tar
+tar -xvf ../files/zlux-core.tar
 cp zlux-app-server/manifest.yaml "${REPO_ROOT_DIR}"
 cp zlux-app-server/package.json "${REPO_ROOT_DIR}"
 rm -fr "${BASE_DIR}/${UNTAR_DIR}"
