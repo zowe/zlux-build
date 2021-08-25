@@ -48,7 +48,6 @@ fi
 BASE_DIR=$(cd $(dirname $0);pwd)
 REPO_ROOT_DIR=$(cd $(dirname $0)/../;pwd)
 WORK_DIR=tmp
-UNTAR_DIR=untar
 JFROG_REPO_SNAPSHOT=libs-snapshot-local
 JFROG_REPO_RELEASE=libs-release-local
 JFROG_URL=https://zowe.jfrog.io/zowe/
@@ -59,8 +58,8 @@ rm -fr "${BASE_DIR}/${WORK_DIR}"
 mkdir -p "${BASE_DIR}/${WORK_DIR}"
 
 ###############################
-# Container scripts
-echo ">>>> running container scripts"
+# Download zlux
+echo ">>>> prepare zlux"
 cd "${BASE_DIR}"
 chmod +x *.sh
 if [ ! -f pull-zowe-install-artifacts.sh ]; then
@@ -71,9 +70,8 @@ if [ ! -f download-zlux.sh ]; then
   echo "Error: download-zlux script is missing."
   exit 4
 fi
-cd "${BASE_DIR}/${WORK_DIR}"
-../pull-zowe-install-artifacts.sh
-../download-zlux.sh
+./pull-zowe-install-artifacts.sh
+./download-zlux.sh
 
 ###############################
 # untar zlux-core and copy package.json,manifest.yaml
@@ -103,14 +101,16 @@ if [ ! -f Dockerfile.zlux ]; then
 fi
 cat Dockerfile.zlux | sed -e "s#version=\"0\.0\.0\"#version=\"${package_version}\"#" -e "s#release=\"0\"#release=\"${package_release}\"#" > "${linux_distro}/${cpu_arch}/Dockerfile"
 
+
 ###############################
 echo ">>>>> prepare basic files"
 cd "${REPO_ROOT_DIR}"
 cp README.md "${BASE_DIR}/${WORK_DIR}"
 cp LICENSE "${BASE_DIR}/${WORK_DIR}"
 cp package.json "${BASE_DIR}/${WORK_DIR}"
-
-find "${BASE_DIR}/${WORK_DIR}"
+mv "${BASE_DIR}/files" "${BASE_DIR}/${WORK_DIR}"
+cd "${BASE_DIR}/${WORK_DIR}"
+find .
 
 ###############################
 echo ">>>>> prepare manifest.json"
@@ -130,14 +130,13 @@ cat manifest.yaml | \
       -e "s#{{build\.commitHash}}#${GITHUB_SHA}#" \
       -e "s#{{build\.timestamp}}#$(date +%s)#" \
   > "${BASE_DIR}/${WORK_DIR}/manifest.yaml"
-  
-  
+
+
  ###############################
 # copy to target context
 echo ">>>>> copy to target build context"
-cp -r "${BASE_DIR}/${WORK_DIR}" "${BASE_DIR}/${linux_distro}/${cpu_arch}/component"
-
+cp -r "${BASE_DIR}/${WORK_DIR}/." "${BASE_DIR}/${linux_distro}/${cpu_arch}"
 
 ###############################
 # done
-echo ">>>>> all done"
+echo ">>>>> all done" 

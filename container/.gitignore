@@ -1,4 +1,8 @@
 *.tar
-files/zlux
+files/
+tmp/
 # manifest.json
 logs
+# Dockerfile
+ubuntu/
+ubi/
