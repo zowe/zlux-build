@@ -48,6 +48,7 @@ fi
 BASE_DIR=$(cd $(dirname $0);pwd)
 REPO_ROOT_DIR=$(cd $(dirname $0)/../;pwd)
 WORK_DIR=tmp
+UNTAR_DIR=untar
 JFROG_REPO_SNAPSHOT=libs-snapshot-local
 JFROG_REPO_RELEASE=libs-release-local
 JFROG_URL=https://zowe.jfrog.io/zowe/
@@ -75,14 +76,14 @@ fi
 
 ###############################
 # untar zlux-core and copy package.json,manifest.yaml
-echo ">>>>> clean up folder"
-rm -fr "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
-mkdir -p "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
-cd "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
+echo ">>>>> create tmp folder to extract tar"
+rm -fr "${BASE_DIR}/${UNTAR_DIR}"
+mkdir -p "${BASE_DIR}/${UNTAR_DIR}"
+cd "${BASE_DIR}/${UNTAR_DIR}"
 tar -xvf ../zlux-core.tar
 cp zlux-app-server/manifest.yaml "${REPO_ROOT_DIR}"
 cp zlux-app-server/package.json "${REPO_ROOT_DIR}"
-rm -fr "${BASE_DIR}/${WORK_DIR}/${UNTAR_DIR}"
+rm -fr "${BASE_DIR}/${UNTAR_DIR}"
 
 ###############################
 echo ">>>>> prepare basic files"
