@@ -31,13 +31,11 @@ jobs:
           image-name: app-server
           linux-distro: ubuntu
           cpu-arch: amd64
-          
-          
+      
       - uses: zowe-actions/shared-actions/docker-build-local@main
-       with:
-         build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
-       timeout-minutes: 5
-
+        with:
+          build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
+        timeout-minutes: 5
 
   build-zlinux:
     runs-on: ubuntu-latest
