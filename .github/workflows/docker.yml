@@ -14,33 +14,30 @@ env:
   RELEASE: true
 
 jobs:
-  build:
+  build-ubuntu:
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v2
       
-      - name: Login Jfrog
-        uses: docker/login-action@v1
+      - uses: zowe-actions/shared-actions/prepare-workflow@main
+      
+      - uses: zowe-actions/shared-actions/docker-prepare@main
         with:
-          registry: zowe-docker-snapshot.jfrog.io
-          username: ${{ secrets.ARTIFACTORY_X_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
+          registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
+          release: ${{ env.RELEASE }}
+          base-directory: ${{ env.IMAGE_BASE_DIR }}
+          image-name: app-server
+          linux-distro: ubuntu
+          cpu-arch: amd64
           
-      - name: build and push image
-        run: |
-          cd container
-          chmod +x *.sh
-          ./pull-zowe-install-artifacts.sh
-          ./download-zlux.sh
-          cd files
-          IMAGE_VERSION=$(grep -Po '"version": *\K"[^"]*"'  manifest.json | head -n1)
-          IMAGE_VERSION=`echo $IMAGE_VERSION | sed 's/.\(.*\)/\1/' | sed 's/\(.*\)./\1/'`
-          cd ..
-          ./build.sh
-          docker tag zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing zowe-docker-snapshot.jfrog.io/ompzowe/app-server:$IMAGE_VERSION
-          docker push zowe-docker-snapshot.jfrog.io/ompzowe/app-server:$IMAGE_VERSION
-   
+          
+      - uses: zowe-actions/shared-actions/docker-build-local@main
+       with:
+         build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
+       timeout-minutes: 5
+
 
   build-zlinux:
     runs-on: ubuntu-latest
