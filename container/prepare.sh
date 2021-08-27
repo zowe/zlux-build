@@ -87,8 +87,8 @@ rm -fr "${BASE_DIR}/${UNTAR_DIR}"
 
 ###############################
 echo ">>>>> prepare basic files"
-cd "${REPO_ROOT_DIR}"
-package_version=$(jq -r '.version' package.json)
+cd "${BASE_DIR}/files"
+package_version=$(jq -r '.version' manifest.json)
 package_release=$(echo "${package_version}" | awk -F. '{print $1;}')
 
 ###############################
