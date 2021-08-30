@@ -24,51 +24,40 @@ LABEL name="App Server" \
       summary="Zowe App Server, Desktop, and builtin plugins" \
       description="A core Zowe component that powers the Desktop and Desktop Apps"
 
+EXPOSE 8544/tcp
 
-#ENV VARS
 
-ENV INSTALL_DIR=/component
+ENV ZWED_INSTALL_DIR=/component
 ENV ROOT_DIR=/home/zowe/runtime
 ENV ZOWE_ROOT_DIR=${ROOT_DIR}
 ENV INSTANCE_DIR=/home/zowe/instance
 ENV WORKSPACE_DIR=${INSTANCE_DIR}/workspace
 
-# docker has really nonsensical behavior on when it will/wont extract a tar with ADD.
-ADD files/zlux-core.tar  ${INSTALL_DIR}/share/
-
-# copy all packages & scripts to install
-ADD files ${INSTALL_DIR}/files
-RUN echo "---/component---" && ls -ltr /component && echo "---/component/share/---" && ls -ltr /component/share && echo "---installdir---" && ls -ltr ${INSTALL_DIR}/files && echo "---zlux---" && ls -ltr ${INSTALL_DIR}/files/zlux && echo "---home---" && ls -ltr /home && echo "---zowe---" && ls -ltr /home/zowe
-RUN if [ ! -d ${INSTALL_DIR}/share/zlux-app-server ]; then cd ${INSTALL_DIR}/share && tar -xf zlux-core.tar; fi
-
-RUN cd ${INSTALL_DIR}/share/zlux-app-server/bin && \
-chmod +x *.sh && \
-./install-container.sh
-
-EXPOSE 8544/tcp
-
-ENV ZOWE_EXPLORER_HOST='localhost'
-# ENV ZOWE_IP_ADDRESS=0.0.0.0
-
-ENV ZOWE_ZOSMF_PORT='443'
-ENV ZWED_agent_https_port='8542'
-
-ENV ZWED_node_allowInvalidTLSProxy=true
-# ENV ZOWE_ZLUX_TELNET_PORT=23
-# ENV ZOWE_ZLUX_SECURITY_TYPE=telnet
-ENV ZWE_EXTERNAL_HOST='localhost'
+# Testing parameters
+# ENV ZOWE_EXPLORER_HOST='localhost'
+# ENV ZWED_node_allowInvalidTLSProxy=true
+# ENV ZWE_EXTERNAL_HOST='localhost'
 
 # authorization needs to point to zss endpoint
 # ENV APIML_SECURITY_AUTHORIZATION_PROVIDER=endpoint
 # ENV APIML_SECURITY_AUTHORIZATION_ENDPOINT_ENABLED=true
 
-# ENV LAUNCH_COMPONENT_GROUPS=DESKTOP,GATEWAY
 
-# COPY --chown=zowe:zowe --from=builder /home/zowe /home/zowe
-# RUN chmod a+x /home/zowe/*.sh /home/zowe/.run_inner.sh
+# zlux minus plugins
+ADD --chown=zowe:zowe files/zlux-core.tar  ${ZWED_INSTALL_DIR}/share/
+# copy config and plugins
+ADD --chown=zowe:zowe files ${ZWED_INSTALL_DIR}/files
 
-WORKDIR ${INSTALL_DIR}/bin
-
+RUN chown -R zowe:zowe ${ZWED_INSTALL_DIR}
 USER zowe
 
+RUN if [ ! -d ${ZWED_INSTALL_DIR}/share/zlux-app-server ]; then cd ${ZWED_INSTALL_DIR}/share && tar -xf zlux-core.tar; fi
+
+
+
+RUN cd ${ZWED_INSTALL_DIR}/share/zlux-app-server/bin && \
+chmod +x *.sh && \
+./install-container.sh
+
+WORKDIR ${ZWED_INSTALL_DIR}/bin
 CMD ["./start-container.sh"]
