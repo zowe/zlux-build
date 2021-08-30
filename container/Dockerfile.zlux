@@ -17,42 +17,46 @@ FROM zowe-docker-release.jfrog.io/ompzowe/base-node:${ZOWE_BASE_IMAGE} AS builde
 ##################################
 # labels
 LABEL name="App Server" \
-      maintainer="jstruga@rocketsoftware.component" \
+      maintainer="jstruga@rocketsoftware.com" \
       vendor="Zowe" \
       version="0.0.0" \
       release="0" \
-      description="This Zowe UI component can display jobs running on z/OS"
+      summary="Zowe App Server, Desktop, and builtin plugins" \
+      description="A core Zowe component that powers the Desktop and Desktop Apps"
 
 
 #ENV VARS
+
 ENV INSTALL_DIR=/component
-ENV ROOT_DIR=${INSTALL_DIR}/install
+ENV ROOT_DIR=/home/zowe/runtime
 ENV ZOWE_ROOT_DIR=${ROOT_DIR}
-ENV INSTANCE_DIR=${INSTALL_DIR}/instance
+ENV INSTANCE_DIR=/home/zowe/instance
 ENV WORKSPACE_DIR=${INSTANCE_DIR}/workspace
 
-# COPY zlux-core to /home/zowe/install/components/app-server/share
-ADD files/zlux-core.tar  ${ROOT_DIR}/components/app-server/share/
+# docker has really nonsensical behavior on when it will/wont extract a tar with ADD.
+ADD files/zlux-core.tar  ${INSTALL_DIR}/share/
+
 # copy all packages & scripts to install
 ADD files ${INSTALL_DIR}/files
+RUN echo "---/component---" && ls -ltr /component && echo "---/component/share/---" && ls -ltr /component/share && echo "---installdir---" && ls -ltr ${INSTALL_DIR}/files && echo "---zlux---" && ls -ltr ${INSTALL_DIR}/files/zlux && echo "---home---" && ls -ltr /home && echo "---zowe---" && ls -ltr /home/zowe
+RUN if [ ! -d ${INSTALL_DIR}/share/zlux-app-server ]; then cd ${INSTALL_DIR}/share && tar -xf zlux-core.tar; fi
 
-RUN cd ${ROOT_DIR}/components/app-server/share/zlux-app-server/bin && \
+RUN cd ${INSTALL_DIR}/share/zlux-app-server/bin && \
 chmod +x *.sh && \
 ./install-container.sh
 
 EXPOSE 8544/tcp
 
 ENV ZOWE_EXPLORER_HOST='localhost'
-ENV ZOWE_IP_ADDRESS=0.0.0.0
+# ENV ZOWE_IP_ADDRESS=0.0.0.0
 
 ENV ZOWE_ZOSMF_PORT='443'
 ENV ZWED_agent_https_port='8542'
 
 ENV ZWED_node_allowInvalidTLSProxy=true
-ENV ZOWE_ZLUX_TELNET_PORT=23
-ENV ZOWE_ZLUX_SECURITY_TYPE=telnet
+# ENV ZOWE_ZLUX_TELNET_PORT=23
+# ENV ZOWE_ZLUX_SECURITY_TYPE=telnet
 ENV ZWE_EXTERNAL_HOST='localhost'
-ENV ZWE_REFERRER_HOSTS='localhost,gateway-service,zlux-app-server'
 
 # authorization needs to point to zss endpoint
 # ENV APIML_SECURITY_AUTHORIZATION_PROVIDER=endpoint
@@ -63,5 +67,8 @@ ENV ZWE_REFERRER_HOSTS='localhost,gateway-service,zlux-app-server'
 # COPY --chown=zowe:zowe --from=builder /home/zowe /home/zowe
 # RUN chmod a+x /home/zowe/*.sh /home/zowe/.run_inner.sh
 
-WORKDIR ${ROOT_DIR}/components/app-server/bin
+WORKDIR ${INSTALL_DIR}/bin
+
+USER zowe
+
 CMD ["./start-container.sh"]

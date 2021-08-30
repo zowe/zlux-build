@@ -1,5 +1,5 @@
 *.tar
-files/
+#files/
 tmp/
 # manifest.json
 logs

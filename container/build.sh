@@ -13,5 +13,6 @@
 #########################################################################################
 
 mkdir -p logs
-docker pull zowe-docker-release.jfrog.io/ompzowe/base-node:latest-ubuntu
-docker build --pull -f Dockerfile.zlux --no-cache --progress=plain -t zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing . 2>&1 | tee logs/docker-build.log
+docker pull zowe-docker-release.jfrog.io/ompzowe/base-node:$ZOWE_BASE_IMAGE
+docker build --pull -f Dockerfile.zlux --no-cache --progress=plain --build-arg ZOWE_BASE_IMAGE=$ZOWE_BASE_IMAGE -t zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing . 2>&1 | tee logs/docker-build.log
+
