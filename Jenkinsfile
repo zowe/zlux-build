@@ -16,10 +16,10 @@
 */
 
 def zluxParameters = [
-  "PR_ZLUX_APP_MANAGER" : "",
+  "PR_ZLUX_APP_MANAGER" : "369",
   "PR_ZLUX_APP_SERVER" : "",
   "PR_ZLUX_PLATFORM" : "",
-  "PR_ZLUX_SERVER_FRAMEWORK" : "",
+  "PR_ZLUX_SERVER_FRAMEWORK" : "327",
   "PR_ZLUX_SHARED" : "",
   "PR_ZLUX_BUILD" : ""
 ]
