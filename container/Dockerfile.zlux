@@ -9,10 +9,23 @@
 # Copyright IBM Corporation 2021                                                        #
 #                                                                                       #
 #########################################################################################
-FROM node:12
+# base image tag
+ARG ZOWE_BASE_IMAGE=latest-ubuntu
+
+FROM zowe-docker-release.jfrog.io/ompzowe/base-node:${ZOWE_BASE_IMAGE} AS builder
+
+##################################
+# labels
+LABEL name="App Server" \
+      maintainer="jstruga@rocketsoftware.component" \
+      vendor="Zowe" \
+      version="0.0.0" \
+      release="0" \
+      description="This Zowe UI component can display jobs running on z/OS"
+
 
 #ENV VARS
-ENV INSTALL_DIR=/home/zowe
+ENV INSTALL_DIR=/component
 ENV ROOT_DIR=${INSTALL_DIR}/install
 ENV ZOWE_ROOT_DIR=${ROOT_DIR}
 ENV INSTANCE_DIR=${INSTALL_DIR}/instance

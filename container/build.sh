@@ -13,5 +13,5 @@
 #########################################################################################
 
 mkdir -p logs
-docker pull node:12
+docker pull zowe-docker-release.jfrog.io/ompzowe/base-node:latest-ubuntu
 docker build --pull -f Dockerfile.zlux --no-cache --progress=plain -t zowe-docker-snapshot.jfrog.io/ompzowe/app-server:testing . 2>&1 | tee logs/docker-build.log

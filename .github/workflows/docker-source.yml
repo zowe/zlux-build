@@ -1,0 +1,39 @@
+name: Build docker image with sources
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Tag of ompzowe/app-server to use in build'
+        required: true
+      node_version:
+        description: 'Version of nodejs included in the build, ex: 12.19.0'
+        required: true
+
+env:
+  ZOWE_DOCKER_REGISTRY: zowe-docker-snapshot.jfrog.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+#      - uses: zowe-actions/shared-actions/envvars-global@main
+        
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+          
+      - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
+        with:
+          image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
+          node-version: ${{ github.event.inputs.node_version }}
+          registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+      - uses: zowe-actions/shared-actions/docker-build-local@feature/get-docker-sources
+        env:
+          IMAGE_DIRECTORY: ${{ github.workspace }}/docker-build-local
+        with:
+          dockerfile: Dockerfile.sources
+          build-arg-list: IMAGE_NAME=zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
