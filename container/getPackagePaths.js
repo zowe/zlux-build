@@ -19,16 +19,25 @@ async  function getPackageUrls() {
     let urls = []
     let packages = []
     for (const [key, value] of Object.entries(zowePackages)) {
-        if (key.startsWith(zluxPrefix) ) { //|| (key == 'org.zowe.explorer-ip')) {
-            let packageName = key.replace(zluxPrefix + '.', '');
-            packages.push(packageName)
-            let { repository, version, artifact } = value;
-            urls.push(`${baseUrl}/${repository ? repository : DEFAULT_REPO}/org/zowe/zlux/${packageName}/${version}/${artifact.replace('.pax', '.tar')}`);
+		let { repository, version, artifact } = value;
+		if (key.startsWith(zluxPrefix)) {
+			let { repository, version, artifact } = value;
+			if (repository == 'libs-snapshot-local'){
+				let packageName = key.replace(zluxPrefix + '.', '');
+				packages.push(packageName)
+				urls.push(`${baseUrl}/${repository}/org/zowe/zlux/${packageName}/${version}/${artifact.replace('.pax', '.tar')}`);
+			}else{
+				let packageName = key.replace(zluxPrefix + '.', '');
+				let versionName = value['version'].replace('~', '');
+				let artifactName = value['artifact'].replace('.pax', '.tar')
+				let result  = await artifactory(packageName, versionName, artifactName);
+				packages.push(packageName)
+				urls.push(`${baseUrl}/${result}`);
+				
+			}
         }
     }
-
-
-    //console.log(urls);
+	//console.log(urls);
     return `${packages.toString()};${urls.toString()}`;
 }
 
