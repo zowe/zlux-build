@@ -54,7 +54,7 @@ function findArtifact(name, version, artifact){
       path: '/zowe/api/search/aql',
       method: 'POST',
       headers: {
-        'X-JFrog-Art-Api':`${{ secrets.JF_ARTIFACTORY_TOKEN }}`
+        'X-JFrog-Art-Api':'${{ secrets.JF_ARTIFACTORY_TOKEN }}'
       }
     }
     var ret = '';
