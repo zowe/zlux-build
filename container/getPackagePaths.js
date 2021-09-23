@@ -48,6 +48,7 @@ function findArtifact(name, version, artifact){
   return new Promise(resolve => {
     const https = require('https')
     const data = `items.find({"repo": "libs-snapshot-local", "path": {"$match": "org/zowe/zlux/${name}/*${version}"}, "name": {"$match": "${artifact}"}})`
+	console.log(data)
 	const options ={
       hostname: 'zowe.jfrog.io',
       path: '/zowe/api/search/aql',
