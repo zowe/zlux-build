@@ -5,13 +5,15 @@ name: app-server build
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ staging ]
 
 env:
   IMAGE_BASE_DIR: container
   RELEASE: true
 
 jobs:
-  build-ubuntu:
+  build-amd64-ubuntu:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,6 +22,8 @@ jobs:
       - uses: zowe-actions/shared-actions/prepare-workflow@main
       
       - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -34,7 +38,33 @@ jobs:
           build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 5
 
-  build-zlinux:
+
+  build-amd64-ubi:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: zowe-actions/shared-actions/prepare-workflow@main
+      
+      - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+        with:
+          registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
+          release: ${{ env.RELEASE }}
+          base-directory: ${{ env.IMAGE_BASE_DIR }}
+          image-name: app-server
+          linux-distro: ubi
+          cpu-arch: amd64
+      
+      - uses: zowe-actions/shared-actions/docker-build-local@main
+        with:
+          build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
+        timeout-minutes: 5
+
+  build-s390x-ubuntu:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -42,6 +72,8 @@ jobs:
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
       - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -59,3 +91,33 @@ jobs:
           zlinux-ssh-passphrase: ${{ secrets.ZLINUX_SSH_PASSPHRASE }}
           build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 10
+
+
+  build-s390x-ubi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: zowe-actions/shared-actions/prepare-workflow@main
+
+      - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+        with:
+          registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
+          registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
+          release: ${{ env.RELEASE }}
+          base-directory: ${{ env.IMAGE_BASE_DIR }}
+          image-name: app-server
+          linux-distro: ubi
+          cpu-arch: s390x
+
+      - uses: zowe-actions/shared-actions/docker-build-zlinux@main
+        with:
+          zlinux-host: ${{ secrets.ZLINUX_HOST }}
+          zlinux-ssh-user: ${{ secrets.ZLINUX_SSH_USER }}
+          zlinux-ssh-key: ${{ secrets.ZLINUX_SSH_KEY }}
+          zlinux-ssh-passphrase: ${{ secrets.ZLINUX_SSH_PASSPHRASE }}
+          build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
+        timeout-minutes: 10
+
