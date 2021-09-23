@@ -12,6 +12,11 @@
 #########################################################################################
 */
 
+if (!process.env.ZLUX_DOWNLOAD_API_TOKEN) {
+  console.log('*** WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=... ***');
+}
+
+
 const { binaryDependencies: zowePackages } = require('./files/manifest.json');
 const baseUrl = process.env.ZOWE_REPOSITORY || 'https://zowe.jfrog.io/artifactory';
 async  function getPackageUrls() {
@@ -53,7 +58,7 @@ function findArtifact(name, version, artifact){
       path: '/zowe/api/search/aql',
       method: 'POST',
       headers: {
-        'X-JFrog-Art-Api':'*'
+        'X-JFrog-Art-Api':process.env.ZLUX_DOWNLOAD_API_TOKEN ? process.env.ZLUX_DOWNLOAD_API_TOKEN : '*'
       }
     }
     var ret = '';

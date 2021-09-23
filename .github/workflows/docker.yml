@@ -5,8 +5,6 @@ name: app-server build
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [staging] 
 
 env:
   IMAGE_BASE_DIR: container
@@ -22,6 +20,8 @@ jobs:
       - uses: zowe-actions/shared-actions/prepare-workflow@main
       
       - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -86,6 +86,7 @@ jobs:
           build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 10
 
+
   build-s390x-ubi:
     runs-on: ubuntu-latest
     steps:
@@ -111,3 +112,4 @@ jobs:
           zlinux-ssh-passphrase: ${{ secrets.ZLINUX_SSH_PASSPHRASE }}
           build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
         timeout-minutes: 10
+
