@@ -23,7 +23,7 @@ mkdir -p files/zlux
 git clone --branch staging https://github.com/zowe/zowe-install-packaging  files/zowe-install-packaging
 
 # copy manifest to files
-# mv files/zowe-install-packaging/manifest.json.template files/manifest.json
+mv files/zowe-install-packaging/manifest.json.template files/manifest.json
 
 #cp files/zowe-install-packaging/manifest.json.template files/manifest.json
 mv files/zowe-install-packaging/files/zlux/config files/zlux/config

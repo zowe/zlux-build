@@ -60,7 +60,8 @@ function findArtifact(name, version, artifact){
       headers: {
         'X-JFrog-Art-Api':process.env.ZLUX_DOWNLOAD_API_TOKEN ? process.env.ZLUX_DOWNLOAD_API_TOKEN : '*'
       }
-    }
+  }
+
     var ret = '';
     const req = https.request(options, (res) => {
       //console.log(`statusCode: ${res.statusCode}`)
