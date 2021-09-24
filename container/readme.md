@@ -11,6 +11,7 @@
 
 # TODO:
 - container script `app-install-container.sh` copied from `server-bundle` is not used as of now
+- when running the run script make sure to 'export ZLUX_DOWNLOAD_API_TOKEN' with a proper 'X-JFrog-Art-Api'
 
 # Container Scripts
 - `install-container.sh`  -> layout binaries, and scripts
