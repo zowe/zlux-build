@@ -11,6 +11,7 @@
 
 # TODO:
 - container script `app-install-container.sh` copied from `server-bundle` is not used as of now
+- if using custom manifest.json, please export `ZLUX_DOWNLOAD_API_TOKEN` with a proper value for `X-JFrog-Art-Api`
 
 # Container Scripts
 - `install-container.sh`  -> layout binaries, and scripts
