@@ -20,5 +20,5 @@ docker run -it \
     --env ZOSMF_PORT=443 \
     --env ZWED_agent_https_port=48542 \
     --env ZLUX_NO_CLUSTER=1 \
-    -p 8544:8544 \
+    -p 7556:7556 \
     ompzowe/app-server:testing $@ 2>&1 | tee logs/docker-run.log
