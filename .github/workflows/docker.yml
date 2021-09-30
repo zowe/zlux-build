@@ -4,13 +4,15 @@ name: app-server build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, staging ]
+  pull_request:
+    branches: [ staging ]
   workflow_dispatch:
     inputs:
       release:
         description: 'Whether this is a test build or official release'
         required: true
-        default: false
+        default: ${{ github.ref == 'refs/heads/master' }}
 
 env:
   IMAGE_BASE_DIR: container
