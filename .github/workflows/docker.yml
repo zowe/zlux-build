@@ -8,11 +8,8 @@ on:
   pull_request:
     branches: [ staging ]
   workflow_dispatch:
-    inputs:
-      release:
-        description: 'Whether this is a test build or official release'
-        required: true
-        default: ${{ github.ref == 'refs/heads/master' }}
+
+
 
 env:
   IMAGE_BASE_DIR: container
@@ -32,7 +29,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubuntu
@@ -58,7 +55,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubi
@@ -82,7 +79,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubuntu
@@ -111,7 +108,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubi
@@ -143,7 +140,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubuntu
@@ -171,7 +168,7 @@ jobs:
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
-          release: ${{ github.event.inputs.release }}
+          release: ${{ github.ref == 'refs/heads/master' }}
           base-directory: ${{ env.IMAGE_BASE_DIR }}
           image-name: app-server
           linux-distro: ubi
