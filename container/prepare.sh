@@ -42,9 +42,6 @@ if [ -z "${cpu_arch}" ]; then
   exit 1
 fi
 
-echo "Printing env"
-env
-
 ################################################################################
 # CONSTANTS
 # this should be containers/zowe-launch-scripts
@@ -79,7 +76,6 @@ fi
 if [ -z "${ZLUX_DOWNLOAD_API_TOKEN}" ]; then
   echo "*** WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=... ***"
 fi
-
 
 ./download-zlux.sh
 

@@ -138,6 +138,8 @@ jobs:
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
       - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -163,6 +165,8 @@ jobs:
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
       - uses: zowe-actions/shared-actions/docker-prepare@main
+        env:
+          ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
