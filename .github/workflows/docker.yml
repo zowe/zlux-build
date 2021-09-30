@@ -18,7 +18,7 @@ env:
   IMAGE_BASE_DIR: container
 
 jobs:
-  build-amd64-ubuntu:
+  build-ubuntu-amd64:
     runs-on: ubuntu-latest
     
     steps:
@@ -44,7 +44,7 @@ jobs:
         timeout-minutes: 5
 
 
-  build-amd64-ubi:
+  build-ubi-amd64:
     runs-on: ubuntu-latest
     
     steps:
@@ -69,7 +69,7 @@ jobs:
           build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
         timeout-minutes: 5
 
-  build-s390x-ubuntu:
+  build-ubuntu-s390x:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -98,7 +98,7 @@ jobs:
         timeout-minutes: 10
 
 
-  build-s390x-ubi:
+  build-ubi-s390x:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
