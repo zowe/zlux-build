@@ -5,8 +5,7 @@ name: app-server build
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ staging ]
+
 
 env:
   IMAGE_BASE_DIR: container
