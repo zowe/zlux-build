@@ -42,6 +42,9 @@ if [ -z "${cpu_arch}" ]; then
   exit 1
 fi
 
+echo "Printing env"
+env
+
 ################################################################################
 # CONSTANTS
 # this should be containers/zowe-launch-scripts
