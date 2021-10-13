@@ -4,12 +4,14 @@ name: app-server build
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [staging] 
   workflow_dispatch:
     inputs:
       release:
         description: 'Whether this is a test build or official release'
         required: true
-        default: false
+        default: true
 
 env:
   IMAGE_BASE_DIR: container
