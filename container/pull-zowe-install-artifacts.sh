@@ -14,7 +14,7 @@
 
 if [ -z "$ZLUX_BRANCH" ]; then
 	echo " Default branch will be staging, to change branch please set environment ZLUX_BRANCH. Set with for example export ZLUX_BRANCH=..."
-	export ZLUX_BRANCH=staging
+	export ZLUX_BRANCH="staging"
 fi
 
 set -e
