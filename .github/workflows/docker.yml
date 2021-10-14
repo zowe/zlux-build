@@ -8,6 +8,10 @@ on:
     branches: [staging] 
   workflow_dispatch:
     inputs:
+      branch:
+        description: 'Please enter the branch name'
+        required: false
+        default: 'staging'
       release:
         description: 'Whether this is a test build or official release'
         required: true
@@ -28,6 +32,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -54,6 +59,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -78,6 +84,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -107,6 +114,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -139,6 +147,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
@@ -167,6 +176,7 @@ jobs:
       - uses: zowe-actions/shared-actions/docker-prepare@main
         env:
           ZLUX_DOWNLOAD_API_TOKEN: ${{ secrets.ZLUX_API_TOKEN }}
+          ZLUX_BRANCH: ${{ github.event.inputs.branch }}
         with:
           registry-user: ${{ secrets.ARTIFACTORY_X_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_X_PASSWORD }}
