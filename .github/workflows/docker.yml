@@ -11,7 +11,7 @@ on:
       release:
         description: 'Whether this is a test build or official release'
         required: true
-        default: true
+        default: false
 
 env:
   IMAGE_BASE_DIR: container
