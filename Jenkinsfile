@@ -51,9 +51,9 @@ ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
 ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
-PAX_HOSTNAME = "zzow01.zowe.marist.cloud"
+PAX_HOSTNAME = "zzow04.zowe.marist.cloud"
 PAX_SSH_PORT = 22
-PAX_CREDENTIALS = "ssh-marist-server-zzow01"
+PAX_CREDENTIALS = "ssh-marist-server-credential"
 NODE_VERSION = "v12.16.1"
 USER_EMAIL = "zowe-robot@zowe.org"
 USER_NAME = "Zowe Robot"
