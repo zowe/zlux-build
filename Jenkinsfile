@@ -259,6 +259,7 @@ node(JENKINS_NODE) {
             mkdir bin && cd share &&
             tar xpoUf ../../zlux.tar &&
             ../../tag-files.sh . &&
+            echo "tag-files done, prepare to npm install" &&
             cd zlux-server-framework &&
             rm -rf node_modules &&
             ${NODE_ENV_VARS} PATH=${NODE_HOME}/bin:$PATH npm install -ddd &&
