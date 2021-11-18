@@ -54,7 +54,7 @@ ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
 PAX_HOSTNAME = "zzow04.zowe.marist.cloud"
 PAX_SSH_PORT = 22
 PAX_CREDENTIALS = "ssh-marist-server-credential"
-NODE_VERSION = "v12.16.1"
+NODE_VERSION = "v12.18.4"
 USER_EMAIL = "zowe-robot@zowe.org"
 USER_NAME = "Zowe Robot"
 
