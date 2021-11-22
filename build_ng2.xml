@@ -81,7 +81,7 @@
           <include name="**/dts"/>
           <include name="**/nodeServer"/>
           <include name="**/webClient"/>
-          <exclude name="**/zssServer"/>
+          <exclude name="**/zssServer/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-app-server/node_modules/**"/>
