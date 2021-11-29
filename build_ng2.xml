@@ -81,7 +81,7 @@
           <include name="**/dts"/>
           <include name="**/nodeServer"/>
           <include name="**/webClient"/>
-          <exclude name="sample-*/**"/>
+          <exclude name="**/zssServer/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-app-server/node_modules/**"/>
@@ -102,7 +102,6 @@
           <exclude name="zlux-app-server/**"/>
           <exclude name="zlux-build/**"/>
           <exclude name="**/node_modules/**"/>
-          <exclude name="sample-*/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-shared/src/**"/>
@@ -115,6 +114,21 @@
     </for>
   </target>
 
+  <target name="removeZssSource">
+    <!-- <delete><fileset .../>...</delete> is extremely slow -->
+    <for param="path">
+      <path>
+        <dirset dir="${capstone}" defaultexcludes="false">
+          <include name="**/zssServer"/>
+        </dirset>
+      </path>
+      <sequential>
+        <delete dir="@{path}"/>
+        <delete file="@{path}"/>
+      </sequential>
+    </for>
+  </target>
+  
   <target name="getDesktopDir">
     <dirname file="${capstone}/zlux-app-manager/virtual-desktop/package.json" property="MVD_DESKTOP_DIR"/>
     <echo message="MVD_DESKTOP_DIR is ${MVD_DESKTOP_DIR}"/>
