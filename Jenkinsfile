@@ -279,6 +279,7 @@ node(JENKINS_NODE) {
             pax -o saveext -pp -wf ../zlux.pax *
           """
           sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
+          sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
         }
       }
       
