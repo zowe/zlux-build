@@ -72,6 +72,11 @@ if [ ! -f download-zlux.sh ]; then
   exit 4
 fi
 ./pull-zowe-install-artifacts.sh
+
+if [ -z "${ZLUX_DOWNLOAD_API_TOKEN}" ]; then
+  echo "*** WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=... ***"
+fi
+
 ./download-zlux.sh
 
 ###############################
