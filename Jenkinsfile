@@ -276,7 +276,7 @@ node(JENKINS_NODE) {
               cp manifest.yaml ../../
             fi
             cd ../../
-            pax -x os390 -pp -wf ../zlux.pax *
+            pax -o saveext -pp -wf ../zlux.pax *
           """
           sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
           sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
