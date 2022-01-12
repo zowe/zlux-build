@@ -24,7 +24,7 @@ def zluxParameters = [
   "PR_ZLUX_BUILD" : ""
 ]
 
-DEFAULT_BRANCH = "staging"
+DEFAULT_BRANCH = "v2.x/staging"
 
 properties([
   parameters(zluxParameters)
