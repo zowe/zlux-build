@@ -37,7 +37,7 @@ The script logic only looks for the two option flags to be set, the value does n
 ## Build Pipeline
 
 To build zlux-core with multiple pull request edit the Jenkinsfile to point to the pull request you want to build with. There should be a map call zluxParameters with keys and values, just
-add the pull request number to the value of the key you want. If the value is empty it will default to staging.
+add the pull request number to the value of the key you want. If the value is empty it will default to v2.x/staging.
 
 ## Copyright
 
