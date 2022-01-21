@@ -64,3 +64,11 @@ jobs:
         uses: zowe-actions/zlux-builds/core/build@users/jstruga/testplugins
         with:
           build-zss: false
+
+      - name: '[Prep 7] packaging'
+        uses: zowe-actions/zlux-builds/core/package@users/jstruga/testplugins
+        with:
+          pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
+          pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
+          pax-name: zlux-core
+          
