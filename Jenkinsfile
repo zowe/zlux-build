@@ -263,9 +263,6 @@ node(JENKINS_NODE) {
             rm -rf node_modules &&
             ${NODE_ENV_VARS} PATH=${NODE_HOME}/bin:$PATH npm install &&
             cd .. &&
-            iconv -f iso8859-1 -t 1047 zlux-app-server/defaults/serverConfig/server.json > zlux-app-server/defaults/serverConfig/server.json.1047 &&
-            mv zlux-app-server/defaults/serverConfig/server.json.1047 zlux-app-server/defaults/serverConfig/server.json &&
-            chtag -tc 1047 zlux-app-server/defaults/serverConfig/server.json &&
             cd zlux-app-server/bin &&
             cp start.sh configure.sh ../../../bin &&
             if [ -e "validate.sh" ]; then
