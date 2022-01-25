@@ -81,7 +81,7 @@ jobs:
         with:
           zlux-app-manager: ${{ github.event.inputs.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ github.event.inputs.ZLUX_APP_SERVER }}
-          zlux-build: ${{ github.event.inputs.ZLUX_BUILD
+          zlux-build: ${{ github.event.inputs.ZLUX_BUILD }}
           zlux-platform: ${{ github.event.inputs.ZLUX_PLATFORM }}
           zlux-server-framework: ${{ github.event.inputs.ZLUX_SERVER_FRAMEWORK }}
           zlux-shared: ${{ github.event.inputs.ZLUX_SHARED }}
