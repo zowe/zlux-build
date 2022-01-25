@@ -30,7 +30,7 @@ on:
       DEFAULT_BRANCH:
         description: 'please enter the default branch you would like to build with, default will be v2.x/staging'
         required: false
-        default: 'v2.x/staging'
+        default: 'staging'
 
 jobs:
   check-permission:
@@ -61,19 +61,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-cache-node-modules-
       
-      - name: '[Prep 3] Setup Node'
+      - name: '[Prep 2] Setup Node'
         uses: actions/setup-node@v2
         with:
           node-version: 14
 
-
-      - name: '[Prep 4] Setup jFrog CLI'
+      - name: '[Prep 3] Setup jFrog CLI'
         uses: jfrog/setup-jfrog-cli@v2
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
-      - name: '[Prep 5] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@users/jstruga/testplugins
+      - name: '[Prep 4] prepare workflow'
+        uses: zowe-actions/zlux-builds/core/prepare@main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -81,8 +80,8 @@ jobs:
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
-      - name: '[Prep 6] build'
-        uses: zowe-actions/zlux-builds/core/build@users/jstruga/testplugins
+      - name: '[Prep 5] build'
+        uses: zowe-actions/zlux-builds/core/build@main
         with:
           zlux-app-manager: ${{ github.event.inputs.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ github.event.inputs.ZLUX_APP_SERVER }}
@@ -91,14 +90,13 @@ jobs:
           zlux-server-framework: ${{ github.event.inputs.ZLUX_SERVER_FRAMEWORK }}
           zlux-shared: ${{ github.event.inputs.ZLUX_SHARED }}
 
-      - name: '[Prep 7] packaging'
-        uses: zowe-actions/zlux-builds/core/package@users/jstruga/testplugins
+      - name: '[Prep 6] packaging'
+        uses: zowe-actions/zlux-builds/core/package@main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
-      - name: '[Prep 8] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@users/jstruga/testplugins
-
-          
+      - name: '[Prep 7] deploy'
+        uses: zowe-actions/zlux-builds/core/deploy@main
+        
