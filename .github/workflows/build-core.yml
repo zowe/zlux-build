@@ -27,6 +27,10 @@ on:
       ZLUX_SHARED:
         description: 'zlux-shared PR number'
         required: false
+      DEFAULT_BRANCH:
+        description: 'please enter the default branch you would like to build with, default will be v2.x/staging'
+        required: false
+        default: 'v2.x/staging'
 
 jobs:
   check-permission:
@@ -75,6 +79,7 @@ jobs:
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
           github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
+          default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
       - name: '[Prep 6] build'
         uses: zowe-actions/zlux-builds/core/build@users/jstruga/testplugins
