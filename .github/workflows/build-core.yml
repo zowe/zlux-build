@@ -8,8 +8,24 @@ on:
 
   workflow_dispatch:
     inputs: 
-      PERFORM_RELEASE:
-        description: '[Release] perform release'
+      ZLUX_APP_MANAGER:
+        description: 'zlux-app-manager PR number'
+        required: false
+      ZLUX_APP_SERVER:
+        description: 'zlux-app-server PR number'
+        required: false
+      ZLUX_BUILD:
+        description: 'zlux-build PR number'
+        required: false
+      ZLUX_PLATFORM:
+        description: 'zlux-platform PR number'
+        required: false
+        
+      ZLUX_SERVER_FRAMEWORK:
+        description: 'zlux-server-framework PR number'
+        required: false
+      ZLUX_SHARED:
+        description: 'zlux-shared PR number'
         required: false
 
 jobs:
@@ -63,7 +79,12 @@ jobs:
       - name: '[Prep 6] build'
         uses: zowe-actions/zlux-builds/core/build@users/jstruga/testplugins
         with:
-          build-zss: false
+          zlux-app-manager: ${{ github.event.inputs.ZLUX_APP_MANAGER }}
+          zlux-app-server: ${{ github.event.inputs.ZLUX_APP_SERVER }}
+          zlux-build: ${{ github.event.inputs.ZLUX_BUILD
+          zlux-platform: ${{ github.event.inputs.ZLUX_PLATFORM }}
+          zlux-server-framework: ${{ github.event.inputs.ZLUX_SERVER_FRAMEWORK }}
+          zlux-shared: ${{ github.event.inputs.ZLUX_SHARED }}
 
       - name: '[Prep 7] packaging'
         uses: zowe-actions/zlux-builds/core/package@users/jstruga/testplugins
