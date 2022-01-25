@@ -93,3 +93,7 @@ jobs:
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
+      - name: '[Prep 8] deploy'
+        uses: zowe-actions/zlux-builds/core/deploy@users/jstruga/testplugins
+
+          
