@@ -2,7 +2,9 @@ name: Build Core
 on:
   push:
     branches:
-      - staging, master, rc 
+      - v1.x/staging
+      - master
+      - rc
   pull_request:
     types: [opened, reopened, synchronize]
 
@@ -72,7 +74,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 4] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@users/jstruga/testplugins
+        uses: zowe-actions/zlux-builds/core/prepare@main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
