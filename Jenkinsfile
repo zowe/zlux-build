@@ -21,7 +21,7 @@ def zluxParameters = [
   "PR_ZLUX_PLATFORM" : "",
   "PR_ZLUX_SERVER_FRAMEWORK" : "367",
   "PR_ZLUX_SHARED" : "",
-  "PR_ZLUX_BUILD" : ""
+  "PR_ZLUX_BUILD" : "99"
 ]
 
 DEFAULT_BRANCH = "v2.x/staging"
