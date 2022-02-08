@@ -7,7 +7,7 @@ on:
       branch:
         description: 'Please enter the branch name'
         required: false
-        default: 'staging'
+        default: 'v2.x/staging'
       release:
         description: 'Whether this is a test build or official release'
         required: true
