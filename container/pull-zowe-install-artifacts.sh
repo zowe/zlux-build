@@ -12,6 +12,11 @@
 #                                                                                       #
 #########################################################################################
 
+if [ -z "$ZLUX_BRANCH" ]; then
+	echo " Default branch will be staging, to change branch please set environment ZLUX_BRANCH. Set with for example export ZLUX_BRANCH=..."
+	export ZLUX_BRANCH="staging"
+fi
+
 set -e
 
 # refresh
@@ -21,6 +26,7 @@ mkdir -p files/zlux
 
 # clone zowe-install-packaging - copy manifest, files/zlux/config
 git clone --branch rc https://github.com/zowe/zowe-install-packaging -b fixZoweExtHostName  files/zowe-install-packaging
+
 
 # copy manifest to files
 mv files/zowe-install-packaging/manifest.json.template files/manifest.json

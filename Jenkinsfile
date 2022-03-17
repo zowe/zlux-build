@@ -24,7 +24,7 @@ def zluxParameters = [
   "PR_ZLUX_BUILD" : ""
 ]
 
-DEFAULT_BRANCH = "staging"
+DEFAULT_BRANCH = "v1.x/staging"
 
 properties([
   parameters(zluxParameters)
@@ -51,10 +51,10 @@ ZOWE_MANIFEST_URL = \
 "https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
 ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
-PAX_HOSTNAME = "zzow01.zowe.marist.cloud"
+PAX_HOSTNAME = "zzow04.zowe.marist.cloud"
 PAX_SSH_PORT = 22
-PAX_CREDENTIALS = "ssh-marist-server-zzow01"
-NODE_VERSION = "v12.16.1"
+PAX_CREDENTIALS = "ssh-marist-server-credential"
+NODE_VERSION = "v12.18.4"
 USER_EMAIL = "zowe-robot@zowe.org"
 USER_NAME = "Zowe Robot"
 
@@ -276,7 +276,7 @@ node(JENKINS_NODE) {
               cp manifest.yaml ../../
             fi
             cd ../../
-            pax -x os390 -pp -wf ../zlux.pax *
+            pax -o saveext -pp -wf ../zlux.pax *
           """
           sshGet remote: PAX_SERVER, from: "${paxPackageDir}/zlux.pax", into: "zlux.pax"
           sshCommand remote: PAX_SERVER, command: "rm -rf ${paxPackageDir}"
