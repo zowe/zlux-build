@@ -1,0 +1,68 @@
+name: Release Core
+on:
+  workflow_dispatch:
+    inputs: 
+      ZOWE_VERSION:
+        description: 'Please enter the Zowe version you want to build'
+        required: true
+
+jobs:
+  check-permission:
+    runs-on: ubuntu-latest
+    steps:
+      # this action will fail the whole workflow if permission check fails
+      - name: check permission
+        uses: zowe-actions/shared-actions/permission-check@main
+        with:
+          user: ${{ github.actor }}
+          github-repo: ${{ github.repository }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check-permission
+    steps:
+
+      - name: '[Prep 1] Cache node modules'
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: |
+            ~/.npm
+            ~/.nvm/.cache
+            ~/.nvm/versions
+          key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-cache-node-modules-
+      
+      - name: '[Prep 2] Setup Node'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: '[Prep 3] Setup jFrog CLI'
+        uses: jfrog/setup-jfrog-cli@v2
+        env:
+          JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
+
+      - name: '[Prep 4] prepare workflow'
+        uses: zowe-actions/zlux-builds/core/prepare@v2.x/rc
+        with:
+          github-user: ${{ secrets.ZOWE_ROBOT_USER }}
+          github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
+          github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
+          github-branch: ${{ github.event.inputs.BRANCH_NAME }}
+          zowe-version: ${{ github.event.inputs.ZOWE_VERSION }}
+
+      - name: '[Prep 5] build'
+        uses: zowe-actions/zlux-builds/core/build@v2.x/rc
+
+      - name: '[Prep 6] packaging'
+        uses: zowe-actions/zlux-builds/core/package@v2.x/rc
+        with:
+          pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
+          pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
+          pax-name: zlux-core
+
+      - name: '[Prep 7] deploy'
+        uses: zowe-actions/zlux-builds/core/deploy@v2.x/rc
