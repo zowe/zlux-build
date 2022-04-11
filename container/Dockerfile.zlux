@@ -24,14 +24,12 @@ LABEL name="App Server" \
       summary="Zowe App Server, Desktop, and builtin plugins" \
       description="A core Zowe component that powers the Desktop and Desktop Apps"
 
-EXPOSE 8544/tcp
+EXPOSE 7556/tcp
 
 
 ENV ZWED_INSTALL_DIR=/component
 ENV ROOT_DIR=/home/zowe/runtime
 ENV ZOWE_ROOT_DIR=${ROOT_DIR}
-ENV INSTANCE_DIR=/home/zowe/instance
-ENV WORKSPACE_DIR=${INSTANCE_DIR}/workspace
 
 # Testing parameters
 # ENV ZOWE_EXPLORER_HOST='localhost'

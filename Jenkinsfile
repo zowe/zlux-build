@@ -24,7 +24,7 @@ def zluxParameters = [
   "PR_ZLUX_BUILD" : ""
 ]
 
-DEFAULT_BRANCH = "v1.x/staging"
+DEFAULT_BRANCH = "v2.x/staging"
 
 properties([
   parameters(zluxParameters)
@@ -48,7 +48,7 @@ ZLUX_CORE_PLUGINS = [
   "zlux-shared"
 ]
 ZOWE_MANIFEST_URL = \
-"https://raw.githubusercontent.com/zowe/zowe-install-packaging/staging/manifest.json.template"
+"https://raw.githubusercontent.com/zowe/zowe-install-packaging/${DEFAULT_BRANCH}/manifest.json.template"
 ARTIFACTORY_SERVER = "zoweArtifactory"
 ARTIFACTORY_REPO = "libs-snapshot-local/org/zowe/zlux"
 PAX_HOSTNAME = "zzow04.zowe.marist.cloud"
@@ -263,9 +263,6 @@ node(JENKINS_NODE) {
             rm -rf node_modules &&
             ${NODE_ENV_VARS} PATH=${NODE_HOME}/bin:$PATH npm install &&
             cd .. &&
-            iconv -f iso8859-1 -t 1047 zlux-app-server/defaults/serverConfig/server.json > zlux-app-server/defaults/serverConfig/server.json.1047 &&
-            mv zlux-app-server/defaults/serverConfig/server.json.1047 zlux-app-server/defaults/serverConfig/server.json &&
-            chtag -tc 1047 zlux-app-server/defaults/serverConfig/server.json &&
             cd zlux-app-server/bin &&
             cp start.sh configure.sh ../../../bin &&
             if [ -e "validate.sh" ]; then
