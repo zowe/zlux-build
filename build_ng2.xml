@@ -74,6 +74,7 @@
           <include name="**/node_modules"/>
           <include name="**/dco-signoffs"/>
           <exclude name="zlux-app-server/node_modules/**"/>
+          <exclude name="zlux-app-manager/system-apps/**/node_modules/**"/>
           <exclude name="zlux-server-framework/node_modules/**"/>
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
