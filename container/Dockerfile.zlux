@@ -55,8 +55,11 @@ RUN if [ ! -d ${ZWED_INSTALL_DIR}/share/zlux-app-server ]; then cd ${ZWED_INSTAL
 RUN cd ${ZWED_INSTALL_DIR}/share/zlux-app-server/bin && \
 chmod +x *.sh && \
 ./install-container.sh
-
+RUN ls -la ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json
 RUN if [ -f ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json ]; then rm ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json; fi
+RUN ls -la ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/
+RUN ls -la /home/zowe/instance/workspace/app-server/plugins/
+RUN ls -la /home/zowe/runtime/components/app-server/share/zlux-app-server/defaults/plugins/
 
 WORKDIR ${ZWED_INSTALL_DIR}/bin
 CMD ["./start-container.sh"]
