@@ -51,8 +51,6 @@ USER zowe
 
 RUN if [ ! -d ${ZWED_INSTALL_DIR}/share/zlux-app-server ]; then cd ${ZWED_INSTALL_DIR}/share && tar -xf zlux-core.tar; fi
 
-RUN if [ -f ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json ]; then rm ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json; fi
-
 RUN cd ${ZWED_INSTALL_DIR}/share/zlux-app-server/bin && \
 chmod +x *.sh && \
 ./install-container.sh
