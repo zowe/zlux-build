@@ -1,0 +1,51 @@
+name: Release Core
+on:
+  workflow_dispatch:
+    inputs:
+      ZOWE_VERSION:
+        description: 'Version of release (vX.X.X)'
+        required: true
+      CREATE_RELEASE:
+        description: 'Create github release'
+        type: boolean
+        default: false
+      MERGE_TO_MASTER:
+        description: 'Merge rc branches to master'
+        type: boolean
+        default: false
+      UPDATE_RC:
+        description: 'Merge staging branches to rc'
+        type: boolean
+        default: false
+      ZOWE_COMMON_C_HEAD:
+        description: 'Create github release'
+        default: staging
+        required: true
+jobs:
+  check-permission:
+    runs-on: ubuntu-latest
+    steps:
+      # this action will fail the whole workflow if permission check fails
+      - name: check permission
+        uses: zowe-actions/shared-actions/permission-check@main
+        with:
+          user: ${{ github.actor }}
+          github-repo: ${{ github.repository }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check-permission
+    steps:
+
+      - name: '[Prep 1] make release'
+        uses: zowe-actions/zlux-build/zlux-git-release/create-release@feature/zlux-build-actions
+        with:
+          github-user: ${{ secrets.ZOWE_ROBOT_USER }}
+          github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
+          github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
+          tag-name: ${{ github.event.inputs.ZOWE_VERSION }}
+          create-release: ${{ github.event.inputs.CREATE_RELEASE }}
+          merge-to-master: ${{ github.event.inputs.MERGE_TO_MASTER }}
+          update-rc: ${{ github.event.inputs. UPDATE_RC }}
+          zowe-common-c-head: ${{ github.event.inputs.ZOWE_COMMON_C_HEAD }}
