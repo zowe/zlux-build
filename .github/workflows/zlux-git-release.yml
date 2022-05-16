@@ -1,4 +1,4 @@
-name: zlux git release
+name: zlux Git Release
 on:
   workflow_dispatch:
     inputs:
