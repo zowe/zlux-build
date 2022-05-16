@@ -1,4 +1,4 @@
-name: Release Core
+name: zlux git release
 on:
   workflow_dispatch:
     inputs:
