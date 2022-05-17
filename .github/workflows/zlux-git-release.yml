@@ -8,23 +8,22 @@ on:
       ZOWE_VERSION:
           description: 'Version of release (vX.X.X)'
           required: true
-        CREATE_RELEASE:
-          description: 'Create github release'
-          type: boolean
-          default: false
-        MERGE_TO_MASTER:
-          description: 'Merge rc branches to master'
-          type: boolean
-          default: false
-        UPDATE_RC:
-          description: 'Merge staging branches to rc'
-          type: boolean
-          default: false
-        ZOWE_COMMON_C_HEAD:
-          description: 'Create github release'
-          default: staging
-          required: true
-
+      CREATE_RELEASE:
+        description: 'Create github release'
+        type: boolean
+        default: false
+      MERGE_TO_MASTER:
+        description: 'Merge rc branches to master'
+        type: boolean
+        default: false
+      UPDATE_RC:
+        description: 'Merge staging branches to rc'
+        type: boolean
+        default: false
+      ZOWE_COMMON_C_HEAD:
+        description: 'Create github release'
+        default: staging
+        required: true
 jobs:
   check-permission:
     runs-on: ubuntu-latest
