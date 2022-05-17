@@ -42,7 +42,7 @@ jobs:
     steps:
 
       - name: '[Prep 1] make release'
-        uses: Himani1519/zowe-actions/zlux-build/zlux-git-release/create-release@feature/zlux-build-actions
+        uses: Himani1519/zlux-builds/zlux-git-release/create-release@feature/zlux-build-actions
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
