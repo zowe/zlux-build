@@ -34,7 +34,7 @@ jobs:
         with:
           user: ${{ github.actor }}
           github-repo: ${{ github.repository }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.SECRET_TOKEN }}
 
   build:
     runs-on: ubuntu-latest
