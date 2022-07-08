@@ -65,55 +65,6 @@
 
   </target>
 
-  <target name="removeSource">
-    <!-- <delete><fileset .../>...</delete> is extremely slow -->
-    <for param="path">
-      <path>
-        <dirset dir="${capstone}" defaultexcludes="false">
-          <include name="**/.*"/>
-          <include name="**/node_modules"/>
-          <include name="**/dco-signoffs"/>
-          <exclude name="zlux-app-server/node_modules/**"/>
-          <exclude name="zlux-server-framework/node_modules/**"/>
-        </dirset>
-        <dirset dir="${capstone}" defaultexcludes="false">
-          <include name="**/src"/>
-          <include name="**/dts"/>
-          <include name="**/nodeServer"/>
-          <include name="**/webClient"/>
-          <exclude name="**/zssServer/**"/>
-          <exclude name="zlux-app-manager/virtual-desktop/**"/>
-          <exclude name="zlux-platform/interface/**"/>
-          <exclude name="zlux-app-server/node_modules/**"/>
-          <exclude name="zlux-server-framework/node_modules/**"/>
-          <exclude name="zlux-shared/**"/>
-        </dirset>
-        <fileset dir="${capstone}" defaultexcludes="false">
-          <include name="**/.*"/>
-          <include name="**/sonar-project.properties"/>
-          <exclude name="zlux-app-server/node_modules/**"/>
-          <exclude name="zlux-server-framework/node_modules/**"/>
-        </fileset>
-        <fileset dir="${capstone}" defaultexcludes="false">
-          <include name="**/*.ts"/>
-          <include name="**/tsconfig*.json"/>
-          <include name="**/tslint.json"/>
-          <include name="**/webpack.config.js"/>
-          <exclude name="zlux-app-server/**"/>
-          <exclude name="zlux-build/**"/>
-          <exclude name="**/node_modules/**"/>
-          <exclude name="zlux-app-manager/virtual-desktop/**"/>
-          <exclude name="zlux-platform/interface/**"/>
-          <exclude name="zlux-shared/src/**"/>
-        </fileset>
-      </path>
-      <sequential>
-        <delete dir="@{path}"/>
-        <delete file="@{path}"/>
-      </sequential>
-    </for>
-  </target>
-
   <target name="removeZssSource">
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
     <for param="path">
