@@ -272,6 +272,9 @@ node(JENKINS_NODE) {
             if [ -e "manifest.yaml" ]; then
               cp manifest.yaml ../../
             fi
+            if [ -d "schemas" ]; then
+              cp -r schemas ../../
+            fi
             cd ../../
             pax -o saveext -pp -wf ../zlux.pax *
           """
