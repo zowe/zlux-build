@@ -1,5 +1,7 @@
 name: Build Core
 on:
+  schedule:
+    - cron: '30 6 * * *'
   push:
     branches:
       - v2.x/staging
