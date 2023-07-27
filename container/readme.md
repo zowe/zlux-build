@@ -26,3 +26,9 @@
   #edit start.sh parameter for zss & zosmf
   ./run.sh
 ```
+
+# Using Github Actions to build image
+
+- use the action called `app-server container build`
+- Specify the branch of zowe-install-packaging, this will download the right artifacts based on manifest of the zowe-install-packaging branch
+- run workflow
