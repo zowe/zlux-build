@@ -1,11 +1,10 @@
-name: app-server build
-
+name: app-server container build
 
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Please enter the branch name'
+        description: 'Please enter the zowe-install-packaging branch name'
         required: false
         default: 'v2.x/staging'
       release:
