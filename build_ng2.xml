@@ -39,6 +39,14 @@
     </antcall>
 
     <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-store/webClient"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/app-store/webClient"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+
+    <antcall target="npmInstall">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
     </antcall>
     <antcall target="npmBuild">
