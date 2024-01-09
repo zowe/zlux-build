@@ -6,7 +6,7 @@ on:
       branch:
         description: 'Please enter the zowe-install-packaging branch name'
         required: false
-        default: 'v2.x/staging'
+        default: 'v3.x/staging'
       release:
         description: 'Whether this is a test build or official release'
         required: true
