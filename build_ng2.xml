@@ -30,7 +30,8 @@
       <param name="buildType" value="build"/>
     </antcall>
 
-    <antcall target="npmInstall">
+    <!-- TODO: Update component's dependencies such that install passes with npmInstall -->
+    <antcall target="npmInstallLegacy">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/admin-notification-app/webClient"/>
     </antcall>
     <antcall target="npmBuild">
@@ -218,6 +219,33 @@
           resultproperty="rc"
           searchpath="true">
       <arg line="/c npm install"/>
+    </exec>
+    <exec executable="npm" 
+          dir="${packagejson.Location}"
+          osfamily="unix"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="install"/>
+    </exec>
+    
+    <echo message="Result of install in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm install in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+
+  <target name="npmInstallLegacy" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="cmd" 
+          dir="${packagejson.Location}" 
+          osfamily="windows"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="/c npm install --legacy-peer-deps"/>
     </exec>
     <exec executable="npm" 
           dir="${packagejson.Location}"
