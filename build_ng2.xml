@@ -118,31 +118,20 @@
     </for>
   </target>
   
-  <property name="plugins.dir" value="**/web"/>
-	<target name="cleanupPlugins">
-		<fileset id="files.to.check" dir="${plugins.dir}" includes="**/*.js, **/*.map"/>
-		<foreach target="processFile" inputrefid="files.to.check">
-			<path>
-				<fileset refid="files.to.check"/>
-			</path>
-		</foreach>
-	</target>
-	<target name="processFile">
-		<antcall target="processFileInner">
-			<param name="file" value="${file}"/>
-		</antcall>
-	</target>
-	<target name="processFileInner">
-		<condition property="gz.file.exists">
-			<available file="${file}.gz"/>
-		</condition>
-		<delete file="${file}">
-			<condition property="delete.file" value="true">
-				<equals arg1="${gz.file.exists}" arg2="true"/>
-			</condition>
-		</delete>
-		<delete file="${file}.gz"/>
-	</target>
+  <target name="cleanupPlugins">
+        
+        <condition property="gz.file.exists">
+            <available file="**/web/main.js.gz"/>
+        </condition>
+        <delete file="**/web/main.js">
+            <condition property="delete.file" value="true">
+                <equals arg1="${gz.file.exists}" arg2="true"/>
+            </condition>
+        </delete>
+		<delete>
+            <fileset dir="**/web" includes="**/*.map, **/*.map.gz"/>
+        </delete>
+    </target>
 
 
   <target name="removeZssSource">
