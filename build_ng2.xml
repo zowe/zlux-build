@@ -119,20 +119,18 @@
   </target>
   
   <target name="cleanupPlugins">
-		<delete>
-            <fileset dir="**/web" includes="**/*.map, **/*.map.gz"/>
-        </delete>
-        <property name="gz.file.path" value="**/web/main.js.gz"/>
-        <property name="js.file.path" value="**/web/main.js"/>
-        <condition property="gz.file.exists">
-            <available file="${gz.file.path}"/>
-        </condition>
-        <delete file="${js.file.path}">
-            <condition property="delete.file" value="true">
-                <equals arg1="${gz.file.exists}" arg2="true"/>
-            </condition>
-        </delete>
-    </target>
+    <for param="path">
+	  <path>
+		<fileset dir="${capstone}" defaultexcludes="false">
+		  <include name="**/web/*.map"/>  
+		  <include name="**/web/*.map.gz"/>
+		</fileset>
+	  </path>
+	  <sequential>
+		<delete file="@{path}"/>
+	  </sequential>
+	</for>
+  </target>
 
 
   <target name="removeZssSource">
