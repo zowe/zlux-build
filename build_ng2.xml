@@ -117,6 +117,23 @@
       </sequential>
     </for>
   </target>
+  
+  <target name="cleanupPlugins">
+    <!-- <delete><fileset .../>...</delete> is extremely slow -->
+    <for param="path">
+      <path>
+        <dirset dir="${capstone}" defaultexcludes="false">
+          <include name="**/web/**/*.js"/>
+          <include name="**/web/**/*.js.map"/>
+        </dirset>
+      </path>
+      <sequential>
+        <delete dir="@{path}"/>
+        <delete file="@{path}"/>
+      </sequential>
+    </for>
+  </target>
+
 
   <target name="removeZssSource">
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
