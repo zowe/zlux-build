@@ -119,14 +119,18 @@
   </target>
   
   <target name="cleanupPlugins">
-		<delete>
-            <fileset dir="${capstone}" defaultexcludes="false">
-                <include name="**/web/*.map"/>
-                <include name="**/web/*.map.gz"/>
-            </fileset>
-        </delete>
-	</target>
-
+    <for param="path">
+	  <delete>
+			<fileset dir="${capstone}" defaultexcludes="false">
+				<include name="**/web/*.map"/>  
+				<include name="**/web/*.map.gz"/>
+			</fileset>
+		</delete>
+	  <sequential>
+		<delete file="@{path}"/>
+	  </sequential>
+	</for>
+  </target>
 
 
   <target name="removeZssSource">
