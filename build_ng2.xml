@@ -126,18 +126,11 @@
 			</fileset>
 		</delete>
 		<condition property="main.js.exists">
-			<available file="${capstone}/web/main.js.gz"/>
+			<available file="**/web/main.js.gz"/>
 		</condition>
-		<delete>
-			<fileset dir="${capstone}/web" includes="main.js">
-			</fileset>
-			<condition property="delete.main.js" value="true">
-				<available file="${capstone}/web/main.js.gz"/>
-			</condition>
-		</delete>
-		<exec executable="sh" failonerror="true" if="main.js.exists">
-			<arg line="-c 'rm -f ${capstone}/web/main.js'"/>
-		</exec>
+		<target name="conditionalDeleteMainJs" if="main.js.exists">
+			<delete file="**/web/main.js"/>
+		</target>
 	</target>
 
 
