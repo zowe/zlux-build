@@ -119,29 +119,22 @@
   </target>
   
   <target name="cleanupPlugins">
-    <for param="path">
-	  <delete>
-			<fileset dir="${capstone}" defaultexcludes="false">
-				<include name="**/web/*.map"/>  
-				<include name="**/web/*.map.gz"/>
-			</fileset>
-		</delete>
-		<path id="files.to.check">
-            <fileset dir="${capstone}/web">
-                <include name="**/web/main.js.gz"/>
+     <delete>
+            <fileset dir="${capstone}" defaultexcludes="false">
+                <include name="**/web/*.map"/>
+                <include name="**/web/*.map.gz"/>
             </fileset>
-        </path>
-		<condition property="main.js.to.delete" value="true">
-            <path refid="files.to.check"/>
+        </delete>
+        <condition property="main.js.exists">
+            <available file="${capstone}/web/main.js.gz"/>
         </condition>
-	  <sequential>
-            <delete if="main.js.to.delete">
-                <fileset dir="${capstone}/web">
-                    <include name="**/web/main.js"/>
-                </fileset>
-            </delete>
-        </sequential>
-	</for>
+        <delete>
+            <fileset dir="${capstone}/web" includes="main.js">
+                <condition property="delete.main.js">
+                    <available file="${capstone}/web/main.js.gz"/>
+                </condition>
+            </fileset>
+        </delete>
   </target>
 
 
