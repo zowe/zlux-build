@@ -119,23 +119,27 @@
   </target>
   
   <target name="cleanupPlugins">
-     <delete>
-            <fileset dir="${capstone}" defaultexcludes="false">
-                <include name="**/web/*.map"/>
-                <include name="**/web/*.map.gz"/>
-            </fileset>
-        </delete>
-        <condition property="main.js.exists">
-            <available file="${capstone}/web/main.js.gz"/>
-        </condition>
-        <delete>
-            <fileset dir="${capstone}/web" includes="main.js">
-                <condition property="delete.main.js">
-                    <available file="${capstone}/web/main.js.gz"/>
-                </condition>
-            </fileset>
-        </delete>
-  </target>
+		<delete>
+			<fileset dir="${capstone}" defaultexcludes="false">
+				<include name="**/web/*.map"/>
+				<include name="**/web/*.map.gz"/>
+			</fileset>
+		</delete>
+		<condition property="main.js.exists">
+			<available file="${capstone}/web/main.js.gz"/>
+		</condition>
+		<delete>
+			<fileset dir="${capstone}/web" includes="main.js">
+			</fileset>
+			<condition property="delete.main.js" value="true">
+				<available file="${capstone}/web/main.js.gz"/>
+			</condition>
+		</delete>
+		<exec executable="sh" failonerror="true" if="main.js.exists">
+			<arg line="-c 'rm -f ${capstone}/web/main.js'"/>
+		</exec>
+	</target>
+
 
 
   <target name="removeZssSource">
