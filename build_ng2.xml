@@ -120,17 +120,11 @@
   
   <target name="cleanupPlugins">
 		<delete>
-			<fileset dir="${capstone}" defaultexcludes="false">
-				<include name="**/web/*.map"/>
-				<include name="**/web/*.map.gz"/>
-			</fileset>
-		</delete>
-		<condition property="main.js.exists">
-			<available file="**/web/main.js.gz"/>
-		</condition>
-		<target name="conditionalDeleteMainJs" if="main.js.exists">
-			<delete file="**/web/main.js"/>
-		</target>
+            <fileset dir="${capstone}" defaultexcludes="false">
+                <include name="**/web/*.map"/>
+                <include name="**/web/*.map.gz"/>
+            </fileset>
+        </delete>
 	</target>
 
 
