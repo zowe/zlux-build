@@ -178,7 +178,7 @@ jobs:
           zlux-shared: ${{ github.event.inputs.ZLUX_SHARED }}
 
       - name: '[Prep 6] packaging'
-        uses: zowe-actions/zlux-builds/core/package@vtest/v3/force-staging
+        uses: zowe-actions/zlux-builds/core/package@test/v3/force-staging
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
