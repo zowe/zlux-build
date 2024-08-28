@@ -53,10 +53,6 @@
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
       <param name="buildType" value="build"/>
     </antcall>
-
-    <antcall target="npmRunI18n">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
-    </antcall>
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
     
