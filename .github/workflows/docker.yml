@@ -38,8 +38,6 @@ jobs:
           cpu-arch: amd64
       
       - uses: zowe-actions/shared-actions/docker-build-local@main
-        with:
-          build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 5
 
 
@@ -65,8 +63,6 @@ jobs:
           cpu-arch: amd64
       
       - uses: zowe-actions/shared-actions/docker-build-local@main
-        with:
-          build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
         timeout-minutes: 5
 
   build-ubuntu-s390x:
@@ -95,7 +91,6 @@ jobs:
           zlinux-ssh-user: ${{ secrets.ZLINUX_SSH_USER }}
           zlinux-ssh-key: ${{ secrets.ZLINUX_SSH_KEY }}
           zlinux-ssh-passphrase: ${{ secrets.ZLINUX_SSH_PASSPHRASE }}
-          build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 10
 
 
@@ -125,7 +120,6 @@ jobs:
           zlinux-ssh-user: ${{ secrets.ZLINUX_SSH_USER }}
           zlinux-ssh-key: ${{ secrets.ZLINUX_SSH_KEY }}
           zlinux-ssh-passphrase: ${{ secrets.ZLINUX_SSH_PASSPHRASE }}
-          build-arg-list: ZOWE_BASE_IMAGE=latest-ubi
         timeout-minutes: 10
 
 
