@@ -38,8 +38,6 @@ jobs:
           cpu-arch: amd64
       
       - uses: zowe-actions/shared-actions/docker-build-local@main
-        with:
-          build-arg-list: ZOWE_BASE_IMAGE=latest-ubuntu
         timeout-minutes: 5
 
 
