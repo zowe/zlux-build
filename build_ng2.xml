@@ -55,9 +55,11 @@
     </antcall>
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
+    <copy file="${capstone}/zlux-app-manager/virtual-desktop-v2/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop-v2/web/require.js" unless:set="isZos"/>
     
     <exec if:set="isZos" executable="sh">
       <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop/web/require.js'"/>
+      <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop-v2/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop-v2/web/require.js'"/>
     </exec>
 
   </target>
@@ -83,6 +85,7 @@
           <include name="**/webClient"/>
           <exclude name="**/zssServer/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
+          <exclude name="zlux-app-manager/virtual-desktop-v2/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-app-server/node_modules/**"/>
           <exclude name="zlux-server-framework/node_modules/**"/>
@@ -103,6 +106,7 @@
           <exclude name="zlux-build/**"/>
           <exclude name="**/node_modules/**"/>
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
+          <exclude name="zlux-app-manager/virtual-desktop-v2/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-shared/src/**"/>
         </fileset>
@@ -157,6 +161,7 @@
         <or>
           <equals arg1="${plugin}" arg2="../../zlux-app-manager/bootstrap"/>
           <equals arg1="${plugin}" arg2="../../zlux-app-manager/virtual-desktop"/>
+          <equals arg1="${plugin}" arg2="../../zlux-app-manager/virtual-desktop-v2"/>
         </or>
       </not>
       <then>
@@ -218,10 +223,21 @@
     </antcall>
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
-      <param name="buildType" value="build:externals"/>
+      <param name="buildType" value="build:externals"/> <!-- might not be needed -->
     </antcall>
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+    <antcall target="npmInstall" unless:set="noInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop-v2"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop-v2"/>
+      <param name="buildType" value="build:externals"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop-v2"/>
       <param name="buildType" value="build"/>
     </antcall>
   </target>
