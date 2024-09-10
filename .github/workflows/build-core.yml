@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - v3.x/staging
-      - v3.x/rc
-      - v3.x/master
   pull_request:
     types: [opened, reopened, synchronize]
 
