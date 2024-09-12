@@ -70,6 +70,10 @@
   <target name="removeSource" description="Remove source code and all files that are not needed for production">
     <ant antfile="build_ng2.xml" target="removeSource" dir="."/>
   </target>
+  
+  <target name="cleanupPlugins" description="Remove js files and map files for plugins.">
+    <ant antfile="build_ng2.xml" target="cleanupPlugins" dir="."/>
+  </target>
 
 </project>
 

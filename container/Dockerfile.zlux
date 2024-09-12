@@ -10,7 +10,7 @@
 #                                                                                       #
 #########################################################################################
 # base image tag
-ARG ZOWE_BASE_IMAGE=latest-ubuntu
+ARG ZOWE_BASE_IMAGE=3-ubuntu
 
 FROM zowe-docker-release.jfrog.io/ompzowe/base-node:${ZOWE_BASE_IMAGE} AS builder
 
@@ -52,12 +52,12 @@ USER zowe
 RUN if [ ! -d ${ZWED_INSTALL_DIR}/share/zlux-app-server ]; then cd ${ZWED_INSTALL_DIR}/share && tar -xf zlux-core.tar; fi
 
 RUN cd ${ZWED_INSTALL_DIR}/share/zlux-app-server/bin && \
-chmod +x *.sh && \
-./install-container.sh
+      chmod +x *.sh && \
+      ./install-container.sh
 
 # remove default explorer-ip plugin json 
 RUN if [ -f ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json ]; \
-then rm ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json; fi
+      then rm ${ZWED_INSTALL_DIR}/share/zlux-app-server/defaults/plugins/org.zowe.explorer-ip.json; fi
 
 WORKDIR ${ZWED_INSTALL_DIR}/bin
 CMD ["./start-container.sh"]

@@ -36,9 +36,9 @@ jobs:
             ${{ runner.os }}-build-cache-node-modules-
       
       - name: '[Prep 2] Setup Node'
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.15.0
+          node-version: 18
 
       - name: '[Prep 3] Setup jFrog CLI'
         uses: jfrog/setup-jfrog-cli@v2
@@ -46,7 +46,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 4] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@v2.x/rc
+        uses: zowe-actions/zlux-builds/core/prepare@v3.x/rc
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -55,14 +55,14 @@ jobs:
           zowe-version: ${{ github.event.inputs.ZOWE_VERSION }}
 
       - name: '[Prep 5] build'
-        uses: zowe-actions/zlux-builds/core/build@v2.x/rc
+        uses: zowe-actions/zlux-builds/core/build@v3.x/rc
 
       - name: '[Prep 6] packaging'
-        uses: zowe-actions/zlux-builds/core/package@v2.x/rc
+        uses: zowe-actions/zlux-builds/core/package@v3.x/rc
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
 
       - name: '[Prep 7] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@v2.x/rc
+        uses: zowe-actions/zlux-builds/core/deploy@v3.x/rc
