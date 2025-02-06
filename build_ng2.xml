@@ -299,13 +299,6 @@
   </target>
   
   <target name="npmRunCompress" depends="package.jsonExists" if="package.jsonPresent">
-    <exec executable="cmd" 
-          dir="${packagejson.Location}" 
-          osfamily="windows" 
-          resultproperty="rc"
-          searchpath="true">
-      <arg line="/c npm run compress"/>
-    </exec>
     <exec executable="npm" 
           dir="${packagejson.Location}" 
           osfamily="unix"  
