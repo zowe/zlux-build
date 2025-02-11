@@ -25,7 +25,7 @@ for i in "${!URLS[@]}";
 do
   # echo package zlux/"${PACKAGES[i]}".tar
   echo url "${URLS[i]}"
-  curl -s "${URLS[i]}" -o files/zlux/"${PACKAGES[i]}".tar && echo "${PACKAGES[i]} done" &
+  curl -sL "${URLS[i]}" -o files/zlux/"${PACKAGES[i]}".tar && echo "${PACKAGES[i]} done" &
 done
 wait
 
