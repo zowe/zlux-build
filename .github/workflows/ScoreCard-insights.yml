@@ -7,7 +7,7 @@ on:
       - v3.x/staging
   
   schedule:
-    - cron: '30 6 1 * *'  # Runs at 06:30 UTC on the 1st day of every month
+    - cron: '0 */3 * * *'
 
 permissions:
   contents: read
