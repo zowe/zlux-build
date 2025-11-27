@@ -1,18 +1,14 @@
-name: "OSSF Scorecard SARIF Filter & Summary"
-description: "Runs Scorecard, filters SARIF, generates summary, uploads artifacts, and uploads to code scanning."
+name: "OSSF Scorecard SARIF"
+description: "Runs Scorecard and outputs SARIF results."
 inputs:
   enabled_checks:
     description: "Comma-separated list of enabled Scorecard checks"
-    required: true
-    default: TokenPermissionsID,PinnedDependenciesID,BranchProtectionID,ContributorsID,DangerousWorkflowID
+    required: false
+    default: ""
   results_file:
     description: "Path to the SARIF results file"
     required: true
     default: results.sarif
-  filtered_results_file:
-    description: "Path to the filtered SARIF results file"
-    required: true
-    default: filteredResults.sarif
 
 runs:
   using: "composite"
@@ -23,83 +19,5 @@ runs:
         results_file: ${{ inputs.results_file }}
         results_format: sarif
         publish_results: false
-
-    - name: "Validate prerequisites"
-      shell: bash
-      run: |
-        # Check for jq existence
-        command -v jq >/dev/null 2>&1 || { echo >&2 "jq is required but it's not installed. Aborting."; exit 1; }
-        # Check SARIF file exists
-        if [ ! -f "${{ inputs.results_file }}" ]; then
-          echo "SARIF results file '${{ inputs.results_file }}' not found!"
-          exit 1
-        fi
-
-    - name: "Filter analysis results to enabled checks"
-      shell: bash
-      run: |
-        ENABLED_CHECKS_IN_JSON=$(echo "${{ inputs.enabled_checks }}" | jq -cR 'split(",")')
-        FILTERED=$(cat "${{ inputs.results_file }}" | jq ".runs[].results |= map(select(.ruleId as \$id | \$ENABLED_CHECKS_IN_JSON | index(\$id)))" --argjson ENABLED_CHECKS_IN_JSON "$ENABLED_CHECKS_IN_JSON")
-        if [ "$(echo "$FILTERED" | jq '.runs[].results | length')" -eq 0 ]; then
-          jq '.runs[].results = []' "${{ inputs.results_file }}" > "${{ inputs.filtered_results_file }}"
-        else
-          echo "$FILTERED" > "${{ inputs.filtered_results_file }}"
-        fi
-
-    - name: "Generate Scorecard summary with findings and details"
-      shell: bash
-      run: |
-        # Get repo and workflow run links
-        REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
-        ACTIONS_URL="${REPO_URL}/actions/runs/${GITHUB_RUN_ID}"
-
-        # Define check details
-        declare -A CHECK_DETAILS
-        CHECK_DETAILS[TokenPermissionsID]="TokenPermissionsID: GitHub workflow tokens have excess permissions, which could be abused if compromised. GitHub Actions tokens use least privilege. Helps reduce blast radius if a token is compromised."
-        CHECK_DETAILS[PinnedDependenciesID]="PinnedDependenciesID: Dependencies are not locked to specific versions; you could get a bad update unexpectedly. Dependencies are pinned (fixed versions/hashes). Prevents accidental upgrades to insecure or malicious versions."
-        CHECK_DETAILS[BranchProtectionID]="BranchProtectionID: Your main or important branches are not protected; someone could force-push or delete them. Branch protection rules are enabled. Prevents accidental/malicious changes to main/release branches."
-        CHECK_DETAILS[ContributorsID]="ContributorsID: Most recent contributions come from a single org/person, increasing risk of unchecked changes. Diversity of contributors (from different orgs). Reduces risk of insider attacks, increases trust."
-        CHECK_DETAILS[DangerousWorkflowID]="DangerousWorkflowID: Your workflows may allow attackers to steal secrets or run malicious code. Dangerous GitHub Actions patterns. Prevents workflows that could leak secrets or be abused."
-
-        {
-          echo "# Scorecard analysis summary"
-          echo ""
-          echo "**Repository:** ${REPO_URL}"
-          echo "**Workflow Run:** [See execution details](${ACTIONS_URL})"
-          echo ""
-          echo "| Check ID | Findings |"
-          echo "|----------|----------|"
-        } > scorecard-summary.md
-
-        details_section=""
-        any=0
-        for id in $(echo "${{ inputs.enabled_checks }}" | tr ',' ' '); do
-          count=$(jq --arg id "$id" '[.runs[].results[] | select(.ruleId == $id)] | length' "${{ inputs.filtered_results_file }}")
-          if [ "$count" -gt 0 ]; then
-            echo "| $id | $count |" >> scorecard-summary.md
-            details_section="${details_section}\n\n${CHECK_DETAILS[$id]}"
-            any=1
-          fi
-        done
-
-        if [ "$any" -eq 1 ]; then
-          echo -e "$details_section" >> scorecard-summary.md
-          cat scorecard-summary.md >> "$GITHUB_STEP_SUMMARY"
-        else
-          echo "✅ No Scorecard findings detected for selected checks." > scorecard-summary.md
-          echo "✅ No Scorecard findings detected for selected checks." >> "$GITHUB_STEP_SUMMARY"
-        fi
-
-    - name: "Upload SARIF artifacts"
-      uses: actions/upload-artifact@v4
-      with:
-        name: SARIF file
-        path: |
-          ${{ inputs.results_file }}
-          ${{ inputs.filtered_results_file }}
-        retention-days: 3
-
-    - name: "Upload SARIF to code scanning"
-      uses: github/codeql-action/upload-sarif@v4
-      with:
-        sarif_file: ${{ inputs.filtered_results_file }}
+        # Only include enabled_checks if provided; removing it uses the defaults (all checks)
+        enabled_checks: ${{ inputs.enabled_checks }}
