@@ -1,8 +1,8 @@
 name: "OSSF Scorecard SARIF"
 description: "Runs Scorecard and outputs SARIF results."
 inputs:
-  enabled_checks:
-    description: "Comma-separated list of enabled Scorecard checks"
+  checks:
+    description: "Comma-separated list of Scorecard checks to enable"
     required: false
     default: ""
   results_file:
@@ -19,5 +19,4 @@ runs:
         results_file: ${{ inputs.results_file }}
         results_format: sarif
         publish_results: false
-        # Only include enabled_checks if provided; removing it uses the defaults (all checks)
-        enabled_checks: ${{ inputs.enabled_checks }}
+        checks: ${{ inputs.checks }}
