@@ -25,6 +25,10 @@ runs:
       shell: bash
       run: |
         echo "# Scorecard Results" > scorecard-summary.md
+        echo "" >> scorecard-summary.md
+        echo "**Repository:** https://github.com/${GITHUB_REPOSITORY}" >> scorecard-summary.md
+        echo "**Workflow Run:** https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> scorecard-summary.md
+        echo "" >> scorecard-summary.md
         echo "| Check ID | Findings |" >> scorecard-summary.md
         echo "|----------|----------|" >> scorecard-summary.md
         for id in TokenPermissionsID PinnedDependenciesID BranchProtectionID ContributorsID DangerousWorkflowID; do
