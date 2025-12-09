@@ -1,10 +1,6 @@
 name: "OSSF Scorecard SARIF"
 description: "Runs Scorecard and outputs SARIF results."
 inputs:
-  checks:
-    description: "Comma-separated list of Scorecard checks to enable"
-    required: false
-    default: ""
   results_file:
     description: "Path to the SARIF results file"
     required: true
@@ -19,7 +15,6 @@ runs:
         results_file: ${{ inputs.results_file }}
         results_format: sarif
         publish_results: false
-        checks: ${{ inputs.checks }}
         
     - name: "Generate Scorecard Findings Summary"
       shell: bash
