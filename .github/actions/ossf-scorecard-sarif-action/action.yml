@@ -10,7 +10,7 @@ runs:
   using: "composite"
   steps:
     - name: "Run OSSF Scorecard analysis"
-      uses: ossf/scorecard-action@v2.3.0
+      uses: ossf/scorecard-action@05b42c624433fc40578a4040d5cf5e36ddca8cde
       with:
         results_file: ${{ inputs.results_file }}
         results_format: sarif
