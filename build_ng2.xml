@@ -88,7 +88,7 @@
     </exec>
 
 
-f  </target>
+  </target>
 
   <target name="removeSource">
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
