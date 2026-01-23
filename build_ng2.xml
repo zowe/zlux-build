@@ -31,13 +31,40 @@
     </antcall>
 
     <!-- TODO: Update component's dependencies such that install passes with npmInstall -->
-    <antcall target="npmInstallLegacy">
+    <antcall target="npmInstall">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/admin-notification-app/webClient"/>
     </antcall>
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/admin-notification-app/webClient"/>
       <param name="buildType" value="build"/>
     </antcall>
+
+    <!-- Copy @zlux/widgets for build time (system-settings-preferences) BEFORE building -->
+    <copy todir="${capstone}/zlux-app-manager/system-apps/system-settings-preferences/webClient/node_modules/@zlux/widgets" unless:set="isZos">
+      <fileset dir="${capstone}/zlux-app-manager/virtual-desktop/node_modules/@zlux/widgets"/>
+    </copy>
+
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'mkdir -p ${capstone}/zlux-app-manager/system-apps/system-settings-preferences/webClient/node_modules/@zlux &amp;&amp; cp -rp ${capstone}/zlux-app-manager/virtual-desktop/node_modules/@zlux/widgets ${capstone}/zlux-app-manager/system-apps/system-settings-preferences/webClient/node_modules/@zlux/widgets'"/>
+    </exec>
+
+    <!-- Build system-settings-preferences after widgets are copied -->
+    <antcall target="npmInstall">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/system-settings-preferences/webClient"/>
+    </antcall>
+    <antcall target="npmBuild">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/system-settings-preferences/webClient"/>
+      <param name="buildType" value="build"/>
+    </antcall>
+
+    <!-- Copy @zlux/widgets to system-settings-preferences/web for runtime access -->
+    <copy todir="${capstone}/zlux-app-manager/system-apps/system-settings-preferences/web/node_modules/@zlux/widgets" unless:set="isZos">
+      <fileset dir="${capstone}/zlux-app-manager/virtual-desktop/node_modules/@zlux/widgets"/>
+    </copy>
+
+    <exec if:set="isZos" executable="sh">
+      <arg line="-c 'mkdir -p ${capstone}/zlux-app-manager/system-apps/system-settings-preferences/web/node_modules/@zlux &amp;&amp; cp -rp ${capstone}/zlux-app-manager/virtual-desktop/node_modules/@zlux/widgets ${capstone}/zlux-app-manager/system-apps/system-settings-preferences/web/node_modules/@zlux/widgets'"/>
+    </exec>
 
     <antcall target="npmInstall">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
@@ -62,6 +89,7 @@
     <exec if:set="isZos" executable="sh">
       <arg line="-c 'cp -p ${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js ${capstone}/zlux-app-manager/virtual-desktop/web/require.js'"/>
     </exec>
+
 
   </target>
 
@@ -207,7 +235,7 @@
     </antcall>
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
-      <param name="buildType" value="build:externals"/>
+      <param name="buildType" value="build:externals"/> <!-- might not be needed -->
     </antcall>
     <antcall target="npmBuild">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
