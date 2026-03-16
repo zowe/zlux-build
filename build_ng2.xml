@@ -53,6 +53,9 @@
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
       <param name="buildType" value="build"/>
     </antcall>
+	<antcall target="npmRunCompress">
+      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
+    </antcall>
     
     <copy file="${capstone}/zlux-app-manager/virtual-desktop/node_modules/requirejs/require.js" tofile="${capstone}/zlux-app-manager/virtual-desktop/web/require.js" unless:set="isZos"/>
     
@@ -112,20 +115,6 @@
         <delete file="@{path}"/>
       </sequential>
     </for>
-  </target>
-  
-  <target name="cleanupPlugins">
-    <for param="path">
-	  <delete>
-			<fileset dir="${capstone}" defaultexcludes="false">
-				<include name="**/web/*.map"/>  
-				<include name="**/web/*.map.gz"/>
-			</fileset>
-		</delete>
-	  <sequential>
-		<delete file="@{path}"/>
-	  </sequential>
-	</for>
   </target>
 
 
@@ -305,6 +294,26 @@
       </not>
       <then>
         <fail message="Error with npm run ${buildType} in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+  
+  <target name="npmRunCompress" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="npm" 
+          dir="${packagejson.Location}" 
+          osfamily="unix"  
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="run compress"/>
+    </exec>
+    
+    <echo message="Result of compress in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm run compress in ${packagejson.Location}" />
       </then>
     </if>
   </target>
