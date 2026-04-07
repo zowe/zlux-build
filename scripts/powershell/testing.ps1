@@ -53,8 +53,9 @@ function Invoke-SetupDist {
     if (Test-Path $DistDir) { Remove-Item -Recurse -Force $DistDir }
     New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 
-    $capstoneParen = [System.IO.Path]::GetFullPath((Join-Path $Capstone ".."))
-    Copy-Item -Path "$capstoneParen\*" -Destination $DistDir -Recurse -Force
+    # Copy capstone contents into dist so that dist mirrors the capstone layout
+    # (e.g. dist\zlux-build\, dist\zlux-app-server\, ...) and dist_build_dir resolves correctly.
+    Copy-Item -Path "$Capstone\*" -Destination $DistDir -Recurse -Force
 
     if ($CorePluginProps.ContainsKey("CORE_PLUGINS")) {
         $corePluginsRaw = $CorePluginProps["CORE_PLUGINS"]

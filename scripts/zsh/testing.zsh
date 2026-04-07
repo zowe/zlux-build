@@ -51,11 +51,13 @@ setup_dist() {
     rm -rf "$DIST_DIR"
     mkdir -p "$DIST_DIR"
 
+    # Copy capstone contents into dist so that dist mirrors the capstone layout
+    # (e.g. dist/zlux-build/, dist/zlux-app-server/, ...) and dist_build_dir resolves correctly.
     if is_zos || ! is_windows; then
-        cp -pR "${CAPSTONE}/../"*(.) "${DIST_DIR}/" 2>/dev/null || true
-        cp -pR "${CAPSTONE}/../"*(/) "${DIST_DIR}/" 2>/dev/null || true
+        cp -pR "${CAPSTONE}/"*(.) "${DIST_DIR}/" 2>/dev/null || true
+        cp -pR "${CAPSTONE}/"*(/) "${DIST_DIR}/" 2>/dev/null || true
     else
-        cp -R "${CAPSTONE}/../" "${DIST_DIR}/"
+        cp -R "${CAPSTONE}/" "${DIST_DIR}/"
     fi
 
     if [[ -n "${CORE_PLUGINS:-}" ]]; then

@@ -53,8 +53,9 @@ function Invoke-SetupDist {
     New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 
     # Copy all capstone contents to dist.
-    $capstoneParen = [System.IO.Path]::GetFullPath((Join-Path $Capstone ".."))
-    Copy-Item -Path "$capstoneParen\*" -Destination $DistDir -Recurse -Force
+    # Copy capstone contents into dist so that dist mirrors the capstone layout
+    # (e.g. dist\zlux-build\, dist\zlux-app-server\, ...) and dist_build_dir resolves correctly.
+    Copy-Item -Path "$Capstone\*" -Destination $DistDir -Recurse -Force
 
     # Replace version placeholder tokens in CORE_PLUGINS files.
     if ($CorePluginProps.ContainsKey("CORE_PLUGINS")) {
