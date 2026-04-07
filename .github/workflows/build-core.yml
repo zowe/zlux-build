@@ -230,7 +230,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 6] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@v3.x/main
+        uses: zowe-actions/zlux-builds/core/prepare@feature/shell-scripts
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -239,7 +239,7 @@ jobs:
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
       - name: '[Prep 7] build'
-        uses: zowe-actions/zlux-builds/core/build@v3.x/main
+        uses: zowe-actions/zlux-builds/core/build@feature/shell-scripts
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -248,14 +248,13 @@ jobs:
           zlux-server-framework: ${{ env.ZLUX_SERVER_FRAMEWORK }}
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
-
       - name: '[Prep 8] packaging'
-        uses: zowe-actions/zlux-builds/core/package@v3.x/main
+        uses: zowe-actions/zlux-builds/core/package@feature/shell-scripts
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 9] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@v3.x/main
+        uses: zowe-actions/zlux-builds/core/deploy@feature/shell-scripts
         
