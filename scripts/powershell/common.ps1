@@ -16,10 +16,31 @@ function Import-PropertiesFile {
     param([string]$PropertiesPath)
     $result = @{}
     if (Test-Path $PropertiesPath) {
-        Get-Content $PropertiesPath | ForEach-Object {
-            $line = $_.Trim()
-            # Skip comments and blank lines.
-            if ($line -match '^\s*#' -or [string]::IsNullOrWhiteSpace($line)) { return }
+        # Pre-join backslash-continuation lines before parsing key=value pairs.
+        $joinedLines = [System.Collections.Generic.List[string]]::new()
+        $accumulator = $null
+        foreach ($rawLine in (Get-Content $PropertiesPath)) {
+            if ($rawLine -match '\\$') {
+                $segment = $rawLine -replace '\\$', ''
+                if ($null -eq $accumulator) {
+                    $accumulator = $segment
+                } else {
+                    $accumulator += $segment.TrimStart()
+                }
+            } else {
+                if ($null -ne $accumulator) {
+                    $joinedLines.Add($accumulator + $rawLine.TrimStart())
+                    $accumulator = $null
+                } else {
+                    $joinedLines.Add($rawLine)
+                }
+            }
+        }
+        if ($null -ne $accumulator) { $joinedLines.Add($accumulator) }
+
+        foreach ($line in $joinedLines) {
+            $line = $line.Trim()
+            if ($line -match '^\s*#' -or [string]::IsNullOrWhiteSpace($line)) { continue }
             $parts = $line -split '=', 2
             if ($parts.Length -eq 2) {
                 $key   = $parts[0].Trim()

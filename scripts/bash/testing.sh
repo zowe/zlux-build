@@ -27,15 +27,16 @@ load_common_properties "$BUILD_DIR"
 load_version_properties "$BUILD_DIR"
 
 # Load core-plugins.properties.
+# sed pre-joins backslash-continuation lines so the while loop only
+# ever sees complete key=value pairs.
 if [ -f "${BUILD_DIR}/core-plugins.properties" ]; then
     while IFS='=' read -r key value; do
         [[ "$key" =~ ^[[:space:]]*# ]] && continue
         [[ -z "${key// }" ]] && continue
         key="${key//[[:space:]]/}"
-        value="${value%\\}"
-        value="${value// /}"
-        export "$key"="${!key:-}${value}"
-    done < "${BUILD_DIR}/core-plugins.properties"
+        value="${value//[[:space:]]/}"
+        export "$key"="$value"
+    done < <(sed ':a; /\\$/{N; s/\\\n[[:space:]]*//; ta}' "${BUILD_DIR}/core-plugins.properties")
 fi
 
 # Build version date (yyyyMMdd).
