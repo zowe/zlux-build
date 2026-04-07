@@ -2,6 +2,11 @@ name: Build Core
 
 on:
   workflow_call:
+    secrets:
+      SSH_MARIST_USERNAME:
+        required: true
+      SSH_MARIST_RACF_PASSWORD:
+        required: true
     inputs:
       SOURCE_REPO:
         required: false
