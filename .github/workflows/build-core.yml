@@ -238,7 +238,6 @@ jobs:
 
 
       - name: '[Prep 6] packaging'
-        if: ${{ secrets.SSH_MARIST_USERNAME != '' }}
         uses: zowe-actions/zlux-builds/core/package@v3.x/main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
