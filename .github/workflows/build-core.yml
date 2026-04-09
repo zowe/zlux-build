@@ -4,9 +4,9 @@ on:
   workflow_call:
     secrets:
       SSH_MARIST_USERNAME:
-        required: true
+        required: false
       SSH_MARIST_RACF_PASSWORD:
-        required: true
+        required: false
     inputs:
       SOURCE_REPO:
         required: false
