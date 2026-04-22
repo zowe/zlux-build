@@ -30,18 +30,31 @@
   <target name="deploy">
     <mkdir dir="${home}/defaults/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <!-- v2 -->
     <property name="productActions" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
     <property name="productRecognizers" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${productActions}"/>
     <mkdir dir="${productRecognizers}"/>    
+    <!-- v3 -->
+    <property name="productV3Actions" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/actions"/>
+    <property name="productV3Recognizers" value="${home}/defaults/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/recognizers"/>
+    <mkdir dir="${productV3Actions}"/>
+    <mkdir dir="${productV3Recognizers}"/>    
 
+    
     <mkdir dir="${siteDir}/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <!-- v2 -->
     <property name="siteActions" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
     <property name="siteRecognizers" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${siteActions}"/>
     <mkdir dir="${siteRecognizers}"/>
-
+    <!-- v3 -->
+    <property name="siteV3Actions" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/actions"/>
+    <property name="siteV3Recognizers" value="${siteDir}/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/recognizers"/>
+    <mkdir dir="${siteV3Actions}"/>
+    <mkdir dir="${siteV3Recognizers}"/>
+    
     <property name="serverConfig" value="${instanceDir}/ZLUX/serverConfig" unless:set="instanceMode"/>
     <property name="serverConfig" value="${instanceDir}/serverConfig" if:set="instanceMode"/>
     <property name="instancePlugins" value="${instanceDir}/ZLUX/plugins" unless:set="instanceMode"/>
@@ -51,10 +64,16 @@
     <mkdir dir="${serverConfig}"/>
     <mkdir dir="${instanceDir}/ZLUX/pluginStorage"/>
     <!-- A common storage area for apps to deploy their configs into for desktop behavior -->
+    <!-- v2 -->
     <property name="instanceActions" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/actions"/>
     <property name="instanceRecognizers" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ng2desktop/recognizers"/>
     <mkdir dir="${instanceActions}"/>
     <mkdir dir="${instanceRecognizers}"/> 
+    <!-- v3 -->
+    <property name="instanceV3Actions" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/actions"/>
+    <property name="instanceV3Recognizers" value="${instanceDir}/ZLUX/pluginStorage/org.zowe.zlux.ivydesktop/recognizers"/>
+    <mkdir dir="${instanceV3Actions}"/>
+    <mkdir dir="${instanceV3Recognizers}"/> 
     
     <mkdir dir="${instanceDir}/users"/>
     <mkdir dir="${instanceDir}/groups"/>
