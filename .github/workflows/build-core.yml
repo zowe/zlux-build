@@ -17,21 +17,27 @@ on:
       ZLUX_APP_MANAGER:
         required: false
         type: string
+        description: 'zlux-app-manager PR number'
       ZLUX_APP_SERVER:
         required: false
         type: string
+        description: 'zlux-app-server PR number'
       ZLUX_BUILD:
         required: false
         type: string
+        description: 'zlux-build PR number'
       ZLUX_PLATFORM:
         required: false
         type: string
+        description: 'zlux-platform PR number'
       ZLUX_SERVER_FRAMEWORK:
         required: false
         type: string
+        description: 'zlux-server-framework PR number'
       ZLUX_SHARED:
         required: false
         type: string
+        description: 'zlux-shared PR number'
       DEFAULT_BRANCH:
         required: false
         type: string
