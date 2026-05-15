@@ -109,6 +109,11 @@
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-shared/src/**"/>
         </fileset>
+        <fileset dir="${capstone}" defaultexcludes="false">
+          <include name="**/*.cer"/>
+          <include name="**/*.key"/>
+          <include name="**/*.p12"/>
+        </fileset>
       </path>
       <sequential>
         <delete dir="@{path}"/>
