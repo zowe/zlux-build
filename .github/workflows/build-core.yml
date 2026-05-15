@@ -201,7 +201,13 @@ jobs:
             echo "DEFAULT_BRANCH=${{ github.event.inputs.DEFAULT_BRANCH }}" >> $GITHUB_ENV
           fi
 
-      - name: '[Prep 1] Cache node modules'
+      - name: '[Prep 1] Checkout'
+        uses: actions/checkout@v2
+
+      - name: '[Prep 2] Validate package.json'
+        uses: zowe-actions/shared-actions/validate-package-json@main
+
+      - name: '[Prep 3] Cache node modules'
         uses: actions/cache@v4
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
@@ -213,17 +219,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-cache-node-modules-
       
-      - name: '[Prep 2] Setup Node'
+      - name: '[Prep 4] Setup Node'
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: '[Prep 3] Setup jFrog CLI'
+      - name: '[Prep 5] Setup jFrog CLI'
         uses: jfrog/setup-jfrog-cli@v2
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
-      - name: '[Prep 4] prepare workflow'
+      - name: '[Prep 6] prepare workflow'
         uses: zowe-actions/zlux-builds/core/prepare@chore/v3/reduce-package-size2
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
@@ -232,7 +238,7 @@ jobs:
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
-      - name: '[Prep 5] build'
+      - name: '[Prep 7] build'
         uses: zowe-actions/zlux-builds/core/build@chore/v3/reduce-package-size2
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
@@ -243,13 +249,13 @@ jobs:
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
 
-      - name: '[Prep 6] packaging'
+      - name: '[Prep 8] packaging'
         uses: zowe-actions/zlux-builds/core/package@chore/v3/reduce-package-size2
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
-      - name: '[Prep 7] deploy'
+      - name: '[Prep 9] deploy'
         uses: zowe-actions/zlux-builds/core/deploy@chore/v3/reduce-package-size2
         
