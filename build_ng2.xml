@@ -81,6 +81,7 @@
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="*/test"/>
+          <include name="*/*.ppf"/>
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/src"/>
