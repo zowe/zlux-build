@@ -66,6 +66,9 @@
   </target>
 
   <target name="removeSource">
+    <antcall target="npmPruneProduction">
+      <param name="packagejson.Location" value="${capstone}/zlux-server-framework"/>
+    </antcall>
     <!-- <delete><fileset .../>...</delete> is extremely slow -->
     <for param="path">
       <path>
@@ -329,6 +332,33 @@
     </if>
   </target>
   
+  <target name="npmPruneProduction" depends="package.jsonExists" if="package.jsonPresent">
+    <exec executable="cmd"
+          dir="${packagejson.Location}"
+          osfamily="windows"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="/c npm prune --omit=dev"/>
+    </exec>
+    <exec executable="npm"
+          dir="${packagejson.Location}"
+          osfamily="unix"
+          resultproperty="rc"
+          searchpath="true">
+      <arg line="prune --omit=dev"/>
+    </exec>
+
+    <echo message="Result of prune in ${packagejson.Location} is: ${rc}"/>
+    <if>
+      <not>
+        <equals arg1="${rc}" arg2="0"/>
+      </not>
+      <then>
+        <fail message="Error with npm prune in ${packagejson.Location}" />
+      </then>
+    </if>
+  </target>
+
   <target name="package.jsonExists">
     <available file="${packagejson.Location}/package.json" property="package.jsonPresent"/>
   </target>
