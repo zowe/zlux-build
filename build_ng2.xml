@@ -116,8 +116,8 @@
           <include name="**/*.cer"/>
           <include name="**/*.key"/>
           <include name="**/*.p12"/>
-          <include name="zlux-server-framework/defaults/serverConfig/generate_zlux_certificates.sh"/>
-          <include name="zlux-server-framework/defaults/README.md"/>
+          <include name="zlux-app-server/defaults/serverConfig/generate_zlux_certificates.sh"/>
+          <include name="zlux-app-server/defaults/README.md"/>
         </fileset>
       </path>
       <sequential>
