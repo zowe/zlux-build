@@ -224,7 +224,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 4] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@v3.x/main
+        uses: zowe-actions/zlux-builds/core/prepare@chore/v3/reduce-package-size2
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -233,7 +233,7 @@ jobs:
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
       - name: '[Prep 5] build'
-        uses: zowe-actions/zlux-builds/core/build@v3.x/main
+        uses: zowe-actions/zlux-builds/core/build@chore/v3/reduce-package-size2
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -244,12 +244,12 @@ jobs:
 
 
       - name: '[Prep 6] packaging'
-        uses: zowe-actions/zlux-builds/core/package@v3.x/main
+        uses: zowe-actions/zlux-builds/core/package@chore/v3/reduce-package-size2
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 7] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@v3.x/main
+        uses: zowe-actions/zlux-builds/core/deploy@chore/v3/reduce-package-size2
         
