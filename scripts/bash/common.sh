@@ -77,23 +77,30 @@ load_version_properties() {
 }
 
 # Run npm install in a directory that contains a package.json.
-# Usage: npm_install <directory> [--legacy-peer-deps]
+# Usage: npm_install <directory>
+# Uses 'npm ci' when a package-lock.json is present (faster, reproducible CI
+# installs), falling back to 'npm install' when no lockfile exists.
 npm_install() {
     local location="$1"
-    local extra_flags="${2:-}"
 
     if [ ! -f "${location}/package.json" ]; then
         echo "No package.json found in ${location}, skipping install."
         return 0
     fi
 
-    echo "Running npm install in ${location} ..."
-    local cmd="npm install ${extra_flags}"
+    local cmd
+    if [ -f "${location}/package-lock.json" ]; then
+        echo "Running npm ci in ${location} ..."
+        cmd="npm ci"
+    else
+        echo "Running npm install in ${location} (no package-lock.json found) ..."
+        cmd="npm install"
+    fi
     (cd "$location" && eval "$cmd")
     local rc=$?
-    echo "Result of npm install in ${location}: ${rc}"
+    echo "Result of install in ${location}: ${rc}"
     if [ "$rc" -ne 0 ]; then
-        echo "ERROR: npm install failed in ${location}" >&2
+        echo "ERROR: install failed in ${location}" >&2
         return 1
     fi
 }
