@@ -207,29 +207,18 @@ jobs:
       - name: '[Prep 2] Validate package.json'
         uses: zowe-actions/shared-actions/validate-package-json@main
 
-      - name: '[Prep 3] Cache node modules'
-        uses: actions/cache@v4
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: |
-            ~/.npm
-            ~/.nvm/.cache
-            ~/.nvm/versions
-          key: ${{ runner.os }}-build-cache-node-modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-cache-node-modules-
-      
-      - name: '[Prep 4] Setup Node'
-        uses: actions/setup-node@v3
+      - name: '[Prep 3] Setup Node'
+        id: setup-node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: '[Prep 5] Setup jFrog CLI'
+      - name: '[Prep 4] Setup jFrog CLI'
         uses: jfrog/setup-jfrog-cli@v2
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
-      - name: '[Prep 6] prepare workflow'
+      - name: '[Prep 5] prepare workflow'
         uses: zowe-actions/zlux-builds/core/prepare@feature/shell-scripts2
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
@@ -237,6 +226,22 @@ jobs:
           github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
+
+      - name: '[Prep 6] Cache node modules'
+        uses: actions/cache@v4
+        with:
+          # Cache the npm content-addressable store so that npm ci can install
+          # from the local cache instead of downloading from the registry.
+          # Placed after 'prepare workflow' so all repos are checked out and
+          # their package-lock.json files are visible to hashFiles. Any lockfile
+          # change (including a post-compromise rotation) produces a new cache
+          # key, evicting stale tarballs. GitHub Actions automatically evicts
+          # entries not accessed within 7 days.
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-node${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-node${{ steps.setup-node.outputs.node-version }}-
+            ${{ runner.os }}-npm-
 
       - name: '[Prep 7] build'
         uses: zowe-actions/zlux-builds/core/build@feature/shell-scripts2
