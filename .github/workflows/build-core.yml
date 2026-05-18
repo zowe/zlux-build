@@ -235,8 +235,7 @@ jobs:
           # Placed after 'prepare workflow' so all repos are checked out and
           # their package-lock.json files are visible to hashFiles. Any lockfile
           # change (including a post-compromise rotation) produces a new cache
-          # key, evicting stale tarballs. GitHub Actions automatically evicts
-          # entries not accessed within 7 days.
+          # key, evicting stale tarballs. GitHub Actions automatically evicts entries
           path: ~/.npm
           key: ${{ runner.os }}-npm-node${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
