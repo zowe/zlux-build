@@ -81,6 +81,10 @@
           <include name="zlux-app-manager/system-apps/app-generator/**"/>
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
+          <include name="*/test"/>
+          <include name="*/*.ppf"/>
+        </dirset>
+        <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/src"/>
           <include name="**/dts"/>
           <include name="**/nodeServer"/>
@@ -109,6 +113,13 @@
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-shared/src/**"/>
+        </fileset>
+        <fileset dir="${capstone}" defaultexcludes="false">
+          <include name="**/*.cer"/>
+          <include name="**/*.key"/>
+          <include name="**/*.p12"/>
+          <include name="zlux-app-server/defaults/serverConfig/generate_zlux_certificates.sh"/>
+          <include name="zlux-app-server/defaults/README.md"/>
         </fileset>
       </path>
       <sequential>
