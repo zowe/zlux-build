@@ -133,7 +133,7 @@ function Invoke-BuildNg2 {
     Invoke-NpmBuild   -Location (Join-Path $Capstone "zlux-shared\src\obfuscator") -BuildType "build"
 
     $adminApp = Join-Path $Capstone "zlux-app-manager\system-apps\admin-notification-app\webClient"
-    Invoke-NpmInstall -Location $adminApp -LegacyPeerDeps
+    Invoke-NpmInstall -Location $adminApp
     Invoke-NpmBuild   -Location $adminApp -BuildType "build"
 
     $webBrowserClient = Join-Path $Capstone "zlux-app-manager\system-apps\web-browser-app\webClient"
