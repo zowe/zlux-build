@@ -233,6 +233,15 @@ remove_source() {
     # Remove app-generator directory.
     rm -rf "${capstone}/zlux-app-manager/system-apps/app-generator"
 
+    # Remove top-level test directories (e.g. zlux-app-server/test).
+    find "$capstone" -mindepth 2 -maxdepth 2 -type d -name "test" | while read -r dir; do
+        echo "Removing ${dir}"
+        rm -rf "$dir"
+    done
+
+    # Remove top-level .ppf files.
+    find "$capstone" -mindepth 2 -maxdepth 2 -name "*.ppf" -delete
+
     # Remove src, dts, nodeServer, webClient directories (with exclusions).
     for dir_name in src dts nodeServer webClient; do
         find "$capstone" -type d -name "$dir_name" \
@@ -261,6 +270,12 @@ remove_source() {
         -not -path "${capstone}/zlux-app-manager/virtual-desktop/*" \
         -not -path "${capstone}/zlux-platform/interface/*" \
         -not -path "${capstone}/zlux-shared/src/*" -delete
+
+    # Remove test certificate files and cert-generation scripts.
+    find "$capstone" \( -name "*.cer" -o -name "*.key" -o -name "*.p12" \) \
+        -not -path "*/node_modules/*" -delete
+    rm -f "${capstone}/zlux-app-server/defaults/serverConfig/generate_zlux_certificates.sh"
+    rm -f "${capstone}/zlux-app-server/defaults/README.md"
 }
 
 # -------------------------------------------------------------------------

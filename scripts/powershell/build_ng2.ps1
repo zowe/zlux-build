@@ -179,6 +179,17 @@ function Invoke-RemoveSource {
     $appGen = Join-Path $Capstone "zlux-app-manager\system-apps\app-generator"
     if (Test-Path $appGen) { Remove-Item -Recurse -Force $appGen }
 
+    # Remove top-level test directories (e.g. zlux-app-server\test).
+    Get-ChildItem -Path $Capstone -Depth 1 -Filter "test" -Directory |
+        ForEach-Object {
+            Write-Host "Removing $($_.FullName)"
+            Remove-Item -Recurse -Force $_.FullName
+        }
+
+    # Remove top-level .ppf files.
+    Get-ChildItem -Path $Capstone -Depth 1 -Filter "*.ppf" -File |
+        Remove-Item -Force
+
     # Remove src, dts, nodeServer, webClient directories.
     foreach ($dirName in @("src", "dts", "nodeServer", "webClient")) {
         Get-ChildItem -Path $Capstone -Recurse -Filter $dirName -Directory |
@@ -217,6 +228,15 @@ function Invoke-RemoveSource {
                 -not ($p.StartsWith((Join-Path $Capstone "zlux-shared\src")))
             } | Remove-Item -Force
     }
+
+    # Remove test certificate files and cert-generation scripts.
+    Get-ChildItem -Path $Capstone -Recurse -Include "*.cer","*.key","*.p12" |
+        Where-Object { $_.FullName -notlike "*\node_modules\*" } |
+        Remove-Item -Force
+    $certScript = Join-Path $Capstone "zlux-app-server\defaults\serverConfig\generate_zlux_certificates.sh"
+    if (Test-Path $certScript) { Remove-Item -Force $certScript }
+    $defaultsReadme = Join-Path $Capstone "zlux-app-server\defaults\README.md"
+    if (Test-Path $defaultsReadme) { Remove-Item -Force $defaultsReadme }
 }
 
 function Invoke-RemoveZssSource {
