@@ -7,7 +7,7 @@ REM SPDX-License-Identifier: EPL-2.0
 REM 
 REM Copyright Contributors to the Zowe Project.
 @echo off
-ant buildAll
+powershell -ExecutionPolicy Bypass -File "%~dp0build.ps1" %*
 
 REM This program and the accompanying materials are
 REM made available under the terms of the Eclipse Public License v2.0 which accompanies
