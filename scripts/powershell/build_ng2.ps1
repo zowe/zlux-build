@@ -131,7 +131,10 @@ function Invoke-BuildNg2 {
     Invoke-NpmBuild   -Location (Join-Path $Capstone "zlux-shared\src\logging") -BuildType "build"
     Invoke-NpmInstall -Location (Join-Path $Capstone "zlux-shared\src\obfuscator")
     Invoke-NpmBuild   -Location (Join-Path $Capstone "zlux-shared\src\obfuscator") -BuildType "build"
+    Invoke-NpmInstall -Location (Join-Path $Capstone "zlux-shared\src\codepage")
+    Invoke-NpmBuild   -Location (Join-Path $Capstone "zlux-shared\src\codepage") -BuildType "build"
 
+    
     $adminApp = Join-Path $Capstone "zlux-app-manager\system-apps\admin-notification-app\webClient"
     Invoke-NpmInstall -Location $adminApp
     Invoke-NpmBuild   -Location $adminApp -BuildType "build"

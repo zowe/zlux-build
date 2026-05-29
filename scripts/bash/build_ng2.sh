@@ -173,6 +173,9 @@ build_ng2() {
     npm_install "${CAPSTONE}/zlux-shared/src/obfuscator"
     npm_build   "${CAPSTONE}/zlux-shared/src/obfuscator" "build"
 
+    npm_install "${CAPSTONE}/zlux-shared/src/codepage"
+    npm_build   "${CAPSTONE}/zlux-shared/src/codepage" "build"
+
     # Build system apps.
     npm_install "${CAPSTONE}/zlux-app-manager/system-apps/admin-notification-app/webClient"
     npm_build   "${CAPSTONE}/zlux-app-manager/system-apps/admin-notification-app/webClient" "build"
