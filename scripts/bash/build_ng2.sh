@@ -177,12 +177,6 @@ build_ng2() {
     npm_install "${CAPSTONE}/zlux-app-manager/system-apps/admin-notification-app/webClient"
     npm_build   "${CAPSTONE}/zlux-app-manager/system-apps/admin-notification-app/webClient" "build"
 
-    npm_install "${CAPSTONE}/zlux-app-manager/system-apps/web-browser-app/webClient"
-    npm_build   "${CAPSTONE}/zlux-app-manager/system-apps/web-browser-app/webClient" "build"
-
-    npm_install "${CAPSTONE}/zlux-app-manager/system-apps/web-browser-app/nodeServer"
-    npm_build   "${CAPSTONE}/zlux-app-manager/system-apps/web-browser-app/nodeServer" "build"
-
     # Compress the virtual-desktop (Unix only).
     npm_run_compress "${CAPSTONE}/zlux-app-manager/virtual-desktop"
 
