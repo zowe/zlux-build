@@ -39,21 +39,6 @@
       <param name="buildType" value="build"/>
     </antcall>
 
-    <antcall target="npmInstall">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
-    </antcall>
-    <antcall target="npmBuild">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/webClient"/>
-      <param name="buildType" value="build"/>
-    </antcall>
-    <antcall target="npmInstall">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
-    </antcall>
-    <antcall target="npmBuild">
-      <param name="packagejson.Location" value="${capstone}/zlux-app-manager/system-apps/web-browser-app/nodeServer"/>
-      <param name="buildType" value="build"/>
-    </antcall>
-
     <antcall target="npmRunI18n">
       <param name="packagejson.Location" value="${capstone}/zlux-app-manager/virtual-desktop"/>
     </antcall>
@@ -79,6 +64,10 @@
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="zlux-app-manager/system-apps/app-generator/**"/>
+        </dirset>
+        <dirset dir="${capstone}" defaultexcludes="false">
+          <include name="*/test"/>
+          <include name="*/*.ppf"/>
         </dirset>
         <dirset dir="${capstone}" defaultexcludes="false">
           <include name="**/src"/>
@@ -109,6 +98,13 @@
           <exclude name="zlux-app-manager/virtual-desktop/**"/>
           <exclude name="zlux-platform/interface/**"/>
           <exclude name="zlux-shared/src/**"/>
+        </fileset>
+        <fileset dir="${capstone}" defaultexcludes="false">
+          <include name="**/*.cer"/>
+          <include name="**/*.key"/>
+          <include name="**/*.p12"/>
+          <include name="zlux-app-server/defaults/serverConfig/generate_zlux_certificates.sh"/>
+          <include name="zlux-app-server/defaults/README.md"/>
         </fileset>
       </path>
       <sequential>
