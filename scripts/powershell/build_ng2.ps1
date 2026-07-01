@@ -136,14 +136,6 @@ function Invoke-BuildNg2 {
     Invoke-NpmInstall -Location $adminApp
     Invoke-NpmBuild   -Location $adminApp -BuildType "build"
 
-    $webBrowserClient = Join-Path $Capstone "zlux-app-manager\system-apps\web-browser-app\webClient"
-    Invoke-NpmInstall -Location $webBrowserClient
-    Invoke-NpmBuild   -Location $webBrowserClient -BuildType "build"
-
-    $webBrowserServer = Join-Path $Capstone "zlux-app-manager\system-apps\web-browser-app\nodeServer"
-    Invoke-NpmInstall -Location $webBrowserServer
-    Invoke-NpmBuild   -Location $webBrowserServer -BuildType "build"
-
     # Compress is Unix-only in the original; skip silently on Windows.
     Write-Host "INFO: npm run compress is Unix-only; skipping on Windows."
 
