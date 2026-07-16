@@ -93,7 +93,7 @@ jobs:
       check_commit: ${{ steps.check-changelog.outputs.check_commit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
@@ -158,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Verify Changelog update
         run: |
@@ -202,7 +202,7 @@ jobs:
           fi
 
       - name: '[Prep 1] Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: '[Prep 2] Validate package.json'
         uses: zowe-actions/shared-actions/validate-package-json@main
@@ -219,7 +219,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 5] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@main
+        uses: zowe-actions/zlux-builds/core/prepare@v3.x/main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -243,7 +243,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: '[Prep 7] build'
-        uses: zowe-actions/zlux-builds/core/build@main
+        uses: zowe-actions/zlux-builds/core/build@v3.x/main
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -253,12 +253,12 @@ jobs:
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
       - name: '[Prep 8] packaging'
-        uses: zowe-actions/zlux-builds/core/package@main
+        uses: zowe-actions/zlux-builds/core/package@v3.x/main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 9] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@main
+        uses: zowe-actions/zlux-builds/core/deploy@v3.x/main
         
