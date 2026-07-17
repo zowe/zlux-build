@@ -6,7 +6,7 @@ on:
       branch:
         description: 'Please enter the zowe-install-packaging branch name'
         required: false
-        default: 'v2.x/staging'
+        default: 'v3.x/staging'
       release:
         description: 'Whether this is a test build or official release'
         required: true
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - uses: zowe-actions/shared-actions/prepare-workflow@main
       
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - uses: zowe-actions/shared-actions/prepare-workflow@main
       
@@ -68,7 +68,7 @@ jobs:
   build-ubuntu-s390x:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
@@ -97,7 +97,7 @@ jobs:
   build-ubi-s390x:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
@@ -129,7 +129,7 @@ jobs:
       - build-ubuntu-s390x
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
@@ -158,7 +158,7 @@ jobs:
       - build-ubi-s390x
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: zowe-actions/shared-actions/prepare-workflow@main
 
