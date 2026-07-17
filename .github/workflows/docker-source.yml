@@ -20,18 +20,18 @@ jobs:
 
 #      - uses: zowe-actions/shared-actions/envvars-global@main
         
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '12'
+          node-version: '22'
           
-      - uses: zowe-actions/shared-actions/docker-sources-local@feature/get-docker-sources
+      - uses: zowe-actions/shared-actions/docker-sources-local@3795300c3afc541c8a361e6dad233cbde697aeb5 # feature/get-docker-sources
         with:
           image-name: zowe-docker-snapshot.jfrog.io/ompzowe/app-server:${{ github.event.inputs.image_tag }}
           node-version: ${{ github.event.inputs.node_version }}
           registry-user: ${{ secrets.ARTIFACTORY_USERNAME }}
           registry-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
-      - uses: zowe-actions/shared-actions/docker-build-local@feature/get-docker-sources
+      - uses: zowe-actions/shared-actions/docker-build-local@3795300c3afc541c8a361e6dad233cbde697aeb5 # feature/get-docker-sources
         env:
           IMAGE_DIRECTORY: ${{ github.workspace }}/docker-build-local
         with:

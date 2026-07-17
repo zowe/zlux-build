@@ -40,7 +40,7 @@ jobs:
     steps:
       # this action will fail the whole workflow if permission check fails
       - name: check permission
-        uses: zowe-actions/shared-actions/permission-check@main
+        uses: zowe-actions/shared-actions/permission-check@77d7d9b50e60fedc8132b5e5eb6d611c4e483416 # main
         with:
           user: ${{ github.actor }}
           github-repo: ${{ github.repository }}
@@ -54,7 +54,7 @@ jobs:
       check_commit: ${{ steps.check-changelog.outputs.check_commit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Verify Changelog update
         run: |
@@ -137,7 +137,7 @@ jobs:
     steps:
 
       - name: '[Prep 1] Cache node modules'
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: |
@@ -149,17 +149,17 @@ jobs:
             ${{ runner.os }}-build-cache-node-modules-
       
       - name: '[Prep 2] Setup Node'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 16.15.0
+          node-version: 22
 
       - name: '[Prep 3] Setup jFrog CLI'
-        uses: jfrog/setup-jfrog-cli@v2
+        uses: jfrog/setup-jfrog-cli@11ee3f9bb82595485cb55670e4f93885080e183b # v2
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 4] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@v2.x/main
+        uses: zowe-actions/zlux-builds/core/prepare@e3dd3b0261a84f53bfec96ede073ebda45fe4326 # v2.x/main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -168,7 +168,7 @@ jobs:
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
 
       - name: '[Prep 5] build'
-        uses: zowe-actions/zlux-builds/core/build@v2.x/main
+        uses: zowe-actions/zlux-builds/core/build@e3dd3b0261a84f53bfec96ede073ebda45fe4326 # v2.x/main
         with:
           zlux-app-manager: ${{ github.event.inputs.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ github.event.inputs.ZLUX_APP_SERVER }}
@@ -178,12 +178,12 @@ jobs:
           zlux-shared: ${{ github.event.inputs.ZLUX_SHARED }}
 
       - name: '[Prep 6] packaging'
-        uses: zowe-actions/zlux-builds/core/package@v2.x/main
+        uses: zowe-actions/zlux-builds/core/package@e3dd3b0261a84f53bfec96ede073ebda45fe4326 # v2.x/main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 7] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@v2.x/main
+        uses: zowe-actions/zlux-builds/core/deploy@e3dd3b0261a84f53bfec96ede073ebda45fe4326 # v2.x/main
         
