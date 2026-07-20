@@ -219,7 +219,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 5] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@faa5294d57a7b1ebb1de5234c580a8921961e531 # v3.x/main
+        uses: zowe-actions/zlux-builds/core/prepare@013e1aad4515865af81037ba083e56875b8257b2 # v3.x/main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -243,7 +243,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: '[Prep 7] build'
-        uses: zowe-actions/zlux-builds/core/build@faa5294d57a7b1ebb1de5234c580a8921961e531 # v3.x/main
+        uses: zowe-actions/zlux-builds/core/build@013e1aad4515865af81037ba083e56875b8257b2 # v3.x/main
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -253,12 +253,12 @@ jobs:
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
       - name: '[Prep 8] packaging'
-        uses: zowe-actions/zlux-builds/core/package@faa5294d57a7b1ebb1de5234c580a8921961e531 # v3.x/main
+        uses: zowe-actions/zlux-builds/core/package@013e1aad4515865af81037ba083e56875b8257b2 # v3.x/main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 9] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@faa5294d57a7b1ebb1de5234c580a8921961e531 # v3.x/main
+        uses: zowe-actions/zlux-builds/core/deploy@013e1aad4515865af81037ba083e56875b8257b2 # v3.x/main
         
