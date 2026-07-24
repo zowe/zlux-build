@@ -23,10 +23,27 @@ URLS=($(echo $URLS | sed "s/,/ /g"))
 
 for i in "${!URLS[@]}";
 do
-  # echo package zlux/"${PACKAGES[i]}".tar
   echo url "${URLS[i]}"
-  curl -sL "${URLS[i]}" -o files/zlux/"${PACKAGES[i]}".tar && echo "${PACKAGES[i]} done" &
+  curl -fSL "${URLS[i]}" -o "files/zlux/${PACKAGES[i]}.tar" && echo "${PACKAGES[i]} downloaded" &
+  curl -fSL "${URLS[i]}.sha256" -o "files/zlux/${PACKAGES[i]}.tar.sha256" 2>/dev/null &
 done
 wait
+
+# Verify checksums for all downloaded artifacts
+for i in "${!PACKAGES[@]}"; do
+  TARBALL="files/zlux/${PACKAGES[i]}.tar"
+  CHECKSUM_FILE="${TARBALL}.sha256"
+  if [ -f "$CHECKSUM_FILE" ]; then
+    EXPECTED=$(cat "$CHECKSUM_FILE" | tr -d '[:space:]')
+    ACTUAL=$(sha256sum "$TARBALL" | awk '{print $1}')
+    if [ "$EXPECTED" != "$ACTUAL" ]; then
+      echo "ERROR: Checksum mismatch for ${PACKAGES[i]}. Expected: $EXPECTED, Got: $ACTUAL"
+      exit 1
+    fi
+    echo "Checksum verified for ${PACKAGES[i]}"
+  else
+    echo "WARNING: No .sha256 checksum file available for ${PACKAGES[i]}, skipping verification"
+  fi
+done
 
 mv files/zlux/zlux-core.tar files/zlux-core.tar
