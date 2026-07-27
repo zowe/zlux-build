@@ -12,7 +12,7 @@
 #                                                                                       #
 #########################################################################################
 
-if [ -z "$ZLUX_BRANCH" ]; then
+if [[ -z "$ZLUX_BRANCH" ]]; then
 	echo " Default branch will be staging, to change branch please set environment ZLUX_BRANCH. Set with for example export ZLUX_BRANCH=..."
 	export ZLUX_BRANCH="v3.x/staging"
 fi
@@ -25,12 +25,12 @@ rm -rf files/zowe-install-packaging 2>/dev/null
 mkdir -p files/zlux
 
 # clone zowe-install-packaging - copy manifest, files/zlux/config
-if [ -n "$ZLUX_MANIFEST_COMMIT" ]; then
+if [[ -n "$ZLUX_MANIFEST_COMMIT" ]]; then
   # Pin to a specific commit for reproducible builds
   git clone --no-checkout https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
   git -C files/zowe-install-packaging checkout "$ZLUX_MANIFEST_COMMIT"
   ACTUAL_COMMIT=$(git -C files/zowe-install-packaging rev-parse HEAD)
-  if [ "$ACTUAL_COMMIT" != "$ZLUX_MANIFEST_COMMIT" ]; then
+  if [[ "$ACTUAL_COMMIT" != "$ZLUX_MANIFEST_COMMIT" ]]; then
     echo "ERROR: Commit mismatch. Expected $ZLUX_MANIFEST_COMMIT, got $ACTUAL_COMMIT"
     exit 1
   fi
