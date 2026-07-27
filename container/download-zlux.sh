@@ -17,9 +17,9 @@ set -e
 ZOWE_REPOSITORY=https://zowe.jfrog.io/artifactory
 
 output=$(node getPackagePaths.js)
-read -r PACKAGES URLS <<<$(echo $output | sed "s/;/ /g")
-PACKAGES=($(echo $PACKAGES | sed "s/,/ /g"))
-URLS=($(echo $URLS | sed "s/,/ /g"))
+read -r PACKAGES URLS <<<$(echo "$output" | sed "s/;/ /g")
+PACKAGES=($(echo "$PACKAGES" | sed "s/,/ /g"))
+URLS=($(echo "$URLS" | sed "s/,/ /g"))
 
 for i in "${!URLS[@]}";
 do

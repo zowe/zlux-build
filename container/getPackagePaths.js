@@ -13,7 +13,7 @@
 */
 
 if (!process.env.ZLUX_DOWNLOAD_API_TOKEN) {
-  console.log('*** WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=... ***');
+  console.error('WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=...');
 }
 
 
