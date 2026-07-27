@@ -38,7 +38,7 @@ for i in "${!PACKAGES[@]}"; do
       try { console.log(JSON.parse(d).checksums.sha256); }
       catch(e) { process.exit(1); }
     });" 2>/dev/null)
-  if [ -n "$EXPECTED" ]; then
+  if [[ -n "$EXPECTED" ]]; then
     ACTUAL=$(sha256sum "$TARBALL" | awk '{print $1}')
     if [ "$EXPECTED" != "$ACTUAL" ]; then
       echo "ERROR: Checksum mismatch for ${PACKAGES[i]}. Expected: $EXPECTED, Got: $ACTUAL"
