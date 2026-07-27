@@ -25,7 +25,20 @@ rm -rf files/zowe-install-packaging 2>/dev/null
 mkdir -p files/zlux
 
 # clone zowe-install-packaging - copy manifest, files/zlux/config
-git clone --branch "$ZLUX_BRANCH" https://github.com/zowe/zowe-install-packaging  files/zowe-install-packaging
+if [ -n "$ZLUX_MANIFEST_COMMIT" ]; then
+  # Pin to a specific commit for reproducible builds
+  git clone --no-checkout https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
+  git -C files/zowe-install-packaging checkout "$ZLUX_MANIFEST_COMMIT"
+  ACTUAL_COMMIT=$(git -C files/zowe-install-packaging rev-parse HEAD)
+  if [ "$ACTUAL_COMMIT" != "$ZLUX_MANIFEST_COMMIT" ]; then
+    echo "ERROR: Commit mismatch. Expected $ZLUX_MANIFEST_COMMIT, got $ACTUAL_COMMIT"
+    exit 1
+  fi
+  echo "Checked out zowe-install-packaging at pinned commit $ZLUX_MANIFEST_COMMIT"
+else
+  echo "WARNING: ZLUX_MANIFEST_COMMIT not set. Cloning branch tip (mutable). Set ZLUX_MANIFEST_COMMIT for reproducible builds."
+  git clone --branch "$ZLUX_BRANCH" --depth 1 https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
+fi
 
 # copy manifest to files
 mv files/zowe-install-packaging/manifest.json.template files/manifest.json
