@@ -13,7 +13,7 @@
 */
 
 if (!process.env.ZLUX_DOWNLOAD_API_TOKEN) {
-  console.log('*** WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=... ***');
+  console.error('WARNING: This will not download patterned URLs without environment variable ZLUX_DOWNLOAD_API_TOKEN. Set with for example export ZLUX_DOWNLOAD_API_TOKEN=...');
 }
 
 
@@ -91,6 +91,10 @@ function sortArtifacts(names){
 
 async function artifactory(name, version, artifact){
 	data = await findArtifact(name, version, artifact);
+	if (!data || !data['results'] || data['results'].length === 0) {
+		console.error(`ERROR: AQL search returned no results for ${name} (version: ${version}, artifact: ${artifact}). Is ZLUX_DOWNLOAD_API_TOKEN valid?`);
+		process.exit(1);
+	}
 	sortArtifacts(data)
 	let results = data['results'][0]['repo'] + '/' + data['results'][0]['path'] + '/' + data['results'][0]['name']
 	return results
