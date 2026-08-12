@@ -99,7 +99,7 @@ jobs:
       check_commit: ${{ steps.check-changelog.outputs.check_commit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
@@ -166,7 +166,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Verify Changelog update
         run: |
@@ -212,7 +212,7 @@ jobs:
           fi
 
       - name: '[Prep 1] Checkout'
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: '[Prep 2] Validate package.json'
         uses: zowe-actions/shared-actions/validate-package-json@77d7d9b50e60fedc8132b5e5eb6d611c4e483416 # main
