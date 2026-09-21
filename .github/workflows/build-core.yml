@@ -224,7 +224,7 @@ jobs:
           node-version: 22
 
       - name: '[Prep 4] Setup jFrog CLI'
-        uses: jfrog/setup-jfrog-cli@11ee3f9bb82595485cb55670e4f93885080e183b # v2
+        uses: jfrog/setup-jfrog-cli@68c0efdc951dd2359bbbfa15c48bc67b3ae8e4d6 # v5.2.0
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
