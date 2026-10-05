@@ -227,6 +227,9 @@ remove_source() {
     # Remove app-generator directory.
     rm -rf "${capstone}/zlux-app-manager/system-apps/app-generator"
 
+    # Remove devPlugins (development-only plugins) so they never ship in production builds.
+    rm -rf "${capstone}/zlux-server-framework/devPlugins"
+
     # Remove top-level test directories (e.g. zlux-app-server/test).
     find "$capstone" -mindepth 2 -maxdepth 2 -type d -name "test" | while read -r dir; do
         echo "Removing ${dir}"
