@@ -140,6 +140,12 @@ remove_source() {
     local capstone="${CAPSTONE}"
     echo "==> removeSource: removing development files from ${capstone} ..."
 
+    # Remove devPlugins directory (development-only auth plugins).
+    if [[ -d "${capstone}/zlux-server-framework/devPlugins" ]]; then
+        echo "Removing devPlugins/"
+        rm -rf "${capstone}/zlux-server-framework/devPlugins"
+    fi
+
     local server_nm="${capstone}/zlux-app-server/node_modules"
     local framework_nm="${capstone}/zlux-server-framework/node_modules"
 
