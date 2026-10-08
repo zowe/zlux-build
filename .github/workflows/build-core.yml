@@ -42,6 +42,15 @@ on:
         required: false
         type: string
         default: v3.x/staging
+      RC:
+        required: false
+        type: boolean
+        default: false
+        description: 'Build a release candidate from the vX.x/rc branches'
+      RELEASE_VERSION:
+        required: false
+        type: string
+        description: 'Release version X.Y.Z. RC builds only; defaults to the version in the rc manifest'
 
   schedule:
     - cron: '30 6 * * *'
@@ -72,6 +81,14 @@ on:
       DEFAULT_BRANCH:
         required: false
         default: v3.x/staging
+      RC:
+        required: false
+        type: boolean
+        default: false
+        description: 'Build a release candidate from the vX.x/rc branches'
+      RELEASE_VERSION:
+        required: false
+        description: 'Release version X.Y.Z. RC builds only; defaults to the version in the rc manifest'
 
 permissions: {}
 
@@ -236,6 +253,8 @@ jobs:
           github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
+          rc: ${{ inputs.RC }}
+          release-version: ${{ inputs.RELEASE_VERSION }}
 
       - name: '[Prep 6] Cache node modules'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -271,4 +290,7 @@ jobs:
           
       - name: '[Prep 9] deploy'
         uses: zowe-actions/zlux-builds/core/deploy@main
-        
+        with:
+          source_repo: ${{ env.SOURCE_REPO }}
+          source_pr: ${{ env.SOURCE_PR }}
+
