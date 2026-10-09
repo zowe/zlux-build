@@ -42,6 +42,15 @@ on:
         required: false
         type: string
         default: v3.x/staging
+      RC:
+        required: false
+        type: boolean
+        default: false
+        description: 'Build a release candidate from the vX.x/rc branches'
+      RELEASE_VERSION:
+        required: false
+        type: string
+        description: 'Release version X.Y.Z. RC builds only; defaults to the version in the rc manifest'
 
   schedule:
     - cron: '30 6 * * *'
@@ -72,6 +81,14 @@ on:
       DEFAULT_BRANCH:
         required: false
         default: v3.x/staging
+      RC:
+        required: false
+        type: boolean
+        default: false
+        description: 'Build a release candidate from the vX.x/rc branches'
+      RELEASE_VERSION:
+        required: false
+        description: 'Release version X.Y.Z. RC builds only; defaults to the version in the rc manifest'
 
 permissions: {}
 
@@ -229,13 +246,15 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 5] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@45cd8dc50de64566783bd0f69ea8ae6de830d69a # v3.x/main
+        uses: zowe-actions/zlux-builds/core/prepare@main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
           github-email: ${{ secrets.ZOWE_ROBOT_EMAIL }}
           github-branch: ${{ github.event.inputs.BRANCH_NAME }}
           default-base: ${{ github.event.inputs.DEFAULT_BRANCH }}
+          rc: ${{ inputs.RC }}
+          release-version: ${{ inputs.RELEASE_VERSION }}
 
       - name: '[Prep 6] Cache node modules'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -253,7 +272,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: '[Prep 7] build'
-        uses: zowe-actions/zlux-builds/core/build@45cd8dc50de64566783bd0f69ea8ae6de830d69a # v3.x/main
+        uses: zowe-actions/zlux-builds/core/build@main
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -263,12 +282,15 @@ jobs:
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
       - name: '[Prep 8] packaging'
-        uses: zowe-actions/zlux-builds/core/package@45cd8dc50de64566783bd0f69ea8ae6de830d69a # v3.x/main
+        uses: zowe-actions/zlux-builds/core/package@main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 9] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@45cd8dc50de64566783bd0f69ea8ae6de830d69a # v3.x/main
-        
+        uses: zowe-actions/zlux-builds/core/deploy@main
+        with:
+          source_repo: ${{ env.SOURCE_REPO }}
+          source_pr: ${{ env.SOURCE_PR }}
+
