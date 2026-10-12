@@ -148,6 +148,13 @@ function Invoke-BuildNg2 {
 function Invoke-RemoveSource {
     Write-Host "==> removeSource: removing development files from ${Capstone} ..."
 
+    # Remove devPlugins directory (development-only auth plugins).
+    $devPluginsDir = Join-Path $Capstone "zlux-server-framework\devPlugins"
+    if (Test-Path $devPluginsDir) {
+        Write-Host "Removing devPlugins/"
+        Remove-Item -Recurse -Force $devPluginsDir
+    }
+
     $serverNm    = Join-Path $Capstone "zlux-app-server\node_modules"
     $frameworkNm = Join-Path $Capstone "zlux-server-framework\node_modules"
 
