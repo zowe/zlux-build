@@ -200,6 +200,7 @@ jobs:
     needs: check-permission
     permissions:
       contents: read
+      statuses: write
     env:
       SOURCE_REPO: ${{ inputs.SOURCE_REPO }}
       SOURCE_PR: ${{ inputs.SOURCE_PR }}
@@ -246,7 +247,7 @@ jobs:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_TOKEN }}
 
       - name: '[Prep 5] prepare workflow'
-        uses: zowe-actions/zlux-builds/core/prepare@main
+        uses: zowe-actions/zlux-builds/core/prepare@b39877d3b45f22621adc7ba71605de4681260efd # main
         with:
           github-user: ${{ secrets.ZOWE_ROBOT_USER }}
           github-password: ${{ secrets.ZOWE_ROBOT_TOKEN }}
@@ -272,7 +273,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: '[Prep 7] build'
-        uses: zowe-actions/zlux-builds/core/build@main
+        uses: zowe-actions/zlux-builds/core/build@b39877d3b45f22621adc7ba71605de4681260efd # main
         with:
           zlux-app-manager: ${{ env.ZLUX_APP_MANAGER }}
           zlux-app-server: ${{ env.ZLUX_APP_SERVER }}
@@ -282,15 +283,12 @@ jobs:
           zlux-shared: ${{ env.ZLUX_SHARED }}
 
       - name: '[Prep 8] packaging'
-        uses: zowe-actions/zlux-builds/core/package@main
+        uses: zowe-actions/zlux-builds/core/package@b39877d3b45f22621adc7ba71605de4681260efd # main
         with:
           pax-ssh-username: ${{ secrets.SSH_MARIST_USERNAME }}
           pax-ssh-password: ${{ secrets.SSH_MARIST_RACF_PASSWORD }}
           pax-name: zlux-core
           
       - name: '[Prep 9] deploy'
-        uses: zowe-actions/zlux-builds/core/deploy@main
-        with:
-          source_repo: ${{ env.SOURCE_REPO }}
-          source_pr: ${{ env.SOURCE_PR }}
+        uses: zowe-actions/zlux-builds/core/deploy@b39877d3b45f22621adc7ba71605de4681260efd # main
 
