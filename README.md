@@ -117,9 +117,9 @@ zsh build.zsh deploy
 
 ### Plugin Build Hooks
 
-The default behavior for a plugin is to navigate to its home directory (as defined by the `pluginLocation` field in its `pluginDefinition.json`) and run `npm install` followed by `npm run build`.
+The default behavior for a plugin is to navigate to its home directory (as defined by the `pluginLocation` field in its `pluginDefinition.json`) and run `npm ci --ignore-scripts` followed by `npm run build`.
 
-This can be overridden by adding a `build/build.sh` (or `build.zsh` / `build.ps1`) script to the plugin's home directory. If a `deploy` target is implemented in that script it will be invoked during the deploy step, which is useful for adding plugin-specific configuration files. If a `build` target is implemented it will be called instead of the default `npm install` + `npm run build`.
+This can be overridden by adding a `build/build.sh` (or `build.zsh` / `build.ps1`) script to the plugin's home directory. If a `deploy` target is implemented in that script it will be invoked during the deploy step, which is useful for adding plugin-specific configuration files. If a `build` target is implemented it will be called instead of the default `npm ci --ignore-scripts` + `npm run build`.
 
 ### Configuration
 
@@ -141,7 +141,7 @@ PRODUCT_REVISION=4
 
 ### Options
 
-Setting the `NO_INSTALL` environment variable skips `npm install` and runs only `npm run build`. This is useful when `node_modules` are already present and you want to reduce build time.
+Setting the `NO_INSTALL` environment variable skips the install step and runs only `npm run build`. This is useful when `node_modules` are already present and you want to reduce build time.
 
 ```sh
 NO_INSTALL=1 bash build.sh build
