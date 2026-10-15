@@ -32,7 +32,7 @@ do
 done
 # a bare 'wait' ignores the exit status of background jobs, so a failed download would go unnoticed
 for pid in "${PIDS[@]}"; do
-  wait "$pid" || { echo "ERROR: download failed"; exit 1; }
+  wait "$pid" || { echo "ERROR: download failed" >&2; exit 1; }
 done
 
 # Verify checksums via Artifactory REST API (checksums are stored for every artifact)
@@ -53,7 +53,7 @@ for i in "${!PACKAGES[@]}"; do
     fi
     echo "Checksum verified for ${PACKAGES[i]}"
   else
-    echo "ERROR: Could not retrieve checksum from Artifactory API for ${PACKAGES[i]}, refusing to use an unverified artifact"
+    echo "ERROR: Could not retrieve checksum from Artifactory API for ${PACKAGES[i]}, refusing to use an unverified artifact" >&2
     exit 1
   fi
 done
