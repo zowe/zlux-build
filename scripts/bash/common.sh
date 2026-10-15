@@ -90,7 +90,7 @@ npm_install() {
         return 0
     fi
 
-    if [ ! -f "${location}/package-lock.json" ]; then
+    if [[ ! -f "${location}/package-lock.json" ]]; then
         echo "ERROR: no package-lock.json found in ${location}, refusing to run an unlocked install" >&2
         return 1
     fi
