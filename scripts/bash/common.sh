@@ -78,8 +78,10 @@ load_version_properties() {
 
 # Run npm install in a directory that contains a package.json.
 # Usage: npm_install <directory>
-# Uses 'npm ci' when a package-lock.json is present (faster, reproducible CI
-# installs), falling back to 'npm install' when no lockfile exists.
+# Always uses 'npm ci --ignore-scripts' so that only the versions pinned in
+# package-lock.json are installed and no third-party install scripts run. The
+# build fails when package-lock.json is missing instead of falling back to
+# 'npm install'. First-party scripts still run through npm_build.
 npm_install() {
     local location="$1"
 
@@ -88,15 +90,12 @@ npm_install() {
         return 0
     fi
 
-    local cmd
-    if [ -f "${location}/package-lock.json" ]; then
-        echo "Running npm ci in ${location} ..."
-        cmd="npm ci"
-    else
-        echo "Running npm install in ${location} (no package-lock.json found) ..."
-        cmd="npm install"
+    if [[ ! -f "${location}/package-lock.json" ]]; then
+        echo "ERROR: no package-lock.json found in ${location}, refusing to run an unlocked install" >&2
+        return 1
     fi
-    (cd "$location" && eval "$cmd")
+    echo "Running npm ci --ignore-scripts in ${location} ..."
+    (cd "$location" && npm ci --ignore-scripts)
     local rc=$?
     echo "Result of install in ${location}: ${rc}"
     if [ "$rc" -ne 0 ]; then
