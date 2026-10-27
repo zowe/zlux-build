@@ -30,5 +30,5 @@
 # Using Github Actions to build image
 
 - use the action called `app-server container build`
-- Specify the branch of zowe-install-packaging, this will download the right artifacts based on manifest of the zowe-install-packaging branch
+- Specify the full commit SHA of zowe-install-packaging in `manifest_commit`, this will download the right artifacts based on the manifest at that commit. When running the scripts in CI, `ZLUX_MANIFEST_COMMIT` is required; outside CI, if it is not set, the tip of the `ZLUX_BRANCH` branch is used
 - run workflow

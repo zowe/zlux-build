@@ -27,6 +27,10 @@ mkdir -p files/zlux
 # clone zowe-install-packaging - copy manifest, files/zlux/config
 if [[ -n "$ZLUX_MANIFEST_COMMIT" ]]; then
   # Pin to a specific commit for reproducible builds
+  if [[ ! "$ZLUX_MANIFEST_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "ERROR: ZLUX_MANIFEST_COMMIT must be a full 40-character commit SHA, got '$ZLUX_MANIFEST_COMMIT'"
+    exit 1
+  fi
   git clone --no-checkout https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
   git -C files/zowe-install-packaging checkout "$ZLUX_MANIFEST_COMMIT"
   ACTUAL_COMMIT=$(git -C files/zowe-install-packaging rev-parse HEAD)
@@ -35,6 +39,10 @@ if [[ -n "$ZLUX_MANIFEST_COMMIT" ]]; then
     exit 1
   fi
   echo "Checked out zowe-install-packaging at pinned commit $ZLUX_MANIFEST_COMMIT"
+elif [[ "$CI" == "true" ]]; then
+  # The manifest decides which artifacts are baked into the image, so CI builds must not follow a moving branch
+  echo "ERROR: ZLUX_MANIFEST_COMMIT is required in CI. Set it to the full commit SHA of zowe-install-packaging to build from."
+  exit 1
 else
   echo "WARNING: ZLUX_MANIFEST_COMMIT not set. Cloning branch tip (mutable). Set ZLUX_MANIFEST_COMMIT for reproducible builds."
   git clone --branch "$ZLUX_BRANCH" --depth 1 https://github.com/zowe/zowe-install-packaging files/zowe-install-packaging
