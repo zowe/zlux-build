@@ -53,32 +53,27 @@ function Import-PropertiesFile {
 }
 
 # Run npm install in a directory that contains a package.json.
-# Uses 'npm ci' when a package-lock.json is present (faster, reproducible CI
-# installs), falling back to 'npm install' when no lockfile exists.
+# Always uses 'npm ci --ignore-scripts' so that only the versions pinned in
+# package-lock.json are installed and no third-party install scripts run. Fails
+# when package-lock.json is missing instead of falling back to 'npm install'.
+# First-party scripts still run through Invoke-NpmBuild.
 # Parameters:
-#   Location        - Directory path.
-#   LegacyPeerDeps  - When $true, passes --legacy-peer-deps (install fallback only).
+#   Location - Directory path.
 function Invoke-NpmInstall {
     param(
-        [string]$Location,
-        [switch]$LegacyPeerDeps
+        [string]$Location
     )
     if (-not (Test-Path (Join-Path $Location "package.json"))) {
         Write-Host "No package.json found in ${Location}, skipping install."
         return
     }
+    if (-not (Test-Path (Join-Path $Location "package-lock.json"))) {
+        throw "no package-lock.json found in ${Location}, refusing to run an unlocked install"
+    }
     Push-Location $Location
     try {
-        if (Test-Path (Join-Path $Location "package-lock.json")) {
-            Write-Host "Running npm ci in ${Location} ..."
-            & npm ci
-        } elseif ($LegacyPeerDeps) {
-            Write-Host "Running npm install --legacy-peer-deps in ${Location} (no package-lock.json found) ..."
-            & npm install --legacy-peer-deps
-        } else {
-            Write-Host "Running npm install in ${Location} (no package-lock.json found) ..."
-            & npm install
-        }
+        Write-Host "Running npm ci --ignore-scripts in ${Location} ..."
+        & npm ci --ignore-scripts
         if ($LASTEXITCODE -ne 0) {
             throw "install failed in ${Location} with exit code ${LASTEXITCODE}"
         }
