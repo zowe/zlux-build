@@ -2,5 +2,12 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "v3.x/staging"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "v2.x/staging"
     schedule:
       interval: "weekly"
