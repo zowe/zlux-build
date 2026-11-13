@@ -70,7 +70,7 @@ jobs:
             echo "::set-output name=check_commit::false"
           fi
       - name: Compare PR description with template
-        if: steps.check-changelog.outputs.check_commit == 'false'
+        if: steps.check-changelog.outputs.check_commit == 'false' 
         env:
           PR_DESCRIPTION: ${{ github.event.pull_request.body }}
         run: |
