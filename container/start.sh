@@ -15,10 +15,10 @@
 mkdir -p logs
 docker run -it \
     -h zlux-app-server \
-    --env ZOSMF_HOST=tvt5003.svl.ibm.com \
-    --env ZWED_agent_host=tvt5003.svl.ibm.com \
+    --env ZOSMF_HOST=test.example.com \
+    --env ZWED_agent_host=test.example.com \
     --env ZOSMF_PORT=443 \
-    --env ZWED_agent_https_port=47557 \
+    --env ZWED_agent_https_port=7557 \
     --env ZLUX_NO_CLUSTER=1 \
     -p 7556:7556 \
     ompzowe/app-server:testing $@ 2>&1 | tee logs/docker-run.log
